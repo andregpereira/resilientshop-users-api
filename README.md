@@ -1,2 +1,2 @@
 # resilientshop-backend
-Resilient Shop Backend Repository
+Resilient Shop Backend User Api Repository
