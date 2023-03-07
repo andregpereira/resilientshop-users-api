@@ -19,7 +19,7 @@ public class Usuario {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario")
 	@Column(name = "id_usuario")
-	private Long id_usuario;
+	private Long id;
 
 	@Column(name = "nome", nullable = false)
 	private String nome;
