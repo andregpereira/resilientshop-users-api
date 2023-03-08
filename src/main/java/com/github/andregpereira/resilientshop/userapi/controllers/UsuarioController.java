@@ -23,27 +23,37 @@ public class UsuarioController {
 	@Autowired
 	private UsuarioService usuarioService;
 
+	// Registrar usuário
+	@PostMapping
+	public ResponseEntity<UsuarioDto> registrar(@RequestBody @Valid UsuarioRegistroDto usuarioRegistroDto) {
+		UsuarioDto usuarioDto = usuarioService.registrar(usuarioRegistroDto);
+		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDto);
+	}
+
 	@GetMapping("/ping")
 	public String teste() {
 		return "pong";
 	}
 
+	// Pesquisa por id
 	@GetMapping("/{id}")
 	public ResponseEntity<UsuarioDto> consultarPorId(@PathVariable Long id) {
 		return usuarioService.consultarPorId(id).map(dto -> ResponseEntity.ok(dto))
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
+	// Pesquisa por CPF
 	@GetMapping("/cpf")
 	public ResponseEntity<UsuarioDto> consultarPorCpf(@RequestBody @Valid UsuarioDto usuarioDto) {
 		return usuarioService.consultarPorCpf(usuarioDto).map(dto -> ResponseEntity.ok(dto))
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
-	@PostMapping
-	public ResponseEntity<UsuarioDto> registrar(@RequestBody @Valid UsuarioRegistroDto usuarioRegistroDto) {
-		UsuarioDto usuarioDto = usuarioService.registrar(usuarioRegistroDto);
-		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDto);
+	// Pesquisa por nome
+	@GetMapping("/nome")
+	public ResponseEntity<UsuarioDto> consultarPorNome(@RequestBody @Valid UsuarioDto usuarioDto) {
+		return usuarioService.consultarPorNome(usuarioDto).map(dto -> ResponseEntity.ok(dto))
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 }
