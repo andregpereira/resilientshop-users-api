@@ -10,6 +10,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "usuarios")
+@SequenceGenerator(name = "usuario", sequenceName = "usuario_sq", allocationSize = 1)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -27,13 +28,11 @@ public class Usuario {
 	@Column(name = "sobrenome", nullable = false)
 	private String sobrenome;
 
-	@Column(name = "cpf", nullable = false, unique = true)
+	@Column(name = "cpf", length = 11, nullable = false, unique = true)
 	private String cpf;
 
 	@Column(name = "data_criacao", nullable = false, updatable = false)
 	private LocalDate dataCriacao;
-
-	@Column(name = "data_modificacao", nullable = false)
 	private LocalDate dataModificacao;
 
 }
