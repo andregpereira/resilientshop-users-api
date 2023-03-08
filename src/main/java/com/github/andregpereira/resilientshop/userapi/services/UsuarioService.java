@@ -32,6 +32,18 @@ public class UsuarioService {
 	}
 
 	@Transactional
+	public UsuarioDto atualizar(Long id, UsuarioRegistroDto usuarioRegistroDto) {
+		Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+		if (!usuarioOptional.isPresent()) {
+			throw new EntityNotFoundException();
+		}
+		Usuario usuarioAtualizado = usuarioOptional.get();
+		BeanUtils.copyProperties(usuarioRegistroDto, usuarioAtualizado);
+		usuarioAtualizado.setDataModificacao(LocalDate.now());
+		return new UsuarioDto(usuarioRepository.save(usuarioAtualizado));
+	}
+
+	@Transactional
 	public String deletar(Long id) {
 		Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
 		if (!usuarioOptional.isPresent()) {
