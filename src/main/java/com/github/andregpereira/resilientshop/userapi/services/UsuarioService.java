@@ -31,6 +31,7 @@ public class UsuarioService {
 		return new UsuarioDto(usuarioRepository.save(usuarioRegistrado));
 	}
 
+	@Transactional
 	public String deletar(Long id) {
 		Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
 		if (!usuarioOptional.isPresent()) {
