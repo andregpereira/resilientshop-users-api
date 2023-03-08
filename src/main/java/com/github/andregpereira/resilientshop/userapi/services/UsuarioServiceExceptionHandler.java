@@ -25,12 +25,12 @@ public class UsuarioServiceExceptionHandler {
 
 	@ExceptionHandler(EntityNotFoundException.class)
 	public ResponseEntity<String> error404(EntityNotFoundException e) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("404 - Usuário não encontrado");
 	}
 
 	@ExceptionHandler(EmptyResultDataAccessException.class)
 	public ResponseEntity<String> error404(EmptyResultDataAccessException e) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("404 - Nenhum usuário encontrado");
 	}
 
 	@ExceptionHandler(DataIntegrityViolationException.class)
