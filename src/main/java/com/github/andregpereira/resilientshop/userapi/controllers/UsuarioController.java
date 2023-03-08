@@ -1,5 +1,7 @@
 package com.github.andregpereira.resilientshop.userapi.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,30 +32,34 @@ public class UsuarioController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDto);
 	}
 
+	// Teste
 	@GetMapping("/ping")
 	public String teste() {
 		return "pong";
 	}
 
 	// Pesquisa por id
+	@GetMapping("/lista")
+	public ResponseEntity<List<UsuarioDto>> consultarPorId() {
+		return ResponseEntity.ok(usuarioService.listar());
+	}
+
+	// Pesquisa por id
 	@GetMapping("/{id}")
 	public ResponseEntity<UsuarioDto> consultarPorId(@PathVariable Long id) {
-		return usuarioService.consultarPorId(id).map(dto -> ResponseEntity.ok(dto))
-				.orElseGet(() -> ResponseEntity.notFound().build());
+		return ResponseEntity.ok(usuarioService.consultarPorId(id));
 	}
 
 	// Pesquisa por CPF
 	@GetMapping("/cpf")
 	public ResponseEntity<UsuarioDto> consultarPorCpf(@RequestBody @Valid UsuarioDto usuarioDto) {
-		return usuarioService.consultarPorCpf(usuarioDto).map(dto -> ResponseEntity.ok(dto))
-				.orElseGet(() -> ResponseEntity.notFound().build());
+		return ResponseEntity.ok(usuarioService.consultarPorCpf(usuarioDto));
 	}
 
 	// Pesquisa por nome
 	@GetMapping("/nome")
 	public ResponseEntity<UsuarioDto> consultarPorNome(@RequestBody @Valid UsuarioDto usuarioDto) {
-		return usuarioService.consultarPorNome(usuarioDto).map(dto -> ResponseEntity.ok(dto))
-				.orElseGet(() -> ResponseEntity.notFound().build());
+		return ResponseEntity.ok(usuarioService.consultarPorNome(usuarioDto));
 	}
 
 }
