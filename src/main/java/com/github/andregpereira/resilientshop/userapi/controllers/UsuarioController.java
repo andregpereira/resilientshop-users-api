@@ -30,13 +30,19 @@ public class UsuarioController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<UsuarioDto> consultarPorId(@PathVariable Long id) {
-		return usuarioService.consultarPorId(id).map(usuarioDto -> ResponseEntity.ok(usuarioDto))
+		return usuarioService.consultarPorId(id).map(dto -> ResponseEntity.ok(dto))
+				.orElseGet(() -> ResponseEntity.notFound().build());
+	}
+
+	@GetMapping("/cpf")
+	public ResponseEntity<UsuarioDto> consultarPorCpf(@RequestBody @Valid UsuarioDto usuarioDto) {
+		return usuarioService.consultarPorCpf(usuarioDto).map(dto -> ResponseEntity.ok(dto))
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@PostMapping
-	public ResponseEntity<UsuarioDto> registrar(@RequestBody @Valid UsuarioRegistroDto dto) {
-		UsuarioDto usuarioDto = usuarioService.registrar(dto);
+	public ResponseEntity<UsuarioDto> registrar(@RequestBody @Valid UsuarioRegistroDto usuarioRegistroDto) {
+		UsuarioDto usuarioDto = usuarioService.registrar(usuarioRegistroDto);
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDto);
 	}
 
