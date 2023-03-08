@@ -31,10 +31,19 @@ public class UsuarioService {
 		return new UsuarioDto(usuarioRepository.save(usuarioRegistrado));
 	}
 
+	public String deletar(Long id) {
+		Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+		if (!usuarioOptional.isPresent()) {
+			throw new EntityNotFoundException();
+		}
+		usuarioRepository.deleteById(id);
+		return "Usuário deletado";
+	}
+
 	public List<UsuarioDto> listar() {
 		List<Usuario> usuarios = usuarioRepository.findAll();
 		if (usuarios.isEmpty()) {
-			throw new EmptyResultDataAccessException("404 - Nenhum usuário encontrado", 10);
+			throw new EmptyResultDataAccessException(0);
 		}
 		return UsuarioDto.criarLista(usuarios);
 	}
@@ -42,7 +51,7 @@ public class UsuarioService {
 	public UsuarioDto consultarPorId(Long id) {
 		Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
 		if (!usuarioOptional.isPresent()) {
-			throw new EntityNotFoundException("404 - Usuário não encontrado");
+			throw new EntityNotFoundException();
 		}
 		return usuarioOptional.map(UsuarioDto::new).get();
 	}
@@ -50,7 +59,7 @@ public class UsuarioService {
 	public UsuarioDto consultarPorCpf(UsuarioDto usuarioDto) {
 		Optional<Usuario> usuarioOptional = usuarioRepository.findByCpf(usuarioDto.cpf());
 		if (!usuarioOptional.isPresent()) {
-			throw new EntityNotFoundException("404 - Usuário não encontrado com o CPF informado");
+			throw new EntityNotFoundException();
 		}
 		return usuarioOptional.map(UsuarioDto::new).get();
 	}
@@ -58,7 +67,7 @@ public class UsuarioService {
 	public UsuarioDto consultarPorNome(UsuarioDto usuarioDto) {
 		Optional<Usuario> usuarioOptional = usuarioRepository.findByName(usuarioDto.nome(), usuarioDto.sobrenome());
 		if (!usuarioOptional.isPresent()) {
-			throw new EntityNotFoundException("404 - Usuário não encontrado com o nome informado");
+			throw new EntityNotFoundException();
 		}
 		return usuarioOptional.map(UsuarioDto::new).get();
 	}
