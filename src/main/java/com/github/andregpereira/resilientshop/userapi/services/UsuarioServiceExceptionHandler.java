@@ -1,6 +1,6 @@
 package com.github.andregpereira.resilientshop.userapi.services;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -16,26 +16,31 @@ import jakarta.persistence.EntityNotFoundException;
 @RestControllerAdvice
 public class UsuarioServiceExceptionHandler {
 
+	private record DadoInvalido(String campo, String mensagem) {
+		public DadoInvalido(FieldError erro) {
+			this(erro.getField(), erro.getDefaultMessage());
+		}
+	}
+
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<?> error400(MethodArgumentNotValidException e) {
-		List<FieldError> erros = e.getFieldErrors();
-		// TODO
-		return ResponseEntity.badRequest().body(e.getMessage());
+	public ResponseEntity<Stream<DadoInvalido>> erro400(MethodArgumentNotValidException e) {
+		Stream<FieldError> erros = e.getFieldErrors().stream();
+		return ResponseEntity.badRequest().body(erros.map(DadoInvalido::new));
 	}
 
 	@ExceptionHandler(EntityNotFoundException.class)
-	public ResponseEntity<String> error404(EntityNotFoundException e) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("404 - Usuário não encontrado");
+	public ResponseEntity<String> erro404(EntityNotFoundException e) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
 	}
 
 	@ExceptionHandler(EmptyResultDataAccessException.class)
-	public ResponseEntity<String> error404(EmptyResultDataAccessException e) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("404 - Nenhum usuário encontrado");
+	public ResponseEntity<String> erro404(EmptyResultDataAccessException e) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(" Nenhum usuário encontrado");
 	}
 
 	@ExceptionHandler(DataIntegrityViolationException.class)
-	private ResponseEntity<String> error409(DataIntegrityViolationException e) {
-		return ResponseEntity.status(HttpStatus.CONFLICT).body("409 - O CPF já está em uso");
+	private ResponseEntity<String> erro409(DataIntegrityViolationException e) {
+		return ResponseEntity.status(HttpStatus.CONFLICT).body("Já existe um usuário com o CPF informado");
 	}
 
 }
