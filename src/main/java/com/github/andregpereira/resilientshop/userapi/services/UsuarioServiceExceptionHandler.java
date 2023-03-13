@@ -35,12 +35,17 @@ public class UsuarioServiceExceptionHandler {
 
 	@ExceptionHandler(EmptyResultDataAccessException.class)
 	public ResponseEntity<String> erro404(EmptyResultDataAccessException e) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(" Nenhum usuário encontrado");
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhum usuário encontrado");
 	}
 
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	private ResponseEntity<String> erro409(DataIntegrityViolationException e) {
-		return ResponseEntity.status(HttpStatus.CONFLICT).body("Já existe um usuário com o CPF informado");
+		if (e.getMessage().contains("telefone_uc")) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("O telefone já está em uso");
+		} else if (e.getMessage().contains("cpf_uc")) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("Já existe um usuário com o CPF informado");
+		}
+		return ResponseEntity.status(HttpStatus.CONFLICT).body("Houve um erro");
 	}
 
 }
