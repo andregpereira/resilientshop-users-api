@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.andregpereira.resilientshop.userapi.dtos.UsuarioDto;
-import com.github.andregpereira.resilientshop.userapi.dtos.UsuarioRegistroDto;
+import com.github.andregpereira.resilientshop.userapi.dtos.usuario.UsuarioDto;
+import com.github.andregpereira.resilientshop.userapi.dtos.usuario.UsuarioRegistroDto;
 import com.github.andregpereira.resilientshop.userapi.services.UsuarioService;
 
 import jakarta.validation.Valid;
@@ -79,7 +79,7 @@ public class UsuarioController {
 	@GetMapping
 	public ResponseEntity<Page<UsuarioDto>> consultarPorNomeOuCpf(@RequestParam(required = false) String nome,
 			@RequestParam(required = false) String sobrenome, @RequestParam(required = false) String cpf,
-			@PageableDefault(sort = "nome", direction = Direction.ASC, page = 0, size = 20) Pageable pageable) {
+			@PageableDefault(sort = "nome", direction = Direction.ASC, page = 0, size = 10) Pageable pageable) {
 		if (cpf != null) {
 			return ResponseEntity.ok(usuarioService.consultarPorCpf(cpf, pageable));
 		}
