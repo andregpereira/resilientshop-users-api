@@ -25,8 +25,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @SequenceGenerator(name = "usuario", sequenceName = "sq_usuarios", allocationSize = 1)
-@Table(name = "usuarios", uniqueConstraints = { @UniqueConstraint(name = "uc_telefone", columnNames = "telefone"),
-		@UniqueConstraint(name = "uc_cpf", columnNames = "cpf") })
+@Table(name = "usuarios", uniqueConstraints = { @UniqueConstraint(name = "uc_cpf", columnNames = "cpf") })
 public class Usuario {
 
 	@Id
@@ -37,13 +36,13 @@ public class Usuario {
 	@Column(name = "nome", length = 45, nullable = false)
 	private String nome;
 
-	@Column(name = "sobrenome", length = 45, nullable = false)
+	@Column(name = "sobrenome", length = 250, nullable = false)
 	private String sobrenome;
 
-	@Column(name = "cpf", length = 11, nullable = false)
+	@Column(name = "cpf", length = 14, nullable = false)
 	private String cpf;
 
-	@Column(name = "telefone", length = 20, nullable = false)
+	@Column(name = "telefone", length = 20)
 	private String telefone;
 
 	@Column(name = "data_criacao", nullable = false, updatable = false)
@@ -54,6 +53,7 @@ public class Usuario {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_endereco", foreignKey = @ForeignKey(name = "fk_id_endereco"))
+//	@PrimaryKeyJoinColumn(nome = "id_endereco")
 	private Endereco endereco;
 
 }
