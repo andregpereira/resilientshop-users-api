@@ -1,8 +1,10 @@
-package com.github.andregpereira.resilientshop.userapi.controllers;
-
-import java.util.List;
+package com.github.andregpereira.resilientshop.userapi.controllers.usuario;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,10 +14,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.andregpereira.resilientshop.userapi.dtos.UsuarioDto;
-import com.github.andregpereira.resilientshop.userapi.dtos.UsuarioRegistroDto;
+import com.github.andregpereira.resilientshop.userapi.dtos.usuario.UsuarioDto;
+import com.github.andregpereira.resilientshop.userapi.dtos.usuario.UsuarioRegistroDto;
 import com.github.andregpereira.resilientshop.userapi.services.UsuarioService;
 
 import jakarta.validation.Valid;
@@ -40,11 +43,11 @@ public class UsuarioController {
 		return "pong";
 	}
 
-	// Pesquisa por id
-	@GetMapping("/lista")
-	public ResponseEntity<List<UsuarioDto>> consultarPorId() {
-		return ResponseEntity.ok(usuarioService.listar());
-	}
+//	// Pesquisa por id
+//	@GetMapping("/lista")
+//	public ResponseEntity<List<UsuarioDto>> consultarPorId() {
+//		return ResponseEntity.ok(usuarioService.listar());
+//	}
 
 	// Atualizar usuário por id
 	@PutMapping("/{id}")
@@ -66,15 +69,21 @@ public class UsuarioController {
 	}
 
 	// Pesquisa por CPF
-	@GetMapping("/cpf")
-	public ResponseEntity<UsuarioDto> consultarPorCpf(@RequestBody @Valid UsuarioDto usuarioDto) {
-		return ResponseEntity.ok(usuarioService.consultarPorCpf(usuarioDto));
-	}
+//	@GetMapping("/cpf")
+//	public ResponseEntity<Page<UsuarioDto>> consultarPorCpf(@RequestParam String cpf,
+//			@PageableDefault(sort = "nome", direction = Direction.ASC, page = 0, size = 20) Pageable pageable) {
+//		return ResponseEntity.ok(usuarioService.consultarPorCpf(cpf, pageable));
+//	}
 
 	// Pesquisa por nome
-	@GetMapping("/nome")
-	public ResponseEntity<UsuarioDto> consultarPorNome(@RequestBody @Valid UsuarioDto usuarioDto) {
-		return ResponseEntity.ok(usuarioService.consultarPorNome(usuarioDto));
+	@GetMapping
+	public ResponseEntity<Page<UsuarioDto>> consultarPorNomeOuCpf(@RequestParam(required = false) String nome,
+			@RequestParam(required = false) String sobrenome, @RequestParam(required = false) String cpf,
+			@PageableDefault(sort = "nome", direction = Direction.ASC, page = 0, size = 20) Pageable pageable) {
+		if (cpf != null) {
+			return ResponseEntity.ok(usuarioService.consultarPorCpf(cpf, pageable));
+		}
+		return ResponseEntity.ok(usuarioService.consultarPorNome(nome, sobrenome, pageable));
 	}
 
 }
