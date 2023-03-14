@@ -1,0 +1,20 @@
+package com.github.andregpereira.resilientshop.userapi.dtos.endereco;
+
+import org.springframework.data.domain.Page;
+
+import com.github.andregpereira.resilientshop.userapi.dtos.pais.PaisDto;
+import com.github.andregpereira.resilientshop.userapi.entities.Endereco;
+
+public record EnderecoDto(Long id, String cep, String estado, String cidade, String rua, Integer numero,
+		String complemento, PaisDto pais) {
+
+	public EnderecoDto(Endereco endereco) {
+		this(endereco.getId(), endereco.getCep(), endereco.getEstado(), endereco.getCidade(), endereco.getRua(),
+				endereco.getNumero(), endereco.getComplemento(), new PaisDto(endereco.getPais()));
+	}
+
+	public static Page<EnderecoDto> criarLista(Page<Endereco> enderecosPage) {
+		return enderecosPage.map(EnderecoDto::new);
+	}
+
+}
