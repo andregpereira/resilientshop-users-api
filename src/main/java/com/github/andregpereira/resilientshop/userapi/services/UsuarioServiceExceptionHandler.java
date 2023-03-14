@@ -40,9 +40,9 @@ public class UsuarioServiceExceptionHandler {
 
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	private ResponseEntity<String> erro409(DataIntegrityViolationException e) {
-		if (e.getMessage().contains("telefone_uc")) {
+		if (e.getMessage().contains("uc_telefone")) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("O telefone já está em uso");
-		} else if (e.getMessage().contains("cpf_uc")) {
+		} else if (e.getMessage().contains("uc_cpf")) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("Já existe um usuário com o CPF informado");
 		}
 		return ResponseEntity.status(HttpStatus.CONFLICT).body("Houve um erro");
