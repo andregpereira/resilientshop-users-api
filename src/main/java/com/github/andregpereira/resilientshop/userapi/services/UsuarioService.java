@@ -11,8 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.andregpereira.resilientshop.userapi.dtos.usuario.UsuarioDto;
-import com.github.andregpereira.resilientshop.userapi.dtos.usuario.UsuarioRegistroDto;
+import com.github.andregpereira.resilientshop.userapi.dtos.UsuarioDto;
+import com.github.andregpereira.resilientshop.userapi.dtos.UsuarioRegistroDto;
 import com.github.andregpereira.resilientshop.userapi.entities.Usuario;
 import com.github.andregpereira.resilientshop.userapi.repositories.UsuarioRepository;
 
