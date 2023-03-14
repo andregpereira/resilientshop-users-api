@@ -1,7 +1,5 @@
 package com.github.andregpereira.resilientshop.userapi.entities;
 
-import java.time.LocalDate;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,7 +24,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@SequenceGenerator(name = "endereco", sequenceName = "enderecos_sq", allocationSize = 1)
+@SequenceGenerator(name = "endereco", sequenceName = "sq_enderecos", allocationSize = 1)
 @Table(name = "enderecos")
 public class Endereco {
 
@@ -48,7 +46,7 @@ public class Endereco {
 	private String complemento;
 
 	@Column(name = "cidade", length = 45, nullable = false)
-	private LocalDate cidade;
+	private String cidade;
 
 	@Column(name = "estado", length = 45, nullable = false)
 	private String estado;
