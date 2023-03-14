@@ -1,8 +1,8 @@
 package com.github.andregpereira.resilientshop.userapi.dtos;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.springframework.data.domain.Page;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
@@ -17,10 +17,8 @@ public record UsuarioDto(Long id, String nome, String sobrenome, String cpf, Str
 				usuario.getDataCriacao(), usuario.getDataModificacao());
 	}
 
-	public static final List<UsuarioDto> criarLista(List<Usuario> usuarios) {
-		List<UsuarioDto> usuariosDto = new ArrayList<>();
-		usuarios.forEach((usuario) -> usuariosDto.add(new UsuarioDto(usuario)));
-		return usuariosDto;
+	public static Page<UsuarioDto> criarLista(Page<Usuario> usuariosPage) {
+		return usuariosPage.map(UsuarioDto::new);
 	}
 
 }
