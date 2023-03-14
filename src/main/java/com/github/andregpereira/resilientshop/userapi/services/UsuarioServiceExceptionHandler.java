@@ -30,7 +30,7 @@ public class UsuarioServiceExceptionHandler {
 
 	@ExceptionHandler(EntityNotFoundException.class)
 	public ResponseEntity<String> erro404(EntityNotFoundException e) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado na nossa base de dados");
 	}
 
 	@ExceptionHandler(EmptyResultDataAccessException.class)
@@ -40,10 +40,10 @@ public class UsuarioServiceExceptionHandler {
 
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	private ResponseEntity<String> erro409(DataIntegrityViolationException e) {
-		if (e.getMessage().contains("uc_telefone")) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body("O telefone já está em uso");
+		if (e.getMessage().contains("alterar_cpf")) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("Você não pode alterar o campo CPF");
 		} else if (e.getMessage().contains("uc_cpf")) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body("Já existe um usuário com o CPF informado");
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF já castrado no nosso banco de dados");
 		}
 		return ResponseEntity.status(HttpStatus.CONFLICT).body("Houve um erro");
 	}
