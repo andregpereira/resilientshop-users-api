@@ -1,4 +1,4 @@
-package com.github.andregpereira.resilientshop.userapi.dtos;
+package com.github.andregpereira.resilientshop.userapi.dtos.usuario;
 
 import java.time.LocalDate;
 
