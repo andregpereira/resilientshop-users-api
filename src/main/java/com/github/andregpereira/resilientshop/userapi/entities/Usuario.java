@@ -33,22 +33,22 @@ public class Usuario {
 	@Column(name = "id_usuario")
 	private Long id;
 
-	@Column(name = "nome", length = 45, nullable = false)
+	@Column(length = 45, nullable = false)
 	private String nome;
 
-	@Column(name = "sobrenome", length = 250, nullable = false)
+	@Column(length = 250, nullable = false)
 	private String sobrenome;
 
-	@Column(name = "cpf", length = 14, nullable = false)
+	@Column(length = 14, nullable = false)
 	private String cpf;
 
-	@Column(name = "telefone", length = 20)
+	@Column(length = 20)
 	private String telefone;
 
-	@Column(name = "data_criacao", nullable = false, updatable = false)
+	@Column(nullable = false, updatable = false)
 	private LocalDate dataCriacao;
 
-	@Column(name = "data_modificacao")
+	@Column
 	private LocalDate dataModificacao;
 
 	@OneToOne(cascade = CascadeType.ALL)
