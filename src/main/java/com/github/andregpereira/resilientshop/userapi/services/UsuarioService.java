@@ -1,5 +1,6 @@
 package com.github.andregpereira.resilientshop.userapi.services;
 
+import java.security.InvalidParameterException;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -46,6 +47,7 @@ public class UsuarioService {
 		}
 		Usuario usuarioRegistrado = salvar(usuarioRegistroDto, null);
 		usuarioRegistrado.setDataCriacao(LocalDate.now());
+		usuarioRegistrado.setDataModificacao(LocalDate.now());
 		return usuarioMapper.toUsuarioDetalhesDto(usuarioRepository.save(usuarioRegistrado));
 	}
 
@@ -70,7 +72,7 @@ public class UsuarioService {
 			throw new EntityNotFoundException("usuario_nao_encontrado");
 		}
 		usuarioRepository.deleteById(id);
-		return "Usuário deletado";
+		return "Usuário deletado.";
 	}
 
 	private Usuario salvar(UsuarioRegistroDto usuarioRegistroDto, Usuario usuarioAtualizado) {
@@ -105,25 +107,26 @@ public class UsuarioService {
 		return usuarioOptional.map(UsuarioDto::new).get();
 	}
 
-	public Page<UsuarioDto> consultarPorCpf(String cpf, Pageable pageable) {
-		Page<Usuario> usuariosPage = usuarioRepository.findByCpf(cpf, pageable);
-		if (usuariosPage.isEmpty()) {
-			throw new EmptyResultDataAccessException(1);
+	public UsuarioDto consultarPorCpf(String cpf) {
+		if (cpf == null || cpf.length() < 11 || cpf.length() > 14) {
+			throw new InvalidParameterException("usuario_consulta_cpf_invalido");
 		}
-		return UsuarioDto.criarLista(usuariosPage);
+		Optional<Usuario> usuarioOptional = usuarioRepository.findByCpf(cpf);
+		if (usuarioOptional.isEmpty()) {
+			throw new EntityNotFoundException("usuario_nao_encontrado_cpf");
+		}
+		return usuarioOptional.map(UsuarioDto::new).get();
 	}
 
 	public Page<UsuarioDto> consultarPorNome(String nome, String sobrenome, Pageable pageable) {
-		if (nome != null || sobrenome != null) {
-			nome = nome != null ? nome : "";
-			sobrenome = sobrenome != null ? sobrenome : "";
-			Page<Usuario> usuariosPage = usuarioRepository.findByNome(nome, sobrenome, pageable);
-			if (usuariosPage.isEmpty()) {
-				throw new EmptyResultDataAccessException(1);
-			}
-			return UsuarioDto.criarLista(usuariosPage);
+		sobrenome = sobrenome != null ? sobrenome : "";
+		System.out.println(nome);
+		if (nome == null) {
+			throw new InvalidParameterException("usuario_consulta_nome_invalido");
+		} else if (nome.length() < 2) {
+			throw new InvalidParameterException("usuario_consulta_nome_tamanho_invalido");
 		}
-		Page<Usuario> usuariosPage = usuarioRepository.findAll(pageable);
+		Page<Usuario> usuariosPage = usuarioRepository.findByNome(nome, sobrenome, pageable);
 		if (usuariosPage.isEmpty()) {
 			throw new EmptyResultDataAccessException(1);
 		}
