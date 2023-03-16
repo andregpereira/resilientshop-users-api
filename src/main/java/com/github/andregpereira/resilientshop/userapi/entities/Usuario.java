@@ -15,14 +15,14 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
+@Builder
 @Entity
 @SequenceGenerator(name = "usuario", sequenceName = "sq_usuarios", allocationSize = 1)
 @Table(name = "usuarios", uniqueConstraints = { @UniqueConstraint(name = "uc_cpf", columnNames = "cpf") })
@@ -53,7 +53,6 @@ public class Usuario {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_endereco", foreignKey = @ForeignKey(name = "fk_id_endereco"))
-//	@PrimaryKeyJoinColumn(nome = "id_endereco")
 	private Endereco endereco;
 
 }

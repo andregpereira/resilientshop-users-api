@@ -15,14 +15,14 @@ import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
+@Builder
 @Entity
 @SequenceGenerator(name = "endereco", sequenceName = "sq_enderecos", allocationSize = 1)
 @Table(name = "enderecos")
@@ -42,7 +42,7 @@ public class Endereco {
 	@Column(name = "cep", length = 9, nullable = false)
 	private String cep;
 
-	@Column(name = "complemento", length = 45, nullable = false)
+	@Column(name = "complemento", length = 45)
 	private String complemento;
 
 	@Column(name = "cidade", length = 45, nullable = false)
