@@ -6,6 +6,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,9 +29,19 @@ public class UsuarioServiceExceptionHandler {
 		return ResponseEntity.badRequest().body(erros.map(DadoInvalido::new));
 	}
 
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity<String> erro400(HttpMessageNotReadableException e) {
+		return ResponseEntity.badRequest().body("Houve um erro");
+	}
+
 	@ExceptionHandler(EntityNotFoundException.class)
 	public ResponseEntity<String> erro404(EntityNotFoundException e) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado na nossa base de dados");
+		if (e.getMessage().contains("usuario_nao_encontrado")) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado na nossa base de dados");
+		} else if (e.getMessage().contains("pais_nao_encontrado")) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("País não encontrado na nossa base de dados");
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Dado não encontrado na nossa base de dados");
 	}
 
 	@ExceptionHandler(EmptyResultDataAccessException.class)
@@ -40,6 +51,9 @@ public class UsuarioServiceExceptionHandler {
 
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	private ResponseEntity<String> erro409(DataIntegrityViolationException e) {
+		if (e.getMessage().contains("usuario_existente")) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF já cadastrado no nosso banco de dados");
+		}
 		if (e.getMessage().contains("alterar_cpf")) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("Você não pode alterar o campo CPF");
 		} else if (e.getMessage().contains("uc_cpf")) {
