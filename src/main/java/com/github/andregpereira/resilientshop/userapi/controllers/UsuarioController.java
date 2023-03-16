@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.andregpereira.resilientshop.userapi.dtos.usuario.UsuarioDetalhesDto;
 import com.github.andregpereira.resilientshop.userapi.dtos.usuario.UsuarioDto;
 import com.github.andregpereira.resilientshop.userapi.dtos.usuario.UsuarioRegistroDto;
 import com.github.andregpereira.resilientshop.userapi.services.UsuarioService;
@@ -32,9 +33,9 @@ public class UsuarioController {
 
 	// Registrar usuário
 	@PostMapping
-	public ResponseEntity<UsuarioDto> registrar(@RequestBody @Valid UsuarioRegistroDto usuarioRegistroDto) {
-		UsuarioDto usuarioDto = usuarioService.registrar(usuarioRegistroDto);
-		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDto);
+	public ResponseEntity<UsuarioDetalhesDto> registrar(@RequestBody @Valid UsuarioRegistroDto usuarioRegistroDto) {
+		UsuarioDetalhesDto usuarioDetalhesDto = usuarioService.registrar(usuarioRegistroDto);
+		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDetalhesDto);
 	}
 
 	// Teste
@@ -51,7 +52,7 @@ public class UsuarioController {
 
 	// Atualizar usuário por id
 	@PutMapping("/{id}")
-	public ResponseEntity<UsuarioDto> atualizarPorId(@PathVariable Long id,
+	public ResponseEntity<UsuarioDetalhesDto> atualizarPorId(@PathVariable Long id,
 			@RequestBody @Valid UsuarioRegistroDto usuarioRegistroDto) {
 		return ResponseEntity.ok(usuarioService.atualizar(id, usuarioRegistroDto));
 	}
