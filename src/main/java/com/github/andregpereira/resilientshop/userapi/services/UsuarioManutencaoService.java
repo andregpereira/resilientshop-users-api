@@ -43,6 +43,7 @@ public class UsuarioManutencaoService {
 		Usuario usuarioRegistrado = salvar(usuarioRegistroDto, null);
 		usuarioRegistrado.setDataCriacao(LocalDate.now());
 		usuarioRegistrado.setDataModificacao(LocalDate.now());
+		usuarioRegistrado.setAtivo(true);
 		return usuarioMapper.toUsuarioDetalhesDto(usuarioRepository.save(usuarioRegistrado));
 	}
 
@@ -60,23 +61,25 @@ public class UsuarioManutencaoService {
 		return usuarioMapper.toUsuarioDetalhesDto(usuarioRepository.save(usuarioAtualizado));
 	}
 
-	@Transactional
-	public String deletar(Long id) {
+	public String desativar(Long id) {
 		Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
-		if (!usuarioOptional.isPresent()) {
+		usuarioOptional.ifPresentOrElse(u -> {
+			u.setAtivo(false);
+			enderecoRepository.deleteById(u.getEndereco().getId());
+			usuarioRepository.save(u);
+		}, () -> {
 			throw new EntityNotFoundException("usuario_nao_encontrado");
-		}
-		usuarioRepository.deleteById(id);
-		return "Usuário deletado.";
+		});
+		return "Usuário desativado.";
 	}
 
-	private Usuario salvar(UsuarioRegistroDto usuarioRegistroDto, Usuario usuarioAtualizado) {
+	private Usuario salvar(UsuarioRegistroDto usuarioRegistroDto, Usuario usuarioAntigo) {
 		Usuario usuario = usuarioMapper.toUsuario(usuarioRegistroDto);
 		Endereco endereco = usuario.getEndereco();
 		Pais pais = endereco.getPais();
-		if (usuarioAtualizado != null) {
-			usuario.setDataCriacao(usuarioAtualizado.getDataCriacao());
-			endereco.setId(usuarioAtualizado.getEndereco().getId());
+		if (usuarioAntigo != null) {
+			usuario.setDataCriacao(usuarioAntigo.getDataCriacao());
+			endereco.setId(usuarioAntigo.getEndereco().getId());
 		}
 		Optional<Pais> paisNomeOptional = paisRepository.findByNome(pais.getNome());
 		Optional<Pais> paisCodigoOptional = paisRepository.findByCodigo(pais.getCodigo());

@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @SequenceGenerator(name = "usuario", sequenceName = "sq_usuario", allocationSize = 1)
-@Table(name = "usuarios", uniqueConstraints = { @UniqueConstraint(name = "uc_cpf", columnNames = "cpf") })
+@Table(name = "tb_usuarios", uniqueConstraints = { @UniqueConstraint(name = "uc_cpf", columnNames = "cpf") })
 public class Usuario {
 
 	@Id
@@ -50,6 +50,9 @@ public class Usuario {
 
 	@Column
 	private LocalDate dataModificacao;
+
+	@Column(nullable = false)
+	private boolean ativo;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_endereco", foreignKey = @ForeignKey(name = "fk_id_endereco"))
