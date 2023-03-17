@@ -44,12 +44,6 @@ public class UsuarioController {
 		return "pong";
 	}
 
-//	// Pesquisa por id
-//	@GetMapping("/lista")
-//	public ResponseEntity<List<UsuarioDto>> consultarPorId() {
-//		return ResponseEntity.ok(usuarioService.listar());
-//	}
-
 	// Atualizar usuário por id
 	@PutMapping("/{id}")
 	public ResponseEntity<UsuarioDetalhesDto> atualizarPorId(@PathVariable Long id,
@@ -70,20 +64,16 @@ public class UsuarioController {
 	}
 
 	// Pesquisa por CPF
-//	@GetMapping("/cpf")
-//	public ResponseEntity<Page<UsuarioDto>> consultarPorCpf(@RequestParam String cpf,
-//			@PageableDefault(sort = "nome", direction = Direction.ASC, page = 0, size = 20) Pageable pageable) {
-//		return ResponseEntity.ok(usuarioService.consultarPorCpf(cpf, pageable));
-//	}
+	@GetMapping("/cpf")
+	public ResponseEntity<UsuarioDto> consultarPorCpf(@RequestParam(required = true) String cpf) {
+		return ResponseEntity.ok(usuarioService.consultarPorCpf(cpf));
+	}
 
-	// Pesquisa por nome ou CPF
-	@GetMapping
-	public ResponseEntity<Page<UsuarioDto>> consultarPorNomeOuCpf(@RequestParam(required = false) String nome,
-			@RequestParam(required = false) String sobrenome, @RequestParam(required = false) String cpf,
+	// Pesquisa por nome
+	@GetMapping("/nome")
+	public ResponseEntity<Page<UsuarioDto>> consultarPorNomeOuCpf(@RequestParam(required = true) String nome,
+			@RequestParam(required = false) String sobrenome,
 			@PageableDefault(sort = "nome", direction = Direction.ASC, page = 0, size = 10) Pageable pageable) {
-		if (cpf != null) {
-			return ResponseEntity.ok(usuarioService.consultarPorCpf(cpf, pageable));
-		}
 		return ResponseEntity.ok(usuarioService.consultarPorNome(nome, sobrenome, pageable));
 	}
 
