@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.andregpereira.resilientshop.userapi.dtos.usuario.UsuarioDto;
 import com.github.andregpereira.resilientshop.userapi.entities.Usuario;
+import com.github.andregpereira.resilientshop.userapi.mappers.UsuarioMapper;
 import com.github.andregpereira.resilientshop.userapi.repositories.UsuarioRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -21,12 +22,15 @@ public class UsuarioConsultaService {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 
+	@Autowired
+	private UsuarioMapper usuarioMapper;
+
 	public UsuarioDto consultarPorId(Long id) {
 		Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
 		if (!usuarioOptional.isPresent()) {
 			throw new EntityNotFoundException("usuario");
 		}
-		return usuarioOptional.map(UsuarioDto::new).get();
+		return usuarioMapper.toUsuarioDto(usuarioOptional.get());
 	}
 
 	public UsuarioDto consultarPorCpf(String cpf) {
@@ -40,7 +44,7 @@ public class UsuarioConsultaService {
 		if (usuarioOptional.isEmpty()) {
 			throw new EntityNotFoundException("usuario_nao_encontrado_cpf");
 		}
-		return usuarioOptional.map(UsuarioDto::new).get();
+		return usuarioMapper.toUsuarioDto(usuarioOptional.get());
 	}
 
 	public Page<UsuarioDto> consultarPorNome(String nome, String sobrenome, Pageable pageable) {
