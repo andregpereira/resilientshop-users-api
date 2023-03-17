@@ -41,7 +41,8 @@ public class UsuarioServiceExceptionHandler {
 			return ResponseEntity.badRequest()
 					.body("Desculpe, não foi possível realizar a busca por CPF. Digite um CPF e tente novamente.");
 		}
-		return ResponseEntity.badRequest().body("Houve um erro");
+		return ResponseEntity.badRequest().body(
+				"Não foi possível realizar a busca por usuário. Por favor, preencha os campos obrigatórios e tente novamente.");
 	}
 
 	@ExceptionHandler(InvalidParameterException.class)
@@ -49,14 +50,18 @@ public class UsuarioServiceExceptionHandler {
 		if (e.getMessage().contains("usuario_consulta_nome_tamanho_invalido")) {
 			return ResponseEntity.badRequest().body(
 					"Desculpe, não foi possível realizar a busca por nome. O nome informado deve ter, pelo menos, 2 caracteres.");
-		} else if (e.getMessage().contains("usuario_consulta_nome_invalido")) {
+		} else if (e.getMessage().contains("usuario_consulta_nome_em_branco")) {
 			return ResponseEntity.badRequest()
 					.body("Desculpe, não foi possível realizar a busca por nome. Digite um nome e tente novamente.");
-		} else if (e.getMessage().contains("usuario_consulta_cpf_invalido")) {
+		} else if (e.getMessage().contains("usuario_consulta_cpf_formato_invalido")) {
+			return ResponseEntity.badRequest().body(
+					"Desculpe, não foi possível realizar a busca por CPF. O CPF não foi digitado corretamente. Verifique e tente novamente.");
+		} else if (e.getMessage().contains("usuario_consulta_cpf_em_branco")) {
 			return ResponseEntity.badRequest().body(
 					"Desculpe, não foi possível realizar a busca por CPF. O CPF não foi digitado corretamente. Verifique e tente novamente.");
 		}
-		return ResponseEntity.badRequest().body("Houve um erro.");
+		return ResponseEntity.badRequest().body(
+				"Não foi possível realizar a busca por usuário. Por favor, preencha os campos obrigatórios e tente novamente.");
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
@@ -75,7 +80,8 @@ public class UsuarioServiceExceptionHandler {
 		} else if (e.getMessage().contains("pais_nao_encontrado")) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("País não encontrado na nossa base de dados.");
 		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Dado não encontrado na nossa base de dados");
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body("Nenhum usuário foi encontrado. Verifique e tente novamente.");
 	}
 
 	@ExceptionHandler(EmptyResultDataAccessException.class)
@@ -85,14 +91,13 @@ public class UsuarioServiceExceptionHandler {
 	}
 
 	@ExceptionHandler(DataIntegrityViolationException.class)
-	private ResponseEntity<String> erro409(DataIntegrityViolationException e) {
+	private ResponseEntity<String> erro403e409(DataIntegrityViolationException e) {
 		if (e.getMessage().contains("usuario_existente")) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF já cadastrado no nosso banco de dados.");
-		}
-		if (e.getMessage().contains("alterar_cpf")) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body("Você não pode alterar o campo CPF.");
 		} else if (e.getMessage().contains("uc_cpf")) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF já cadastrado no nosso banco de dados.");
+		} else if (e.getMessage().contains("alterar_cpf")) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Você não pode alterar o campo CPF.");
 		}
 		return ResponseEntity.status(HttpStatus.CONFLICT).body("Houve um erro");
 	}

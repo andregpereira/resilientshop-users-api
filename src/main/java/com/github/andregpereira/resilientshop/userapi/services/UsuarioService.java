@@ -108,7 +108,10 @@ public class UsuarioService {
 	}
 
 	public UsuarioDto consultarPorCpf(String cpf) {
-		if (cpf == null || cpf.length() < 11 || cpf.length() > 14) {
+		if (cpf == null) {
+			throw new InvalidParameterException("usuario_consulta_cpf_em_branco");
+		}
+		if (cpf.length() < 11 || cpf.length() > 14) {
 			throw new InvalidParameterException("usuario_consulta_cpf_invalido");
 		}
 		Optional<Usuario> usuarioOptional = usuarioRepository.findByCpf(cpf);
@@ -120,9 +123,8 @@ public class UsuarioService {
 
 	public Page<UsuarioDto> consultarPorNome(String nome, String sobrenome, Pageable pageable) {
 		sobrenome = sobrenome != null ? sobrenome : "";
-		System.out.println(nome);
 		if (nome == null) {
-			throw new InvalidParameterException("usuario_consulta_nome_invalido");
+			throw new InvalidParameterException("usuario_consulta_nome_em_branco");
 		} else if (nome.length() < 2) {
 			throw new InvalidParameterException("usuario_consulta_nome_tamanho_invalido");
 		}
