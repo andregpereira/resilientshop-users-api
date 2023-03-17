@@ -20,7 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.andregpereira.resilientshop.userapi.dtos.usuario.UsuarioDetalhesDto;
 import com.github.andregpereira.resilientshop.userapi.dtos.usuario.UsuarioDto;
 import com.github.andregpereira.resilientshop.userapi.dtos.usuario.UsuarioRegistroDto;
-import com.github.andregpereira.resilientshop.userapi.services.UsuarioService;
+import com.github.andregpereira.resilientshop.userapi.services.UsuarioConsultaService;
+import com.github.andregpereira.resilientshop.userapi.services.UsuarioManutencaoService;
 
 import jakarta.validation.Valid;
 
@@ -29,52 +30,49 @@ import jakarta.validation.Valid;
 public class UsuarioController {
 
 	@Autowired
-	private UsuarioService usuarioService;
+	private UsuarioManutencaoService usuarioManutencaoService;
+
+	@Autowired
+	private UsuarioConsultaService usuarioConsultaService;
 
 	// Registrar usuário
 	@PostMapping
 	public ResponseEntity<UsuarioDetalhesDto> registrar(@RequestBody @Valid UsuarioRegistroDto usuarioRegistroDto) {
-		UsuarioDetalhesDto usuarioDetalhesDto = usuarioService.registrar(usuarioRegistroDto);
+		UsuarioDetalhesDto usuarioDetalhesDto = usuarioManutencaoService.registrar(usuarioRegistroDto);
 		return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDetalhesDto);
-	}
-
-	// Teste
-	@GetMapping("/ping")
-	public String teste() {
-		return "pong";
 	}
 
 	// Atualizar usuário por id
 	@PutMapping("/{id}")
-	public ResponseEntity<UsuarioDetalhesDto> atualizarPorId(@PathVariable Long id,
+	public ResponseEntity<UsuarioDetalhesDto> atualizar(@PathVariable Long id,
 			@RequestBody @Valid UsuarioRegistroDto usuarioRegistroDto) {
-		return ResponseEntity.ok(usuarioService.atualizar(id, usuarioRegistroDto));
+		return ResponseEntity.ok(usuarioManutencaoService.atualizar(id, usuarioRegistroDto));
 	}
 
 	// Deletar por id
 	@DeleteMapping("/{id}")
 	private ResponseEntity<String> deletar(@PathVariable Long id) {
-		return ResponseEntity.ok(usuarioService.deletar(id));
+		return ResponseEntity.ok(usuarioManutencaoService.deletar(id));
 	}
 
-	// Pesquisa por id
+	// Pesquisar por id
 	@GetMapping("/{id}")
 	public ResponseEntity<UsuarioDto> consultarPorId(@PathVariable Long id) {
-		return ResponseEntity.ok(usuarioService.consultarPorId(id));
+		return ResponseEntity.ok(usuarioConsultaService.consultarPorId(id));
 	}
 
-	// Pesquisa por CPF
+	// Pesquisar por CPF
 	@GetMapping("/cpf")
 	public ResponseEntity<UsuarioDto> consultarPorCpf(@RequestParam(required = true) String cpf) {
-		return ResponseEntity.ok(usuarioService.consultarPorCpf(cpf));
+		return ResponseEntity.ok(usuarioConsultaService.consultarPorCpf(cpf));
 	}
 
-	// Pesquisa por nome
+	// Pesquisar por nome
 	@GetMapping("/nome")
-	public ResponseEntity<Page<UsuarioDto>> consultarPorNomeOuCpf(@RequestParam(required = true) String nome,
+	public ResponseEntity<Page<UsuarioDto>> consultarPorNome(@RequestParam(required = true) String nome,
 			@RequestParam(required = false) String sobrenome,
 			@PageableDefault(sort = "nome", direction = Direction.ASC, page = 0, size = 10) Pageable pageable) {
-		return ResponseEntity.ok(usuarioService.consultarPorNome(nome, sobrenome, pageable));
+		return ResponseEntity.ok(usuarioConsultaService.consultarPorNome(nome, sobrenome, pageable));
 	}
 
 }
