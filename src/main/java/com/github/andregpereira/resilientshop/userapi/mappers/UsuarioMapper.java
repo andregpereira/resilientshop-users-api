@@ -15,6 +15,8 @@ public interface UsuarioMapper {
 
 	Usuario toUsuario(UsuarioRegistroDto usuarioRegistroDto);
 
+	UsuarioDto toUsuarioDto(Usuario usuario);
+
 	UsuarioDetalhesDto toUsuarioDetalhesDto(Usuario usuario);
 
 }
