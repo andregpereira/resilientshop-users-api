@@ -29,7 +29,7 @@ public class Pais {
 	@Column(name = "nome", length = 45, nullable = false)
 	private String nome;
 
-	@Column(name = "codigo", length = 4, nullable = false)
+	@Column(name = "codigo", length = 45, nullable = false)
 	private String codigo;
 
 }
