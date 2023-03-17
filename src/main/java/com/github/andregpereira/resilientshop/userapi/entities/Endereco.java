@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @Entity
-@SequenceGenerator(name = "endereco", sequenceName = "sq_enderecos", allocationSize = 1)
+@SequenceGenerator(name = "endereco", sequenceName = "sq_endereco", allocationSize = 1)
 @Table(name = "enderecos")
 public class Endereco {
 
@@ -30,22 +30,22 @@ public class Endereco {
 	@Column(name = "id_endereco")
 	private Long id;
 
-	@Column(name = "rua", length = 45, nullable = false)
+	@Column(length = 45, nullable = false)
 	private String rua;
 
-	@Column(name = "numero", length = 10, nullable = false)
+	@Column(length = 10, nullable = false)
 	private Integer numero;
 
-	@Column(name = "cep", length = 9, nullable = false)
+	@Column(length = 9, nullable = false)
 	private String cep;
 
-	@Column(name = "complemento", length = 45)
+	@Column(length = 45)
 	private String complemento;
 
-	@Column(name = "cidade", nullable = false)
+	@Column(nullable = false)
 	private String cidade;
 
-	@Column(name = "estado", nullable = false)
+	@Column(nullable = false)
 	private String estado;
 
 	@ManyToOne(cascade = CascadeType.ALL)

@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @Entity
-@SequenceGenerator(name = "usuario", sequenceName = "sq_usuarios", allocationSize = 1)
+@SequenceGenerator(name = "usuario", sequenceName = "sq_usuario", allocationSize = 1)
 @Table(name = "usuarios", uniqueConstraints = { @UniqueConstraint(name = "uc_cpf", columnNames = "cpf") })
 public class Usuario {
 
@@ -33,10 +33,10 @@ public class Usuario {
 	@Column(name = "id_usuario")
 	private Long id;
 
-	@Column(length = 45, nullable = false)
+	@Column(length = 255, nullable = false)
 	private String nome;
 
-	@Column(length = 250, nullable = false)
+	@Column(length = 255, nullable = false)
 	private String sobrenome;
 
 	@Column(length = 14, nullable = false)

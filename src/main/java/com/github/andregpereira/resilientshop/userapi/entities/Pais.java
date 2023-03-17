@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @Entity
-@SequenceGenerator(name = "pais", sequenceName = "sq_paises", allocationSize = 1)
+@SequenceGenerator(name = "pais", sequenceName = "sq_pais", allocationSize = 1)
 @Table(name = "paises")
 public class Pais {
 
@@ -29,7 +29,7 @@ public class Pais {
 	@Column(name = "nome", length = 45, nullable = false)
 	private String nome;
 
-	@Column(name = "codigo", length = 45, nullable = false)
+	@Column(name = "codigo", length = 4, nullable = false)
 	private String codigo;
 
 }
