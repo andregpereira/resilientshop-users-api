@@ -17,12 +17,6 @@ public record UsuarioDto(Long id, String nome, String sobrenome, String cpf, Str
 				usuario.getDataCriacao(), usuario.getDataModificacao());
 	}
 
-//	public static List<UsuarioDto> criarLista(List<Usuario> usuarios) {
-//		List<UsuarioDto> usuariosDto = new ArrayList<>();
-//		usuarios.forEach((usuario) -> usuariosDto.add(new UsuarioDto(usuario)));
-//		return usuariosDto;
-//	}
-
 	public static Page<UsuarioDto> criarLista(Page<Usuario> usuariosPage) {
 		return usuariosPage.map(UsuarioDto::new);
 	}
