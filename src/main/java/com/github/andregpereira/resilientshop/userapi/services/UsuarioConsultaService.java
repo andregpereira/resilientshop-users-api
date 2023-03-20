@@ -48,17 +48,18 @@ public class UsuarioConsultaService {
 	}
 
 	public Page<UsuarioDto> consultarPorNome(String nome, String sobrenome, Pageable pageable) {
+		nome = nome != null ? nome : "";
 		sobrenome = sobrenome != null ? sobrenome : "";
-		if (nome.isBlank()) {
-			throw new InvalidParameterException("usuario_consulta_nome_em_branco");
-		} else if (nome.length() < 2) {
-			throw new InvalidParameterException("usuario_consulta_nome_tamanho_invalido");
-		}
-		Page<Usuario> usuariosPage = usuarioRepository.findByNome(nome, sobrenome, pageable);
-		if (usuariosPage.isEmpty()) {
+		Page<Usuario> usuarios = usuarioRepository.findByNome(nome, sobrenome, pageable);
+		if (usuarios.isEmpty()) {
+//			throw new InvalidParameterException("usuario_consulta_nome_em_branco");
 			throw new EmptyResultDataAccessException(1);
+//			return UsuarioDto.criarLista(usuarioRepository.findByNome(nome, sobrenome, pageable));
 		}
-		return UsuarioDto.criarLista(usuariosPage);
+		return UsuarioDto.criarLista(usuarios);
+//		if (usuarios.isEmpty()) {
+//			throw new EmptyResultDataAccessException(1);
+//		}
 	}
 
 }

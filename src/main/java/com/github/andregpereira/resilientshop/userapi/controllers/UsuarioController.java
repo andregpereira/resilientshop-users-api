@@ -76,7 +76,7 @@ public class UsuarioController {
 
 	// Pesquisar por nome
 	@GetMapping("/nome")
-	public ResponseEntity<Page<UsuarioDto>> consultarPorNome(@RequestParam(required = true) String nome,
+	public ResponseEntity<Page<UsuarioDto>> consultarPorNome(@RequestParam(required = false) String nome,
 			@RequestParam(required = false) String sobrenome,
 			@PageableDefault(sort = "nome", direction = Direction.DESC, page = 0, size = 10) Pageable pageable) {
 		return ResponseEntity.ok(usuarioConsultaService.consultarPorNome(nome, sobrenome, pageable));
