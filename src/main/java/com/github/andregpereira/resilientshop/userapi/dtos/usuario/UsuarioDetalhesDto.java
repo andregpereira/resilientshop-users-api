@@ -11,5 +11,6 @@ import lombok.Builder;
 @Builder
 public record UsuarioDetalhesDto(Long id, String nome, String sobrenome, String cpf, String telefone,
 		@JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy") LocalDate dataCriacao,
-		@JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy") LocalDate dataModificacao, EnderecoDto endereco) {
+		@JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy") LocalDate dataModificacao, boolean ativo,
+		EnderecoDto endereco) {
 }

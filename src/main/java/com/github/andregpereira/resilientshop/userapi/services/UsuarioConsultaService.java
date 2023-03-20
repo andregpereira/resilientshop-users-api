@@ -28,7 +28,7 @@ public class UsuarioConsultaService {
 	public UsuarioDto consultarPorId(Long id) {
 		Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
 		if (!usuarioOptional.isPresent()) {
-			throw new EntityNotFoundException("usuario");
+			throw new EntityNotFoundException();
 		}
 		return usuarioMapper.toUsuarioDto(usuarioOptional.get());
 	}
@@ -36,8 +36,7 @@ public class UsuarioConsultaService {
 	public UsuarioDto consultarPorCpf(String cpf) {
 		if (cpf.isBlank()) {
 			throw new InvalidParameterException("usuario_consulta_cpf_em_branco");
-		}
-		if (cpf.length() < 11 || cpf.length() > 14) {
+		} else if (cpf.length() < 11 || cpf.length() > 14) {
 			throw new InvalidParameterException("usuario_consulta_cpf_invalido");
 		}
 		Optional<Usuario> usuarioOptional = usuarioRepository.findByCpf(cpf);

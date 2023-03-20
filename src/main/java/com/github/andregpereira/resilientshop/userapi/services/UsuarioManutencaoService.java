@@ -51,7 +51,9 @@ public class UsuarioManutencaoService {
 	public UsuarioDetalhesDto atualizar(Long id, UsuarioRegistroDto usuarioRegistroDto) {
 		Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
 		if (!usuarioOptional.isPresent()) {
-			throw new EntityNotFoundException("usuario_nao_encontrado");
+			throw new EntityNotFoundException();
+		} else if (!usuarioOptional.get().isAtivo()) {
+			throw new DataIntegrityViolationException("usuario_inativo");
 		} else if (!usuarioRegistroDto.cpf().equals(usuarioOptional.get().getCpf())) {
 			throw new DataIntegrityViolationException("alterar_cpf");
 		}
@@ -68,7 +70,7 @@ public class UsuarioManutencaoService {
 			enderecoRepository.deleteById(u.getEndereco().getId());
 			usuarioRepository.save(u);
 		}, () -> {
-			throw new EntityNotFoundException("usuario_nao_encontrado");
+			throw new EntityNotFoundException();
 		});
 		return "Usuário desativado.";
 	}
