@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.github.andregpereira.resilientshop.userapi.dtos.usuario.UsuarioDetalhesDto;
 import com.github.andregpereira.resilientshop.userapi.dtos.usuario.UsuarioDto;
 import com.github.andregpereira.resilientshop.userapi.entities.Usuario;
 import com.github.andregpereira.resilientshop.userapi.mappers.UsuarioMapper;
@@ -25,25 +26,25 @@ public class UsuarioConsultaService {
 	@Autowired
 	private UsuarioMapper usuarioMapper;
 
-	public UsuarioDto consultarPorId(Long id) {
+	public UsuarioDetalhesDto consultarPorId(Long id) {
 		Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
-		if (!usuarioOptional.isPresent()) {
-			throw new EntityNotFoundException();
+		if (!usuarioOptional.isPresent() || !usuarioOptional.get().isAtivo()) {
+			throw new EntityNotFoundException("usuario_nao_encontrado_id");
 		}
-		return usuarioMapper.toUsuarioDto(usuarioOptional.get());
+		return usuarioMapper.toUsuarioDetalhesDto(usuarioOptional.get());
 	}
 
-	public UsuarioDto consultarPorCpf(String cpf) {
+	public UsuarioDetalhesDto consultarPorCpf(String cpf) {
 		if (cpf.isBlank()) {
 			throw new InvalidParameterException("usuario_consulta_cpf_em_branco");
 		} else if (cpf.length() < 11 || cpf.length() > 14) {
 			throw new InvalidParameterException("usuario_consulta_cpf_invalido");
 		}
 		Optional<Usuario> usuarioOptional = usuarioRepository.findByCpf(cpf);
-		if (usuarioOptional.isEmpty()) {
+		if (usuarioOptional.isEmpty() || !usuarioOptional.get().isAtivo()) {
 			throw new EntityNotFoundException("usuario_nao_encontrado_cpf");
 		}
-		return usuarioMapper.toUsuarioDto(usuarioOptional.get());
+		return usuarioMapper.toUsuarioDetalhesDto(usuarioOptional.get());
 	}
 
 	public Page<UsuarioDto> consultarPorNome(String nome, String sobrenome, Pageable pageable) {

@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -49,21 +50,27 @@ public class UsuarioController {
 		return ResponseEntity.ok(usuarioManutencaoService.atualizar(id, usuarioRegistroDto));
 	}
 
-	// Deletar por id
+	// Desativar por id
 	@DeleteMapping("/{id}")
-	private ResponseEntity<String> deletar(@PathVariable Long id) {
-		return ResponseEntity.ok(usuarioManutencaoService.deletar(id));
+	private ResponseEntity<String> desativar(@PathVariable Long id) {
+		return ResponseEntity.ok(usuarioManutencaoService.desativar(id));
+	}
+
+	// Ativar por id
+	@PatchMapping("/{id}")
+	private ResponseEntity<String> ativar(@PathVariable Long id) {
+		return ResponseEntity.ok(usuarioManutencaoService.ativar(id));
 	}
 
 	// Pesquisar por id
 	@GetMapping("/{id}")
-	public ResponseEntity<UsuarioDto> consultarPorId(@PathVariable Long id) {
+	public ResponseEntity<UsuarioDetalhesDto> consultarPorId(@PathVariable Long id) {
 		return ResponseEntity.ok(usuarioConsultaService.consultarPorId(id));
 	}
 
 	// Pesquisar por CPF
 	@GetMapping("/cpf")
-	public ResponseEntity<UsuarioDto> consultarPorCpf(@RequestParam(required = true) String cpf) {
+	public ResponseEntity<UsuarioDetalhesDto> consultarPorCpf(@RequestParam(required = true) String cpf) {
 		return ResponseEntity.ok(usuarioConsultaService.consultarPorCpf(cpf));
 	}
 
@@ -71,7 +78,7 @@ public class UsuarioController {
 	@GetMapping("/nome")
 	public ResponseEntity<Page<UsuarioDto>> consultarPorNome(@RequestParam(required = true) String nome,
 			@RequestParam(required = false) String sobrenome,
-			@PageableDefault(sort = "nome", direction = Direction.ASC, page = 0, size = 10) Pageable pageable) {
+			@PageableDefault(sort = "nome", direction = Direction.DESC, page = 0, size = 10) Pageable pageable) {
 		return ResponseEntity.ok(usuarioConsultaService.consultarPorNome(nome, sobrenome, pageable));
 	}
 

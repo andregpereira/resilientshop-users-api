@@ -70,7 +70,10 @@ public class UsuarioServiceExceptionHandler {
 
 	@ExceptionHandler(EntityNotFoundException.class)
 	public ResponseEntity<String> erro404(EntityNotFoundException e) {
-		if (e.getMessage().contains("usuario_nao_encontrado_nome")) {
+		if (e.getMessage().contains("usuario_nao_encontrado_id")) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body("Não foi possível encontrar um usuário com este ID. Verifique e tente novamente.");
+		} else if (e.getMessage().contains("usuario_nao_encontrado_nome")) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body("Não foi possível encontrar um usuário com este nome. Verifique e tente novamente.");
 		} else if (e.getMessage().contains("usuario_nao_encontrado_cpf")) {
@@ -97,8 +100,12 @@ public class UsuarioServiceExceptionHandler {
 		} else if (e.getMessage().contains("alterar_cpf")) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN)
 					.body("Não foi possível atualizar as suas informações. Não é permitido alterar o CPF.");
-		} else if (e.getMessage().contains("usuario_inativo")) {
+		} else if (e.getMessage().contains("alterar_usuario_inativo")) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Você não pode alterar um usuário inativo.");
+		} else if (e.getMessage().contains("usuario_ja_inativo")) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Este usuário já está com a conta desativada.");
+		} else if (e.getMessage().contains("usuario_ja_ativo")) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Este usuário já está com a conta ativada.");
 		}
 		return ResponseEntity.status(HttpStatus.CONFLICT).body("Houve um erro.");
 	}
