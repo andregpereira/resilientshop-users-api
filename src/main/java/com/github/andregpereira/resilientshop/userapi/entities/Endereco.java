@@ -1,6 +1,5 @@
 package com.github.andregpereira.resilientshop.userapi.entities;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
@@ -16,13 +15,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
+@Table(name = "tb_enderecos")
 @SequenceGenerator(name = "endereco", sequenceName = "sq_endereco", allocationSize = 1)
-@Table(name = "enderecos")
 public class Endereco {
 
 	@Id
@@ -30,25 +29,28 @@ public class Endereco {
 	@Column(name = "id_endereco")
 	private Long id;
 
-	@Column(length = 45, nullable = false)
-	private String rua;
-
-	@Column(length = 10, nullable = false)
-	private Integer numero;
-
 	@Column(length = 9, nullable = false)
 	private String cep;
-
-	@Column(length = 45)
-	private String complemento;
-
-	@Column(nullable = false)
-	private String cidade;
 
 	@Column(nullable = false)
 	private String estado;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@Column(nullable = false)
+	private String cidade;
+
+	@Column(length = 45, nullable = false)
+	private String bairro;
+
+	@Column(length = 45, nullable = false)
+	private String rua;
+
+	@Column(length = 10, nullable = false)
+	private String numero;
+
+	@Column(length = 45)
+	private String complemento;
+
+	@ManyToOne
 	@JoinColumn(name = "id_pais", foreignKey = @ForeignKey(name = "fk_id_pais"), nullable = false)
 	private Pais pais;
 
