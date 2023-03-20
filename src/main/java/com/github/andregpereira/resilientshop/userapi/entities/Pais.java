@@ -12,13 +12,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
+@Table(name = "tb_paises")
 @SequenceGenerator(name = "pais", sequenceName = "sq_pais", allocationSize = 1)
-@Table(name = "paises")
 public class Pais {
 
 	@Id
