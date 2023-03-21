@@ -15,5 +15,5 @@ public record EnderecoRegistroDto(
 		@NotBlank(message = "Insira a rua.") @Size(message = "A rua deve ter no máximo 45 caracteres.", max = 45) String rua,
 		@NotNull(message = "Insira o número.") @Size(message = "O número deve ter no máximo 10 carecteres.", max = 10) String numero,
 		@Size(message = "O complemento deve ter no máximo 45 caracteres.", max = 45) String complemento,
-		@NotNull(message = "Insira o país.") @NotNull(message = "Insira o país.") @Valid PaisRegistroDto pais) {
+		@NotNull(message = "Insira o país.") @Valid PaisRegistroDto pais) {
 }

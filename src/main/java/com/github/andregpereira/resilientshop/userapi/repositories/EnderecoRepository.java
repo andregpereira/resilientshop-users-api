@@ -7,5 +7,4 @@ import com.github.andregpereira.resilientshop.userapi.entities.Endereco;
 
 @Repository
 public interface EnderecoRepository extends JpaRepository<Endereco, Long> {
-
 }

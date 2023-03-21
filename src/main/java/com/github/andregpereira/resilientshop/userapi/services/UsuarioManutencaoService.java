@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.github.andregpereira.resilientshop.userapi.dtos.usuario.UsuarioAtualizacaoDto;
 import com.github.andregpereira.resilientshop.userapi.dtos.usuario.UsuarioDetalhesDto;
 import com.github.andregpereira.resilientshop.userapi.dtos.usuario.UsuarioRegistroDto;
 import com.github.andregpereira.resilientshop.userapi.entities.Endereco;
@@ -18,9 +19,11 @@ import com.github.andregpereira.resilientshop.userapi.repositories.EnderecoRepos
 import com.github.andregpereira.resilientshop.userapi.repositories.PaisRepository;
 import com.github.andregpereira.resilientshop.userapi.repositories.UsuarioRepository;
 
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
+@Transactional
 public class UsuarioManutencaoService {
 
 	@Autowired
@@ -35,10 +38,9 @@ public class UsuarioManutencaoService {
 	@Autowired
 	private PaisRepository paisRepository;
 
-	@Transactional
 	public UsuarioDetalhesDto registrar(UsuarioRegistroDto usuarioRegistroDto) {
-		if (usuarioRepository.findByCpfAndAtivoTrue(usuarioRegistroDto.cpf()).isPresent()) {
-			throw new DataIntegrityViolationException("usuario_existente");
+		if (usuarioRepository.findByCpf(usuarioRegistroDto.cpf()).isPresent()) {
+			throw new EntityExistsException("CPF já cadastrado no nosso banco de dados");
 		}
 		Usuario usuario = usuarioMapper.toUsuario(usuarioRegistroDto);
 		Endereco endereco = usuario.getEndereco();
@@ -46,12 +48,11 @@ public class UsuarioManutencaoService {
 		usuario.setDataCriacao(LocalDate.now());
 		usuario.setDataModificacao(LocalDate.now());
 		usuario.setAtivo(true);
-		Optional<Pais> paisNomeOptional = paisRepository.findByNome(pais.getNome());
-		Optional<Pais> paisCodigoOptional = paisRepository.findByCodigo(pais.getCodigo());
-		if (!paisNomeOptional.isPresent() && !paisCodigoOptional.isPresent()) {
+		Optional<Pais> optionalPais = paisRepository.findByNomeOrCodigo(pais.getNome(), pais.getCodigo());
+		if (!optionalPais.isPresent()) {
 			pais = paisRepository.save(pais);
 		} else {
-			pais = paisNomeOptional.isPresent() ? paisNomeOptional.get() : paisCodigoOptional.get();
+			pais = optionalPais.get();
 		}
 		endereco.setPais(pais);
 		endereco = enderecoRepository.save(endereco);
@@ -59,32 +60,26 @@ public class UsuarioManutencaoService {
 		return usuarioMapper.toUsuarioDetalhesDto(usuarioRepository.save(usuario));
 	}
 
-	@Transactional
-	public UsuarioDetalhesDto atualizar(Long id, UsuarioRegistroDto usuarioRegistroDto) {
+	public UsuarioDetalhesDto atualizar(Long id, UsuarioAtualizacaoDto usuarioAtualizacaoDto) {
 		Optional<Usuario> usuarioOptional = usuarioRepository.findByIdAndAtivoTrue(id);
 		if (!usuarioOptional.isPresent()) {
-			throw new EntityNotFoundException("usuario_nao_encontrado_id");
+			throw new EntityNotFoundException(
+					"Não foi possível encontrar um usuário ativo com este id. Verifique e tente novamente");
 		}
-//		else if (!usuarioOptional.get().isAtivo()) {
-//			throw new DataIntegrityViolationException("alterar_usuario_inativo");
-//		}
-		else if (!usuarioRegistroDto.cpf().equals(usuarioOptional.get().getCpf())) {
-			throw new DataIntegrityViolationException("alterar_cpf");
-		}
-		Usuario usuarioAtualizado = usuarioMapper.toUsuario(usuarioRegistroDto);
+		Usuario usuarioAtualizado = usuarioMapper.toUsuario(usuarioAtualizacaoDto);
 		Endereco endereco = usuarioAtualizado.getEndereco();
 		Pais pais = endereco.getPais();
 		Usuario usuarioAntigo = usuarioOptional.get();
 		usuarioAtualizado.setId(id);
+		usuarioAtualizado.setCpf(usuarioAntigo.getCpf());
 		usuarioAtualizado.setDataCriacao(usuarioAntigo.getDataCriacao());
 		usuarioAtualizado.setDataModificacao(LocalDate.now());
 		usuarioAtualizado.setAtivo(true);
-		Optional<Pais> paisNomeOptional = paisRepository.findByNome(pais.getNome());
-		Optional<Pais> paisCodigoOptional = paisRepository.findByCodigo(pais.getCodigo());
-		if (paisNomeOptional.isEmpty() && paisCodigoOptional.isEmpty()) {
+		Optional<Pais> optionalPais = paisRepository.findByNomeOrCodigo(pais.getNome(), pais.getCodigo());
+		if (!optionalPais.isPresent()) {
 			pais = paisRepository.save(pais);
 		} else {
-			pais = paisNomeOptional.isPresent() ? paisNomeOptional.get() : paisCodigoOptional.get();
+			pais = optionalPais.get();
 		}
 		endereco.setId(usuarioAntigo.getEndereco().getId());
 		endereco.setPais(pais);
@@ -93,29 +88,32 @@ public class UsuarioManutencaoService {
 		return usuarioMapper.toUsuarioDetalhesDto(usuarioRepository.save(usuarioAtualizado));
 	}
 
-	@Transactional
 	public String remover(Long id) {
 		Optional<Usuario> usuarioOptional = usuarioRepository.findByIdAndAtivoTrue(id);
 		usuarioOptional.ifPresentOrElse(u -> {
-			if (!u.isAtivo()) {
-				throw new DataIntegrityViolationException("usuario_ja_inativo");
-			}
+			if (!u.isAtivo())
+				throw new DataIntegrityViolationException("Este usuário já está com a conta desativada");
 			u.setAtivo(false);
 			usuarioRepository.save(u);
 		}, () -> {
-			throw new EntityNotFoundException("usuario_nao_encontrado_id");
+			throw new EntityNotFoundException(
+					"Não foi possível encontrar um usuário ativo com este id. Verifique e tente novamente");
 		});
-		return "Usuário desativado.";
+		return "Usuário desativado";
 	}
 
-	public UsuarioDetalhesDto reativar(Long id) {
+	public String reativar(Long id) {
 		Optional<Usuario> usuarioOptional = usuarioRepository.findByIdAndAtivoFalse(id);
-		if (!usuarioOptional.isPresent()) {
-			throw new EntityNotFoundException("usuario_nao_encontrado_id");
-		}
-		Usuario usuario = usuarioOptional.get();
-		usuario.setAtivo(true);
-		return usuarioMapper.toUsuarioDetalhesDto(usuarioRepository.save(usuario));
+		usuarioOptional.ifPresentOrElse(u -> {
+			if (u.isAtivo())
+				throw new DataIntegrityViolationException("Este usuário já está com a conta ativada");
+			u.setAtivo(true);
+			usuarioRepository.save(u);
+		}, () -> {
+			throw new EntityNotFoundException(
+					"Não foi possível encontrar um usuário inativo com este id. Verifique e tente novamente");
+		});
+		return "Usuário reativado";
 	}
 
 }

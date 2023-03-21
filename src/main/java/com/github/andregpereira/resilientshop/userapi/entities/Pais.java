@@ -1,10 +1,13 @@
 package com.github.andregpereira.resilientshop.userapi.entities;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -18,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "tb_paises")
-@SequenceGenerator(name = "pais", sequenceName = "sq_pais", allocationSize = 1)
+@SequenceGenerator(name = "pais", sequenceName = "sq_paises", allocationSize = 1)
 public class Pais {
 
 	@Id
@@ -31,5 +34,8 @@ public class Pais {
 
 	@Column(name = "codigo", length = 4, nullable = false)
 	private String codigo;
+
+	@OneToMany(mappedBy = "pais")
+	private List<Endereco> enderecos;
 
 }

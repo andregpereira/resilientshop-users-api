@@ -29,20 +29,21 @@ public class UsuarioConsultaService {
 	public UsuarioDetalhesDto consultarPorId(Long id) {
 		Optional<Usuario> usuarioOptional = usuarioRepository.findByIdAndAtivoTrue(id);
 		if (!usuarioOptional.isPresent()) {
-			throw new EntityNotFoundException("usuario_nao_encontrado_id");
+			throw new EntityNotFoundException(
+					"Não foi possível encontrar um usuário ativo com este id. Verifique e tente novamente");
 		}
 		return usuarioMapper.toUsuarioDetalhesDto(usuarioOptional.get());
 	}
 
 	public UsuarioDetalhesDto consultarPorCpf(String cpf) {
-		if (cpf.isBlank()) {
-			throw new InvalidParameterException("usuario_consulta_cpf_em_branco");
-		} else if (cpf.length() < 11 || cpf.length() > 14) {
-			throw new InvalidParameterException("usuario_consulta_cpf_invalido");
+		if (cpf.isBlank() || (cpf.length() < 11 && cpf.length() > 14)) {
+			throw new InvalidParameterException(
+					"Não foi possível realizar a busca por CPF. O CPF não foi digitado corretamente. Verifique e tente novamente");
 		}
 		Optional<Usuario> usuarioOptional = usuarioRepository.findByCpfAndAtivoTrue(cpf);
 		if (!usuarioOptional.isPresent()) {
-			throw new EntityNotFoundException("usuario_nao_encontrado_cpf");
+			throw new EntityNotFoundException(
+					"Não foi possível encontrar um usuário ativo com este CPF. Verifique e tente novamente");
 		}
 		return usuarioMapper.toUsuarioDetalhesDto(usuarioOptional.get());
 	}
@@ -50,12 +51,13 @@ public class UsuarioConsultaService {
 	public Page<UsuarioDto> consultarPorNome(String nome, String sobrenome, Pageable pageable) {
 		nome = nome != null ? nome : "";
 		sobrenome = sobrenome != null ? sobrenome : "";
-		if (nome.isBlank() && sobrenome.isBlank()) {
-			return UsuarioDto.criarPage(usuarioRepository.findByAtivoTrue(pageable));
-		}
-		Page<Usuario> usuarios = usuarioRepository.findByAtivoTrue(pageable);
+		nome = nome.trim();
+		sobrenome = sobrenome.trim();
+		Page<Usuario> usuarios = usuarioRepository.findByNome(nome, sobrenome, pageable);
 		if (usuarios.isEmpty()) {
-			throw new EmptyResultDataAccessException(1);
+			throw new EmptyResultDataAccessException("Nenhum usuário foi encontrado. Verifique e tente novamente", 1);
+		} else if (nome.isBlank() && sobrenome.isBlank()) {
+			return UsuarioDto.criarPage(usuarioRepository.findByAtivoTrue(pageable));
 		}
 		return UsuarioDto.criarPage(usuarios);
 	}

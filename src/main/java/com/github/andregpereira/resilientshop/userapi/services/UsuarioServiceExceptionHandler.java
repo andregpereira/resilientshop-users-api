@@ -13,7 +13,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 
 @RestControllerAdvice
@@ -25,89 +27,55 @@ public class UsuarioServiceExceptionHandler {
 		}
 	}
 
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity<String> erro400(HttpMessageNotReadableException e) {
+		return ResponseEntity.badRequest().body("Informação inválida. Verifique os dados e tente novamente");
+	}
+
+	@ExceptionHandler(InvalidParameterException.class)
+	public ResponseEntity<String> erro400(InvalidParameterException e) {
+		return ResponseEntity.badRequest().body(e.getMessage());
+	}
+
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Stream<DadoInvalido>> erro400(MethodArgumentNotValidException e) {
 		Stream<FieldError> erros = e.getFieldErrors().stream();
 		return ResponseEntity.badRequest().body(erros.map(DadoInvalido::new));
 	}
 
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	public ResponseEntity<String> erro400(MethodArgumentTypeMismatchException e) {
+		return ResponseEntity.badRequest().body("Informação inválida. Verifique e tente novamente");
+	}
+
 	@ExceptionHandler(MissingServletRequestParameterException.class)
-	public ResponseEntity<String> erro400(MissingServletRequestParameterException e) {
-		if (e.getMessage().contains("nome")) {
-			return ResponseEntity.badRequest()
-					.body("Não foi possível realizar a busca por nome. Digite um nome e tente novamente.");
-		} else if (e.getMessage().contains("cpf")) {
-			return ResponseEntity.badRequest()
-					.body("Não foi possível realizar a busca por CPF. Digite um CPF e tente novamente.");
-		}
-		return ResponseEntity.badRequest().body(
-				"Não foi possível realizar a busca por usuário. Por favor, preencha os campos obrigatórios e tente novamente.");
-	}
-
-	@ExceptionHandler(InvalidParameterException.class)
-	public ResponseEntity<String> erro400(InvalidParameterException e) {
-		if (e.getMessage().contains("usuario_consulta_nome_tamanho_invalido")) {
-			return ResponseEntity.badRequest().body(
-					"Não foi possível realizar a busca por nome. O nome informado deve ter, pelo menos, 2 caracteres.");
-		} else if (e.getMessage().contains("usuario_consulta_nome_em_branco")) {
-			return ResponseEntity.badRequest()
-					.body("Não foi possível realizar a busca por nome. Digite um nome e tente novamente.");
-		} else if (e.getMessage().contains("usuario_consulta_cpf_formato_invalido")) {
-			return ResponseEntity.badRequest().body(
-					"Não foi possível realizar a busca por CPF. O CPF não foi digitado corretamente. Verifique e tente novamente.");
-		} else if (e.getMessage().contains("usuario_consulta_cpf_em_branco")) {
-			return ResponseEntity.badRequest().body(
-					"Não foi possível realizar a busca por CPF. O CPF não foi digitado corretamente. Verifique e tente novamente.");
-		}
-		return ResponseEntity.badRequest().body(
-				"Não foi possível realizar a busca por usuário. Por favor, preencha os campos obrigatórios e tente novamente.");
-	}
-
-	@ExceptionHandler(HttpMessageNotReadableException.class)
-	public ResponseEntity<String> erro400(HttpMessageNotReadableException e) {
-		return ResponseEntity.badRequest().body("Houve um erro.");
-	}
-
-	@ExceptionHandler(EntityNotFoundException.class)
-	public ResponseEntity<String> erro404(EntityNotFoundException e) {
-		if (e.getMessage().contains("usuario_nao_encontrado_id")) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body("Não foi possível encontrar um usuário com este id. Verifique e tente novamente.");
-		} else if (e.getMessage().contains("usuario_nao_encontrado_nome")) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body("Não foi possível encontrar um usuário com este nome. Verifique e tente novamente.");
-		} else if (e.getMessage().contains("usuario_nao_encontrado_cpf")) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body("Não foi possível encontrar um usuário com este CPF. Verifique e tente novamente.");
-		} else if (e.getMessage().contains("pais_nao_encontrado")) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("País não encontrado na nossa base de dados.");
-		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado. Verifique e tente novamente.");
+	public ResponseEntity<DadoInvalido> erro400(MissingServletRequestParameterException e) {
+		return ResponseEntity.badRequest().body(new DadoInvalido(e.getParameterName(), "O campo "
+				+ (e.getParameterName().equals("cpf") ? e.getParameterName().toUpperCase() : e.getParameterName())
+				+ " é obrigatório"));
 	}
 
 	@ExceptionHandler(EmptyResultDataAccessException.class)
 	public ResponseEntity<String> erro404(EmptyResultDataAccessException e) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-				.body("Nenhum usuário foi encontrado. Verifique e tente novamente.");
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+	}
+
+	@ExceptionHandler(EntityNotFoundException.class)
+	public ResponseEntity<String> erro404(EntityNotFoundException e) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 	}
 
 	@ExceptionHandler(DataIntegrityViolationException.class)
-	private ResponseEntity<String> erro403e409(DataIntegrityViolationException e) {
-		if (e.getMessage().contains("usuario_existente")) {
+	private ResponseEntity<String> erro409(DataIntegrityViolationException e) {
+		if (e.getMessage().contains("uc_cpf")) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF já cadastrado no nosso banco de dados.");
-		} else if (e.getMessage().contains("uc_cpf")) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF já cadastrado no nosso banco de dados.");
-		} else if (e.getMessage().contains("alterar_cpf")) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN)
-					.body("Não foi possível atualizar as suas informações. Não é permitido alterar o CPF.");
-		} else if (e.getMessage().contains("alterar_usuario_inativo")) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Você não pode alterar um usuário inativo.");
-		} else if (e.getMessage().contains("usuario_ja_inativo")) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Este usuário já está com a conta desativada.");
-		} else if (e.getMessage().contains("usuario_ja_ativo")) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Este usuário já está com a conta ativada.");
 		}
-		return ResponseEntity.status(HttpStatus.CONFLICT).body("Houve um erro.");
+		return ResponseEntity.status(HttpStatus.CONFLICT).body("Informação inválida. Verifique e tente novamente");
+	}
+
+	@ExceptionHandler(EntityExistsException.class)
+	public ResponseEntity<String> erro409(EntityExistsException e) {
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 	}
 
 }
