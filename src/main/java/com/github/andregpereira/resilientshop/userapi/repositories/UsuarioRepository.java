@@ -24,4 +24,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	Page<Usuario> findByNome(@Param("nome") String nome, @Param("sobrenome") String sobrenome, Pageable pageable);
 
 	Page<Usuario> findByAtivoTrue(Pageable pageable);
+
 }
