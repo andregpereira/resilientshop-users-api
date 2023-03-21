@@ -43,17 +43,19 @@ public class UsuarioManutencaoService {
 		Usuario usuario = usuarioMapper.toUsuario(usuarioRegistroDto);
 		Endereco endereco = usuario.getEndereco();
 		Pais pais = endereco.getPais();
-		Optional<Pais> paisNomeOptional = paisRepository.findByNome(pais.getNome());
-		Optional<Pais> paisCodigoOptional = paisRepository.findByCodigo(pais.getCodigo());
-		if (!paisNomeOptional.isPresent() && !paisCodigoOptional.isPresent()) {
-			paisRepository.save(pais);
-		} else {
-			pais = paisNomeOptional.isPresent() ? paisNomeOptional.get() : paisCodigoOptional.get();
-		}
 		usuario.setDataCriacao(LocalDate.now());
 		usuario.setDataModificacao(LocalDate.now());
 		usuario.setAtivo(true);
-		enderecoRepository.save(endereco);
+		Optional<Pais> paisNomeOptional = paisRepository.findByNome(pais.getNome());
+		Optional<Pais> paisCodigoOptional = paisRepository.findByCodigo(pais.getCodigo());
+		if (!paisNomeOptional.isPresent() && !paisCodigoOptional.isPresent()) {
+			pais = paisRepository.save(pais);
+		} else {
+			pais = paisNomeOptional.isPresent() ? paisNomeOptional.get() : paisCodigoOptional.get();
+		}
+		endereco.setPais(pais);
+		endereco = enderecoRepository.save(endereco);
+		usuario.setEndereco(endereco);
 		return usuarioMapper.toUsuarioDetalhesDto(usuarioRepository.save(usuario));
 	}
 
@@ -77,16 +79,17 @@ public class UsuarioManutencaoService {
 		usuarioAtualizado.setDataCriacao(usuarioAntigo.getDataCriacao());
 		usuarioAtualizado.setDataModificacao(LocalDate.now());
 		usuarioAtualizado.setAtivo(true);
-		usuarioAtualizado.setEndereco(endereco);
 		Optional<Pais> paisNomeOptional = paisRepository.findByNome(pais.getNome());
 		Optional<Pais> paisCodigoOptional = paisRepository.findByCodigo(pais.getCodigo());
 		if (paisNomeOptional.isEmpty() && paisCodigoOptional.isEmpty()) {
-			paisRepository.save(pais);
+			pais = paisRepository.save(pais);
 		} else {
 			pais = paisNomeOptional.isPresent() ? paisNomeOptional.get() : paisCodigoOptional.get();
 		}
 		endereco.setId(usuarioAntigo.getEndereco().getId());
 		endereco.setPais(pais);
+		endereco = enderecoRepository.save(endereco);
+		usuarioAtualizado.setEndereco(endereco);
 		return usuarioMapper.toUsuarioDetalhesDto(usuarioRepository.save(usuarioAtualizado));
 	}
 
