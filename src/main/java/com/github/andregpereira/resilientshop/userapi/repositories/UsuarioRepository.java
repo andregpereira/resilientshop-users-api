@@ -14,9 +14,14 @@ import com.github.andregpereira.resilientshop.userapi.entities.Usuario;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
-	Optional<Usuario> findByCpf(String cpf);
+	Optional<Usuario> findByIdAndAtivoTrue(Long id);
 
-	@Query(value = "select * from tb_usuarios u where u.nome ilike %:nome% and u.sobrenome ilike %:sobrenome%", nativeQuery = true)
+	Optional<Usuario> findByCpfAndAtivoTrue(String cpf);
+
+	Optional<Usuario> findByIdAndAtivoFalse(Long id);
+
+	@Query(value = "select * from tb_usuarios u where u.nome ilike %:nome% and u.sobrenome ilike %:sobrenome% and ativo=true", nativeQuery = true)
 	Page<Usuario> findByNome(@Param("nome") String nome, @Param("sobrenome") String sobrenome, Pageable pageable);
 
+	Page<Usuario> findByAtivoTrue(Pageable pageable);
 }
