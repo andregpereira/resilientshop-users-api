@@ -50,16 +50,16 @@ public class UsuarioController {
 		return ResponseEntity.ok(usuarioManutencaoService.atualizar(id, usuarioRegistroDto));
 	}
 
-	// Desativar por id
+	// Remoção lógica de usuário por id
 	@DeleteMapping("/{id}")
 	private ResponseEntity<String> desativar(@PathVariable Long id) {
-		return ResponseEntity.ok(usuarioManutencaoService.desativar(id));
+		return ResponseEntity.ok(usuarioManutencaoService.remover(id));
 	}
 
-	// Ativar por id
+	// Reativar por id
 	@PatchMapping("/{id}")
-	private ResponseEntity<String> ativar(@PathVariable Long id) {
-		return ResponseEntity.ok(usuarioManutencaoService.ativar(id));
+	private ResponseEntity<UsuarioDetalhesDto> reativar(@PathVariable Long id) {
+		return ResponseEntity.ok(usuarioManutencaoService.reativar(id));
 	}
 
 	// Pesquisar por id
