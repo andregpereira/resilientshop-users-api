@@ -2,7 +2,6 @@ package com.github.andregpereira.resilientshop.userapi.entities;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
@@ -54,8 +53,8 @@ public class Usuario {
 	@Column(nullable = false)
 	private boolean ativo;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_endereco", foreignKey = @ForeignKey(name = "fk_id_endereco"))
+	@OneToOne
+	@JoinColumn(name = "id_endereco", nullable = false, foreignKey = @ForeignKey(name = "fk_id_endereco"))
 	private Endereco endereco;
 
 }
