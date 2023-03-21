@@ -39,7 +39,7 @@ public class UsuarioManutencaoService {
 	private PaisRepository paisRepository;
 
 	public UsuarioDetalhesDto registrar(UsuarioRegistroDto usuarioRegistroDto) {
-		if (usuarioRepository.findByCpf(usuarioRegistroDto.cpf()).isPresent()) {
+		if (usuarioRepository.existsByCpf(usuarioRegistroDto.cpf())) {
 			throw new EntityExistsException("CPF já cadastrado no nosso banco de dados");
 		}
 		Usuario usuario = usuarioMapper.toUsuario(usuarioRegistroDto);

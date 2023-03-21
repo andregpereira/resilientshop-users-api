@@ -14,7 +14,7 @@ import com.github.andregpereira.resilientshop.userapi.entities.Usuario;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
-	Optional<Usuario> findByCpf(String cpf);
+	boolean existsByCpf(String cpf);
 
 	Optional<Usuario> findByIdAndAtivoTrue(Long id);
 
