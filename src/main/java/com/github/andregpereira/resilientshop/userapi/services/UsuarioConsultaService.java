@@ -27,8 +27,8 @@ public class UsuarioConsultaService {
 	private UsuarioMapper usuarioMapper;
 
 	public UsuarioDetalhesDto consultarPorId(Long id) {
-		Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
-		if (!usuarioOptional.isPresent() || !usuarioOptional.get().isAtivo()) {
+		Optional<Usuario> usuarioOptional = usuarioRepository.findByIdAndAtivoTrue(id);
+		if (!usuarioOptional.isPresent()) {
 			throw new EntityNotFoundException("usuario_nao_encontrado_id");
 		}
 		return usuarioMapper.toUsuarioDetalhesDto(usuarioOptional.get());
@@ -40,8 +40,8 @@ public class UsuarioConsultaService {
 		} else if (cpf.length() < 11 || cpf.length() > 14) {
 			throw new InvalidParameterException("usuario_consulta_cpf_invalido");
 		}
-		Optional<Usuario> usuarioOptional = usuarioRepository.findByCpf(cpf);
-		if (usuarioOptional.isEmpty() || !usuarioOptional.get().isAtivo()) {
+		Optional<Usuario> usuarioOptional = usuarioRepository.findByCpfAndAtivoTrue(cpf);
+		if (!usuarioOptional.isPresent()) {
 			throw new EntityNotFoundException("usuario_nao_encontrado_cpf");
 		}
 		return usuarioMapper.toUsuarioDetalhesDto(usuarioOptional.get());
@@ -50,16 +50,14 @@ public class UsuarioConsultaService {
 	public Page<UsuarioDto> consultarPorNome(String nome, String sobrenome, Pageable pageable) {
 		nome = nome != null ? nome : "";
 		sobrenome = sobrenome != null ? sobrenome : "";
-		Page<Usuario> usuarios = usuarioRepository.findByNome(nome, sobrenome, pageable);
-		if (usuarios.isEmpty()) {
-//			throw new InvalidParameterException("usuario_consulta_nome_em_branco");
-			throw new EmptyResultDataAccessException(1);
-//			return UsuarioDto.criarLista(usuarioRepository.findByNome(nome, sobrenome, pageable));
+		if (nome.isBlank() && sobrenome.isBlank()) {
+			return UsuarioDto.criarPage(usuarioRepository.findByAtivoTrue(pageable));
 		}
-		return UsuarioDto.criarLista(usuarios);
-//		if (usuarios.isEmpty()) {
-//			throw new EmptyResultDataAccessException(1);
-//		}
+		Page<Usuario> usuarios = usuarioRepository.findByAtivoTrue(pageable);
+		if (usuarios.isEmpty()) {
+			throw new EmptyResultDataAccessException(1);
+		}
+		return UsuarioDto.criarPage(usuarios);
 	}
 
 }

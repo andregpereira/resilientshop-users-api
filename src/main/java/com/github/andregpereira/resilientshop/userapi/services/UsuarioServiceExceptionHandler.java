@@ -72,7 +72,7 @@ public class UsuarioServiceExceptionHandler {
 	public ResponseEntity<String> erro404(EntityNotFoundException e) {
 		if (e.getMessage().contains("usuario_nao_encontrado_id")) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body("Não foi possível encontrar um usuário com este ID. Verifique e tente novamente.");
+					.body("Não foi possível encontrar um usuário com este id. Verifique e tente novamente.");
 		} else if (e.getMessage().contains("usuario_nao_encontrado_nome")) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body("Não foi possível encontrar um usuário com este nome. Verifique e tente novamente.");

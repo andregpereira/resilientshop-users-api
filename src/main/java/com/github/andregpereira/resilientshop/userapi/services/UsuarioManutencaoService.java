@@ -37,34 +37,62 @@ public class UsuarioManutencaoService {
 
 	@Transactional
 	public UsuarioDetalhesDto registrar(UsuarioRegistroDto usuarioRegistroDto) {
-		if (usuarioRepository.findByCpf(usuarioRegistroDto.cpf()).isPresent()) {
+		if (usuarioRepository.findByCpfAndAtivoTrue(usuarioRegistroDto.cpf()).isPresent()) {
 			throw new DataIntegrityViolationException("usuario_existente");
 		}
-		Usuario usuarioRegistrado = salvar(usuarioRegistroDto, null);
-		usuarioRegistrado.setDataCriacao(LocalDate.now());
-		usuarioRegistrado.setDataModificacao(LocalDate.now());
-		usuarioRegistrado.setAtivo(true);
-		return usuarioMapper.toUsuarioDetalhesDto(usuarioRepository.save(usuarioRegistrado));
+		Usuario usuario = usuarioMapper.toUsuario(usuarioRegistroDto);
+		Endereco endereco = usuario.getEndereco();
+		Pais pais = endereco.getPais();
+		Optional<Pais> paisNomeOptional = paisRepository.findByNome(pais.getNome());
+		Optional<Pais> paisCodigoOptional = paisRepository.findByCodigo(pais.getCodigo());
+		if (!paisNomeOptional.isPresent() && !paisCodigoOptional.isPresent()) {
+			paisRepository.save(pais);
+		} else {
+			pais = paisNomeOptional.isPresent() ? paisNomeOptional.get() : paisCodigoOptional.get();
+		}
+		usuario.setDataCriacao(LocalDate.now());
+		usuario.setDataModificacao(LocalDate.now());
+		usuario.setAtivo(true);
+		enderecoRepository.save(endereco);
+		return usuarioMapper.toUsuarioDetalhesDto(usuarioRepository.save(usuario));
 	}
 
 	@Transactional
 	public UsuarioDetalhesDto atualizar(Long id, UsuarioRegistroDto usuarioRegistroDto) {
-		Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+		Optional<Usuario> usuarioOptional = usuarioRepository.findByIdAndAtivoTrue(id);
 		if (!usuarioOptional.isPresent()) {
 			throw new EntityNotFoundException("usuario_nao_encontrado_id");
-		} else if (!usuarioOptional.get().isAtivo()) {
-			throw new DataIntegrityViolationException("alterar_usuario_inativo");
-		} else if (!usuarioRegistroDto.cpf().equals(usuarioOptional.get().getCpf())) {
+		}
+//		else if (!usuarioOptional.get().isAtivo()) {
+//			throw new DataIntegrityViolationException("alterar_usuario_inativo");
+//		}
+		else if (!usuarioRegistroDto.cpf().equals(usuarioOptional.get().getCpf())) {
 			throw new DataIntegrityViolationException("alterar_cpf");
 		}
-		Usuario usuarioAtualizado = salvar(usuarioRegistroDto, usuarioOptional.get());
+		Usuario usuarioAtualizado = usuarioMapper.toUsuario(usuarioRegistroDto);
+		Endereco endereco = usuarioAtualizado.getEndereco();
+		Pais pais = endereco.getPais();
+		Usuario usuarioAntigo = usuarioOptional.get();
 		usuarioAtualizado.setId(id);
+		usuarioAtualizado.setDataCriacao(usuarioAntigo.getDataCriacao());
 		usuarioAtualizado.setDataModificacao(LocalDate.now());
+		usuarioAtualizado.setAtivo(true);
+		usuarioAtualizado.setEndereco(endereco);
+		Optional<Pais> paisNomeOptional = paisRepository.findByNome(pais.getNome());
+		Optional<Pais> paisCodigoOptional = paisRepository.findByCodigo(pais.getCodigo());
+		if (paisNomeOptional.isEmpty() && paisCodigoOptional.isEmpty()) {
+			paisRepository.save(pais);
+		} else {
+			pais = paisNomeOptional.isPresent() ? paisNomeOptional.get() : paisCodigoOptional.get();
+		}
+		endereco.setId(usuarioAntigo.getEndereco().getId());
+		endereco.setPais(pais);
 		return usuarioMapper.toUsuarioDetalhesDto(usuarioRepository.save(usuarioAtualizado));
 	}
 
-	public String desativar(Long id) {
-		Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+	@Transactional
+	public String remover(Long id) {
+		Optional<Usuario> usuarioOptional = usuarioRepository.findByIdAndAtivoTrue(id);
 		usuarioOptional.ifPresentOrElse(u -> {
 			if (!u.isAtivo()) {
 				throw new DataIntegrityViolationException("usuario_ja_inativo");
@@ -77,39 +105,14 @@ public class UsuarioManutencaoService {
 		return "Usuário desativado.";
 	}
 
-	public String ativar(Long id) {
-		Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
-		usuarioOptional.ifPresentOrElse(u -> {
-			if (u.isAtivo()) {
-				throw new DataIntegrityViolationException("usuario_ja_ativo");
-			}
-			u.setAtivo(true);
-			usuarioRepository.save(u);
-		}, () -> {
+	public UsuarioDetalhesDto reativar(Long id) {
+		Optional<Usuario> usuarioOptional = usuarioRepository.findByIdAndAtivoFalse(id);
+		if (!usuarioOptional.isPresent()) {
 			throw new EntityNotFoundException("usuario_nao_encontrado_id");
-		});
-		return "Usuário ativado.";
-	}
-	
-	private Usuario salvar(UsuarioRegistroDto usuarioRegistroDto, Usuario usuarioAntigo) {
-		Usuario usuario = usuarioMapper.toUsuario(usuarioRegistroDto);
-		Endereco endereco = usuario.getEndereco();
-		Pais pais = endereco.getPais();
-		if (usuarioAntigo != null) {
-			usuario.setDataCriacao(usuarioAntigo.getDataCriacao());
-			usuario.setAtivo(true);
-			endereco.setId(usuarioAntigo.getEndereco().getId());
 		}
-		Optional<Pais> paisNomeOptional = paisRepository.findByNome(pais.getNome());
-		Optional<Pais> paisCodigoOptional = paisRepository.findByCodigo(pais.getCodigo());
-		if (!paisNomeOptional.isPresent() && !paisCodigoOptional.isPresent()) {
-			paisRepository.save(pais);
-		} else {
-			pais = paisNomeOptional.isPresent() ? paisNomeOptional.get() : paisCodigoOptional.get();
-		}
-		endereco.setPais(pais);
-		usuario.setEndereco(enderecoRepository.save(endereco));
-		return usuario;
+		Usuario usuario = usuarioOptional.get();
+		usuario.setAtivo(true);
+		return usuarioMapper.toUsuarioDetalhesDto(usuarioRepository.save(usuario));
 	}
 
 }
