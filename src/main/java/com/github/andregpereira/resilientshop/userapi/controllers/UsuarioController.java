@@ -57,7 +57,7 @@ public class UsuarioController {
 	}
 
 	// Reativar por id
-	@PatchMapping("/{id}")
+	@PatchMapping("/reativar/{id}")
 	private ResponseEntity<UsuarioDetalhesDto> reativar(@PathVariable Long id) {
 		return ResponseEntity.ok(usuarioManutencaoService.reativar(id));
 	}
