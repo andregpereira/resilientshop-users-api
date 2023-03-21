@@ -20,7 +20,7 @@ public record UsuarioDto(Long id, String nome, String sobrenome, String cpf, Str
 				usuario.getDataCriacao(), usuario.getDataModificacao(), usuario.isAtivo());
 	}
 
-	public static Page<UsuarioDto> criarLista(Page<Usuario> usuariosPage) {
+	public static Page<UsuarioDto> criarPage(Page<Usuario> usuariosPage) {
 		return usuariosPage.map(UsuarioDto::new);
 	}
 
