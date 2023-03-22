@@ -40,7 +40,8 @@ public class UsuarioManutencaoService {
 
 	public UsuarioDetalhesDto registrar(UsuarioRegistroDto usuarioRegistroDto) {
 		if (usuarioRepository.existsByCpf(usuarioRegistroDto.cpf())) {
-			throw new EntityExistsException("CPF já cadastrado no nosso banco de dados");
+			throw new EntityExistsException(
+					"Não foi possível cadastrar o usuário. Já existe um usuário cadastrado com este CPF. Verifique e tente novamente");
 		}
 		Usuario usuario = usuarioMapper.toUsuario(usuarioRegistroDto);
 		Endereco endereco = usuario.getEndereco();
@@ -106,7 +107,7 @@ public class UsuarioManutencaoService {
 		Optional<Usuario> usuarioOptional = usuarioRepository.findByIdAndAtivoFalse(id);
 		usuarioOptional.ifPresentOrElse(u -> {
 			if (u.isAtivo())
-				throw new DataIntegrityViolationException("Este usuário já está com a conta ativada");
+				throw new DataIntegrityViolationException("Este usuário já está com a conta ativa");
 			u.setAtivo(true);
 			usuarioRepository.save(u);
 		}, () -> {

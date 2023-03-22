@@ -43,7 +43,7 @@ public class UsuarioConsultaService {
 		Optional<Usuario> usuarioOptional = usuarioRepository.findByCpfAndAtivoTrue(cpf);
 		if (!usuarioOptional.isPresent()) {
 			throw new EntityNotFoundException(
-					"Não foi possível encontrar um usuário ativo com este CPF. Verifique e tente novamente");
+					"Desculpe, não foi possível encontrar um usuário com este CPF. Verifique e tente novamente");
 		}
 		return usuarioMapper.toUsuarioDetalhesDto(usuarioOptional.get());
 	}
@@ -55,7 +55,8 @@ public class UsuarioConsultaService {
 		sobrenome = sobrenome.trim();
 		Page<Usuario> usuarios = usuarioRepository.findByNome(nome, sobrenome, pageable);
 		if (usuarios.isEmpty()) {
-			throw new EmptyResultDataAccessException("Nenhum usuário foi encontrado. Verifique e tente novamente", 1);
+			throw new EmptyResultDataAccessException(
+					"Desculpe, não foi possível encontrar um usuário com este nome. Verifique e tente novamente", 1);
 		} else if (nome.isBlank() && sobrenome.isBlank()) {
 			return UsuarioDto.criarPage(usuarioRepository.findByAtivoTrue(pageable));
 		}
