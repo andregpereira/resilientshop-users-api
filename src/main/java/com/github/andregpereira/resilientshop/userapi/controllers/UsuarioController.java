@@ -62,6 +62,13 @@ public class UsuarioController {
 		return ResponseEntity.ok(usuarioManutencaoService.reativar(id));
 	}
 
+	// Listar todos os usuários
+	@GetMapping
+	public ResponseEntity<Page<UsuarioDto>> listar(
+			@PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 10) Pageable pageable) {
+		return ResponseEntity.ok(usuarioConsultaService.listar(pageable));
+	}
+
 	// Pesquisar por id
 	@GetMapping("/{id}")
 	public ResponseEntity<UsuarioDetalhesDto> consultarPorId(@PathVariable Long id) {
@@ -70,7 +77,7 @@ public class UsuarioController {
 
 	// Pesquisar por CPF
 	@GetMapping("/cpf")
-	public ResponseEntity<UsuarioDetalhesDto> consultarPorCpf(@RequestParam(required = true) String cpf) {
+	public ResponseEntity<UsuarioDetalhesDto> consultarPorCpf(@RequestParam String cpf) {
 		return ResponseEntity.ok(usuarioConsultaService.consultarPorCpf(cpf));
 	}
 

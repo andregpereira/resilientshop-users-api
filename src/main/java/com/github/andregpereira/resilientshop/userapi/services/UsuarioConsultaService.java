@@ -26,13 +26,16 @@ public class UsuarioConsultaService {
 	@Autowired
 	private UsuarioMapper usuarioMapper;
 
+	public Page<UsuarioDto> listar(Pageable pageable) {
+		return UsuarioDto.criarPage(usuarioRepository.findAll(pageable));
+	}
+	
 	public UsuarioDetalhesDto consultarPorId(Long id) {
-		Optional<Usuario> usuarioOptional = usuarioRepository.findByIdAndAtivoTrue(id);
-		if (!usuarioOptional.isPresent()) {
+		if (!usuarioRepository.existsById(id)) {
 			throw new EntityNotFoundException(
 					"Não foi possível encontrar um usuário ativo com este id. Verifique e tente novamente");
 		}
-		return usuarioMapper.toUsuarioDetalhesDto(usuarioOptional.get());
+		return usuarioMapper.toUsuarioDetalhesDto(usuarioRepository.getReferenceById(id));
 	}
 
 	public UsuarioDetalhesDto consultarPorCpf(String cpf) {
