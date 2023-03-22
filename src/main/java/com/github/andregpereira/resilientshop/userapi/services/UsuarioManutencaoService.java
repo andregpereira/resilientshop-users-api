@@ -90,8 +90,7 @@ public class UsuarioManutencaoService {
 	}
 
 	public String remover(Long id) {
-		Optional<Usuario> usuarioOptional = usuarioRepository.findByIdAndAtivoTrue(id);
-		usuarioOptional.ifPresentOrElse(u -> {
+		usuarioRepository.findByIdAndAtivoTrue(id).ifPresentOrElse(u -> {
 			if (!u.isAtivo())
 				throw new DataIntegrityViolationException("Este usuário já está com a conta desativada");
 			u.setAtivo(false);
@@ -104,8 +103,7 @@ public class UsuarioManutencaoService {
 	}
 
 	public String reativar(Long id) {
-		Optional<Usuario> usuarioOptional = usuarioRepository.findByIdAndAtivoFalse(id);
-		usuarioOptional.ifPresentOrElse(u -> {
+		usuarioRepository.findByIdAndAtivoFalse(id).ifPresentOrElse(u -> {
 			if (u.isAtivo())
 				throw new DataIntegrityViolationException("Este usuário já está com a conta ativa");
 			u.setAtivo(true);
