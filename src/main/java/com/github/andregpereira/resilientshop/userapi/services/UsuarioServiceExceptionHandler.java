@@ -45,7 +45,7 @@ public class UsuarioServiceExceptionHandler {
 
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public ResponseEntity<String> erro400(MethodArgumentTypeMismatchException e) {
-		return ResponseEntity.badRequest().body("Informação inválida. Verifique e tente novamente");
+		return ResponseEntity.badRequest().body("Parâmetro inválido. Verifique e tente novamente");
 	}
 
 	@ExceptionHandler(MissingServletRequestParameterException.class)
@@ -70,7 +70,7 @@ public class UsuarioServiceExceptionHandler {
 		if (e.getMessage().contains("uc_cpf")) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF já cadastrado no nosso banco de dados.");
 		}
-		return ResponseEntity.status(HttpStatus.CONFLICT).body("Informação inválida. Verifique e tente novamente");
+		return ResponseEntity.status(HttpStatus.CONFLICT).body("Dado inválido. Verifique e tente novamente");
 	}
 
 	@ExceptionHandler(EntityExistsException.class)

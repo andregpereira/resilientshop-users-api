@@ -18,9 +18,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
 	Optional<Usuario> findByIdAndAtivoTrue(Long id);
 
-	Optional<Usuario> findByCpfAndAtivoTrue(String cpf);
-
 	Optional<Usuario> findByIdAndAtivoFalse(Long id);
+
+	Optional<Usuario> findByCpfAndAtivoTrue(String cpf);
 
 	@Query(value = "select * from tb_usuarios u where u.nome ilike %:nome% and u.sobrenome ilike %:sobrenome% and ativo=true", nativeQuery = true)
 	Page<Usuario> findByNome(@Param("nome") String nome, @Param("sobrenome") String sobrenome, Pageable pageable);

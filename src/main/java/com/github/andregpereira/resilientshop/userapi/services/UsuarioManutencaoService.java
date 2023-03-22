@@ -63,14 +63,14 @@ public class UsuarioManutencaoService {
 
 	public UsuarioDetalhesDto atualizar(Long id, UsuarioAtualizacaoDto usuarioAtualizacaoDto) {
 		Optional<Usuario> usuarioOptional = usuarioRepository.findByIdAndAtivoTrue(id);
-		if (!usuarioOptional.isPresent()) {
+		if (!usuarioRepository.findByIdAndAtivoTrue(id).isPresent()) {
 			throw new EntityNotFoundException(
 					"Não foi possível encontrar um usuário ativo com este id. Verifique e tente novamente");
 		}
+		Usuario usuarioAntigo = usuarioOptional.get();
 		Usuario usuarioAtualizado = usuarioMapper.toUsuario(usuarioAtualizacaoDto);
 		Endereco endereco = usuarioAtualizado.getEndereco();
 		Pais pais = endereco.getPais();
-		Usuario usuarioAntigo = usuarioOptional.get();
 		usuarioAtualizado.setId(id);
 		usuarioAtualizado.setCpf(usuarioAntigo.getCpf());
 		usuarioAtualizado.setDataCriacao(usuarioAntigo.getDataCriacao());
