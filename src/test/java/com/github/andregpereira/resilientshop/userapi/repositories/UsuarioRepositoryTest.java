@@ -73,9 +73,7 @@ public class UsuarioRepositoryTest {
 	public void criarUsuarioComCpfExistenteThrowsRuntimeException() {
 		Usuario usuario = em.persist(USUARIO);
 		em.detach(usuario);
-		repository.save(usuario);
 		usuario.setId(null);
-		repository.save(usuario);
 		assertThatThrownBy(() -> repository.save(usuario)).isInstanceOf(RuntimeException.class);
 	}
 
