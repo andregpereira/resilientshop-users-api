@@ -19,7 +19,6 @@ import com.github.andregpereira.resilientshop.userapi.repositories.EnderecoRepos
 import com.github.andregpereira.resilientshop.userapi.repositories.PaisRepository;
 import com.github.andregpereira.resilientshop.userapi.repositories.UsuarioRepository;
 
-import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
@@ -40,7 +39,7 @@ public class UsuarioManutencaoService {
 
 	public UsuarioDetalhesDto registrar(UsuarioRegistroDto usuarioRegistroDto) {
 		if (usuarioRepository.existsByCpf(usuarioRegistroDto.cpf())) {
-			throw new EntityExistsException(
+			throw new DataIntegrityViolationException(
 					"Não foi possível cadastrar o usuário. Já existe um usuário cadastrado com este CPF. Verifique e tente novamente");
 		}
 		Usuario usuario = usuarioMapper.toUsuario(usuarioRegistroDto);

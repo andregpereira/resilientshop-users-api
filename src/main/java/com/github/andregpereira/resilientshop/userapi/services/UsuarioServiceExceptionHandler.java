@@ -38,9 +38,9 @@ public class UsuarioServiceExceptionHandler {
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<Stream<DadoInvalido>> erro400(MethodArgumentNotValidException e) {
+	public ResponseEntity<Stream<DadoInvalido>> erro422(MethodArgumentNotValidException e) {
 		Stream<FieldError> erros = e.getFieldErrors().stream();
-		return ResponseEntity.badRequest().body(erros.map(DadoInvalido::new));
+		return ResponseEntity.unprocessableEntity().body(erros.map(DadoInvalido::new));
 	}
 
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -67,7 +67,7 @@ public class UsuarioServiceExceptionHandler {
 
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	private ResponseEntity<String> erro409(DataIntegrityViolationException e) {
-		if (e.getMessage().contains("uc_cpf")) {
+		if (e.getMessage() != null && e.getMessage().contains("uc_cpf")) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF já cadastrado no nosso banco de dados.");
 		}
 		return ResponseEntity.status(HttpStatus.CONFLICT).body("Dado inválido. Verifique e tente novamente");
