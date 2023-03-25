@@ -3,6 +3,7 @@ package com.github.andregpereira.resilientshop.userapi.services;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class UsuarioManutencaoService {
 	private UsuarioRepository usuarioRepository;
 
 	@Autowired
-	private UsuarioMapper usuarioMapper;
+	private UsuarioMapper usuarioMapper = Mappers.getMapper(UsuarioMapper.class);
 
 	@Autowired
 	private EnderecoRepository enderecoRepository;

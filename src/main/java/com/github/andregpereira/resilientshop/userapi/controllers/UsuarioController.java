@@ -62,12 +62,12 @@ public class UsuarioController {
 		return ResponseEntity.ok(usuarioManutencaoService.reativar(id));
 	}
 
-	// Listar todos os usuários
-	@GetMapping
-	public ResponseEntity<Page<UsuarioDto>> listar(
-			@PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 10) Pageable pageable) {
-		return ResponseEntity.ok(usuarioConsultaService.listar(pageable));
-	}
+//	// Listar todos os usuários
+//	@GetMapping
+//	public ResponseEntity<Page<UsuarioDto>> listar(
+//			@PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 10) Pageable pageable) {
+//		return ResponseEntity.ok(usuarioConsultaService.listar(pageable));
+//	}
 
 	// Pesquisar por id
 	@GetMapping("/{id}")

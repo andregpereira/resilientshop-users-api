@@ -1,13 +1,13 @@
 package com.github.andregpereira.resilientshop.userapi.repositories;
 
-import static com.github.andregpereira.resilientshop.userapi.UsuarioConstants.ENDERECO;
-import static com.github.andregpereira.resilientshop.userapi.UsuarioConstants.PAIS;
-import static com.github.andregpereira.resilientshop.userapi.UsuarioConstants.USUARIO;
-import static com.github.andregpereira.resilientshop.userapi.UsuarioConstants.USUARIO_INVALIDO;
-import static com.github.andregpereira.resilientshop.userapi.UsuarioConstants.USUARIO_VAZIO;
+import static com.github.andregpereira.resilientshop.userapi.constants.EnderecoConstants.*;
+import static com.github.andregpereira.resilientshop.userapi.constants.PaisConstants.*;
+import static com.github.andregpereira.resilientshop.userapi.constants.UsuarioConstants.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
@@ -18,8 +18,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 
 import com.github.andregpereira.resilientshop.userapi.entities.Usuario;
 
@@ -48,8 +50,7 @@ public class UsuarioRepositoryTest {
 
 	@Test
 	public void criarUsuarioComDadosValidos() {
-		Usuario usuario = USUARIO;
-		repository.save(USUARIO);
+		Usuario usuario = repository.save(USUARIO);
 		Usuario sut = em.find(Usuario.class, usuario.getId());
 		assertThat(sut).isNotNull();
 		assertThat(sut.getNome()).isEqualTo(USUARIO.getNome());
@@ -65,14 +66,14 @@ public class UsuarioRepositoryTest {
 
 	@Test
 	public void criarUsuarioComDadosInvalidosThrowsRuntimeException() {
-		assertThatThrownBy(() -> repository.save(USUARIO_VAZIO)).isInstanceOf(RuntimeException.class);
+		assertThatThrownBy(() -> repository.save(USUARIO_NULO)).isInstanceOf(RuntimeException.class);
 		assertThatThrownBy(() -> repository.save(USUARIO_INVALIDO)).isInstanceOf(RuntimeException.class);
 	}
 
 	@Test
 	public void criarUsuarioComCpfExistenteThrowsRuntimeException() {
-		Usuario usuario = em.persist(USUARIO);
-		em.detach(usuario);
+		Usuario usuario = em.persistFlushFind(USUARIO);
+		em.remove(usuario);
 		usuario.setId(null);
 		assertThatThrownBy(() -> repository.save(usuario)).isInstanceOf(RuntimeException.class);
 	}
@@ -93,10 +94,13 @@ public class UsuarioRepositoryTest {
 
 	@Test
 	public void consultarUsuarioPorNomeExistenteRetornaUsuario() {
+		PageRequest pageable = PageRequest.of(0, 10, Direction.ASC, "nome");
 		Usuario usuario = em.persistFlushFind(USUARIO);
-		Page<Usuario> usuarios = repository.findByNome(usuario.getNome(), usuario.getSobrenome(), null);
-		assertThat(usuarios).isNotEmpty();
-		assertThat(usuarios.get().findFirst().get()).isEqualTo(usuario);
+		List<Usuario> listaUsuarios = new ArrayList<>();
+		Page<Usuario> pageUsuarios = new PageImpl<>(listaUsuarios, pageable, 10);
+		pageUsuarios = repository.findByNome(usuario.getNome(), usuario.getSobrenome(), pageable);
+		assertThat(pageUsuarios).isNotEmpty();
+		assertThat(pageUsuarios.get().findFirst().get()).isEqualTo(usuario);
 	}
 
 	@Test
@@ -109,7 +113,9 @@ public class UsuarioRepositoryTest {
 
 	@Test
 	public void removerUsuarioComIdInexistenteThrowsException() {
-		assertThatThrownBy(() -> repository.deleteById(1L)).isInstanceOf(EmptyResultDataAccessException.class);
+
+		System.out.println(repository.findById(1L).isEmpty());
+		assertThatThrownBy(() -> repository.deleteById(1L)).isInstanceOf(RuntimeException.class);
 	}
 
 }

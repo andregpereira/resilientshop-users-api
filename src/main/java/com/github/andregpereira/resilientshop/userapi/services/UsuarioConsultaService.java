@@ -4,7 +4,6 @@ import java.security.InvalidParameterException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,10 +25,10 @@ public class UsuarioConsultaService {
 	@Autowired
 	private UsuarioMapper usuarioMapper;
 
-	public Page<UsuarioDto> listar(Pageable pageable) {
-		return UsuarioDto.criarPage(usuarioRepository.findAll(pageable));
-	}
-	
+//	public Page<UsuarioDto> listar(Pageable pageable) {
+//		return UsuarioDto.criarPage(usuarioRepository.findAll(pageable));
+//	}
+
 	public UsuarioDetalhesDto consultarPorId(Long id) {
 		if (!usuarioRepository.existsById(id)) {
 			throw new EntityNotFoundException(
@@ -56,8 +55,8 @@ public class UsuarioConsultaService {
 		sobrenome = sobrenome != null ? (!sobrenome.isBlank() ? sobrenome.trim() : sobrenome) : "";
 		Page<Usuario> usuarios = usuarioRepository.findByNome(nome, sobrenome, pageable);
 		if (usuarios.isEmpty()) {
-			throw new EmptyResultDataAccessException(
-					"Desculpe, não foi possível encontrar um usuário com este nome. Verifique e tente novamente", 1);
+			throw new EntityNotFoundException(
+					"Desculpe, não foi possível encontrar um usuário com este nome. Verifique e tente novamente");
 		} else if (nome.isBlank() && sobrenome.isBlank()) {
 			return UsuarioDto.criarPage(usuarioRepository.findByAtivoTrue(pageable));
 		}

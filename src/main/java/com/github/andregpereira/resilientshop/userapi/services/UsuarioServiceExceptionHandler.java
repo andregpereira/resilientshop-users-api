@@ -19,6 +19,7 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 
 @RestControllerAdvice
+@SuppressWarnings("rawtypes")
 public class UsuarioServiceExceptionHandler {
 
 	private record DadoInvalido(String campo, String mensagem) {
@@ -33,7 +34,7 @@ public class UsuarioServiceExceptionHandler {
 	}
 
 	@ExceptionHandler(InvalidParameterException.class)
-	public ResponseEntity<String> erro400(InvalidParameterException e) {
+	public ResponseEntity erro400(InvalidParameterException e) {
 		return ResponseEntity.badRequest().body(e.getMessage());
 	}
 
@@ -44,7 +45,7 @@ public class UsuarioServiceExceptionHandler {
 	}
 
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
-	public ResponseEntity<String> erro400(MethodArgumentTypeMismatchException e) {
+	public ResponseEntity erro400(MethodArgumentTypeMismatchException e) {
 		return ResponseEntity.badRequest().body("Parâmetro inválido. Verifique e tente novamente");
 	}
 
@@ -56,25 +57,25 @@ public class UsuarioServiceExceptionHandler {
 	}
 
 	@ExceptionHandler(EmptyResultDataAccessException.class)
-	public ResponseEntity<String> erro404(EmptyResultDataAccessException e) {
+	public ResponseEntity erro404(EmptyResultDataAccessException e) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 	}
 
 	@ExceptionHandler(EntityNotFoundException.class)
-	public ResponseEntity<String> erro404(EntityNotFoundException e) {
+	public ResponseEntity erro404(EntityNotFoundException e) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 	}
 
 	@ExceptionHandler(DataIntegrityViolationException.class)
-	private ResponseEntity<String> erro409(DataIntegrityViolationException e) {
+	private ResponseEntity erro409(DataIntegrityViolationException e) {
 		if (e.getMessage() != null && e.getMessage().contains("uc_cpf")) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF já cadastrado no nosso banco de dados.");
 		}
-		return ResponseEntity.status(HttpStatus.CONFLICT).body("Dado inválido. Verifique e tente novamente");
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 	}
 
 	@ExceptionHandler(EntityExistsException.class)
-	public ResponseEntity<String> erro409(EntityExistsException e) {
+	public ResponseEntity erro409(EntityExistsException e) {
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 	}
 
