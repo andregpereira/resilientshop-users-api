@@ -1,5 +1,6 @@
 package com.github.andregpereira.resilientshop.userapi.repositories;
 
+import com.github.andregpereira.resilientshop.userapi.config.PostgreSQLContainerConfig;
 import com.github.andregpereira.resilientshop.userapi.entities.Usuario;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.test.context.AtivoProfiles;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.util.Optional;
 
@@ -20,7 +23,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
-public class UsuarioRepositoryTest {
+@ActiveProfiles("it")
+@ContextConfiguration(initializers = PostgreSQLContainerConfig.PostgreSQLContainerInitializer.class)
+public class UsuarioRepositoryIT extends PostgreSQLContainerConfig {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -119,20 +124,22 @@ public class UsuarioRepositoryTest {
     public void consultarUsuarioPorIdExistenteEAtivoRetornaTrueEUsuario() {
         em.persist(PAIS);
         em.persist(ENDERECO);
-        Usuario usuario = em.persistFlushFind(USUARIO);
-        Optional<Usuario> optionalUsuario = usuarioRepository.findByIdAndAtivoTrue(usuario.getId());
-        assertThat(usuarioRepository.existsById(usuario.getId())).isTrue();
-        assertThat(optionalUsuario).isNotEmpty().get().isEqualTo(usuario);
+        Usuario sut = em.persistFlushFind(USUARIO);
+        Optional<Usuario> optionalUsuario = usuarioRepository.findByIdAndAtivoTrue(sut.getId());
+        assertThat(usuarioRepository.existsById(sut.getId())).isTrue();
+        assertThat(optionalUsuario).isNotEmpty();
+        assertThat(optionalUsuario.get()).isEqualTo(sut);
     }
 
     @Test
     public void consultarUsuarioPorIdExistenteEInativoRetornaTrueEUsuario() {
         em.persist(PAIS);
         em.persist(ENDERECO);
-        Usuario usuario = em.persistFlushFind(USUARIO_INATIVO);
-        Optional<Usuario> optionalUsuario = usuarioRepository.findByIdAndAtivoFalse(usuario.getId());
-        assertThat(usuarioRepository.existsById(usuario.getId())).isTrue();
-        assertThat(optionalUsuario).isNotEmpty().get().isEqualTo(usuario);
+        Usuario sut = em.persistFlushFind(USUARIO_INATIVO);
+        Optional<Usuario> optionalUsuario = usuarioRepository.findByIdAndAtivoFalse(sut.getId());
+        assertThat(usuarioRepository.existsById(sut.getId())).isTrue();
+        assertThat(optionalUsuario).isNotEmpty();
+        assertThat(optionalUsuario.get()).isEqualTo(sut);
     }
 
     @Test
@@ -152,9 +159,9 @@ public class UsuarioRepositoryTest {
     public void consultarUsuarioPorCpfExistenteEAtivoRetornaTrueEUsuario() {
         em.persist(PAIS);
         em.persist(ENDERECO);
-        Usuario usuario = em.persistFlushFind(USUARIO);
-        Optional<Usuario> optionalUsuario = usuarioRepository.findByCpfAndAtivoTrue(usuario.getCpf());
-        assertThat(usuarioRepository.existsByCpf(usuario.getCpf())).isTrue();
+        Usuario sut = em.persistFlushFind(USUARIO);
+        Optional<Usuario> optionalUsuario = usuarioRepository.findByCpfAndAtivoTrue(sut.getCpf());
+        assertThat(usuarioRepository.existsByCpf(USUARIO.getCpf())).isTrue();
         assertThat(optionalUsuario).isNotEmpty();
     }
 
@@ -162,9 +169,9 @@ public class UsuarioRepositoryTest {
     public void consultarUsuarioPorCpfExistenteEInativoRetornaTrueEEmpty() {
         em.persist(PAIS);
         em.persist(ENDERECO);
-        Usuario usuario = em.persistFlushFind(USUARIO_INATIVO);
-        Optional<Usuario> optionalUsuario = usuarioRepository.findByCpfAndAtivoTrue(usuario.getCpf());
-        assertThat(usuarioRepository.existsByCpf(usuario.getCpf())).isTrue();
+        Usuario sut = em.persistFlushFind(USUARIO_INATIVO);
+        Optional<Usuario> optionalUsuario = usuarioRepository.findByCpfAndAtivoTrue(sut.getCpf());
+        assertThat(usuarioRepository.existsByCpf(USUARIO_INATIVO.getCpf())).isTrue();
         assertThat(optionalUsuario).isEmpty();
     }
 
@@ -179,12 +186,12 @@ public class UsuarioRepositoryTest {
     public void consultarUsuarioPorNomeExistenteEAtivoRetornaUsuario() {
         em.persist(PAIS);
         em.persist(ENDERECO);
-        Usuario usuario = em.persistFlushFind(USUARIO);
+        Usuario sut = em.persistFlushFind(USUARIO);
         PageRequest pageable = PageRequest.of(0, 10, Direction.ASC, "nome");
-        Page<Usuario> pageUsuarios = usuarioRepository.findByNomeAndAtivoTrue(usuario.getNome(), usuario.getSobrenome(),
+        Page<Usuario> pageUsuarios = usuarioRepository.findByNomeAndAtivoTrue(sut.getNome(), sut.getSobrenome(),
                 pageable);
         assertThat(pageUsuarios).isNotEmpty().hasSize(1);
-        assertThat(pageUsuarios.getContent().get(0)).isEqualTo(usuario);
+        assertThat(pageUsuarios.getContent().get(0)).isEqualTo(sut);
     }
 
     @Test
@@ -253,9 +260,6 @@ public class UsuarioRepositoryTest {
         Usuario usuarioRemovido = em.find(Usuario.class, sut.getId());
         assertThat(usuarioRemovido).isNull();
     }
-//    @Test
-//    public void removerUsuarioComIdInexistenteThrowsException() {
-//        assertThatThrownBy(() -> usuarioRepository.deleteById(100L)).isInstanceOf(EmptyResultDataAccessException.class);
-//    }
+
 }
 

@@ -1,22 +1,15 @@
 package com.github.andregpereira.resilientshop.userapi.entities;
 
-import java.util.List;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
-@Builder
+import java.util.Objects;
+
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -24,18 +17,30 @@ import lombok.NoArgsConstructor;
 @SequenceGenerator(name = "pais", sequenceName = "sq_paises", allocationSize = 1)
 public class Pais {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pais")
-	@Column(name = "id_pais")
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pais")
+    @Column(name = "id_pais")
+    private Long id;
 
-	@Column(name = "nome", length = 45, nullable = false)
-	private String nome;
+    @Column(name = "nome", length = 45, nullable = false)
+    private String nome;
 
-	@Column(name = "codigo", length = 4, nullable = false)
-	private String codigo;
+    @Column(name = "codigo", length = 4, nullable = false)
+    private String codigo;
 
-	@OneToMany(mappedBy = "pais")
-	private List<Endereco> enderecos;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Pais pais = (Pais) o;
+        return Objects.equals(id, pais.id) && Objects.equals(nome, pais.nome) && Objects.equals(codigo, pais.codigo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, nome, codigo);
+    }
 
 }
