@@ -22,7 +22,7 @@ public class UsuarioServiceExceptionHandler {
     }
 
     @ExceptionHandler(InvalidParameterException.class)
-    public ResponseEntity erro400(InvalidParameterException e) {
+    public ResponseEntity<String> erro400(InvalidParameterException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
@@ -33,7 +33,7 @@ public class UsuarioServiceExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity erro400(MethodArgumentTypeMismatchException e) {
+    public ResponseEntity<String> erro400(MethodArgumentTypeMismatchException e) {
         return ResponseEntity.badRequest().body("Parâmetro inválido. Verifique e tente novamente");
     }
 
@@ -44,12 +44,12 @@ public class UsuarioServiceExceptionHandler {
     }
 
     @ExceptionHandler(UsuarioNotFoundException.class)
-    public ResponseEntity erro404(UsuarioNotFoundException e) {
+    public ResponseEntity<String> erro404(UsuarioNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
     @ExceptionHandler(UsuarioAlreadyExistsException.class)
-    private ResponseEntity erro409(UsuarioAlreadyExistsException e) {
+    private ResponseEntity<String> erro409(UsuarioAlreadyExistsException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 

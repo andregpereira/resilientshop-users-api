@@ -18,6 +18,8 @@ public class UsuarioDtoConstants {
 
     public static final UsuarioDetalhesDto USUARIO_DETALHES_DTO = new UsuarioDetalhesDto(null, "nome", "sobrenome",
             "22426853093", null, LOCAL_DATE, LOCAL_DATE, true, ENDERECO_DTO);
+    public static final UsuarioDetalhesDto USUARIO_DETALHES_DTO_PAIS_NOVO = new UsuarioDetalhesDto(null, "nome", "sobrenome",
+            "22426853093", null, LOCAL_DATE, LOCAL_DATE, true, ENDERECO_DTO_PAIS_NOVO);
 
     public static final UsuarioDetalhesDto USUARIO_DETALHES_DTO_ATUALIZADO = new UsuarioDetalhesDto(null, "nome2",
             "sobrenome2", "22426853093", null, LOCAL_DATE, LOCAL_DATE, true, ENDERECO_DTO_ATUALIZADO);

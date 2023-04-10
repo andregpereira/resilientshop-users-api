@@ -21,89 +21,89 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = UsuarioMapperImpl.class)
-public class UsuarioMapperTest {
+class UsuarioMapperTest {
 
     @InjectMocks
     private UsuarioMapperImpl mapper;
 
     @Test
-    public void usuarioRegistroDtoRetornaUsuario() {
+    void usuarioRegistroDtoRetornaUsuario() {
         assertThat(mapper.toUsuario(USUARIO_REGISTRO_DTO)).isNotNull().isExactlyInstanceOf(Usuario.class);
     }
 
     @Test
-    public void usuarioAtualizacaoDtoRetornaUsuario() {
+    void usuarioAtualizacaoDtoRetornaUsuario() {
         assertThat(mapper.toUsuario(USUARIO_ATUALIZACAO_DTO)).isNotNull().isExactlyInstanceOf(Usuario.class);
     }
 
     @Test
-    public void usuarioRegistroDtoNuloRetornaNull() {
-        assertThat(USUARIO).isNotEqualTo(mapper.toUsuario((UsuarioRegistroDto) null));
+    void usuarioRegistroDtoNuloRetornaNull() {
+        assertThat(mapper.toUsuario((UsuarioRegistroDto) null)).isNotEqualTo(USUARIO);
     }
 
     @Test
-    public void usuarioAtualizacaoDtoNuloRetornaNull() {
-        assertThat(USUARIO).isNotEqualTo(mapper.toUsuario((UsuarioAtualizacaoDto) null));
+    void usuarioAtualizacaoDtoNuloRetornaNull() {
+        assertThat(mapper.toUsuario((UsuarioAtualizacaoDto) null)).isNotEqualTo(USUARIO);
     }
 
     @Test
-    public void usuarioRetornaUsuarioDto() {
-        assertThat(USUARIO_DTO).isEqualTo(mapper.toUsuarioDto(USUARIO));
+    void usuarioRetornaUsuarioDto() {
+        assertThat(mapper.toUsuarioDto(USUARIO)).isEqualTo(USUARIO_DTO);
     }
 
     @Test
-    public void usuarioRetornaUsuarioDetalhesDto() {
-        assertThat(USUARIO_DETALHES_DTO).isEqualTo(mapper.toUsuarioDetalhesDto(USUARIO));
+    void usuarioRetornaUsuarioDetalhesDto() {
+        assertThat(mapper.toUsuarioDetalhesDto(USUARIO)).isEqualTo(USUARIO_DETALHES_DTO);
     }
 
     @Test
-    public void usuarioNuloRetornaUsuarioDtoNull() {
-        assertThat(USUARIO_DTO).isNotEqualTo(mapper.toUsuarioDto(null));
+    void usuarioNuloRetornaUsuarioDtoNull() {
+        assertThat(mapper.toUsuarioDto(null)).isNotEqualTo(USUARIO_DTO);
     }
 
     @Test
-    public void usuarioNuloRetornaUsuarioDetalhesDtoNull() {
-        assertThat(USUARIO_DETALHES_DTO).isNotEqualTo(mapper.toUsuarioDetalhesDto(null));
+    void usuarioNuloRetornaUsuarioDetalhesDtoNull() {
+        assertThat(mapper.toUsuarioDetalhesDto(null)).isNotEqualTo(USUARIO_DETALHES_DTO);
     }
 
     @Test
-    public void enderecoRegistroDtoRetornaEndereco() {
-        assertThat(ENDERECO).isEqualTo(mapper.enderecoRegistroDtoToEndereco(ENDERECO_REGISTRO_DTO));
+    void enderecoRegistroDtoRetornaEndereco() {
+        assertThat(mapper.enderecoRegistroDtoToEndereco(ENDERECO_REGISTRO_DTO)).isEqualTo(ENDERECO);
     }
 
     @Test
-    public void enderecoRegistroDtoNuloRetornaNull() {
-        assertThat(ENDERECO).isNotEqualTo(mapper.enderecoRegistroDtoToEndereco(null));
+    void enderecoRegistroDtoNuloRetornaNull() {
+        assertThat(mapper.enderecoRegistroDtoToEndereco(null)).isNotEqualTo(ENDERECO);
     }
 
     @Test
-    public void enderecoRetornaEnderecoDto() {
-        assertThat(ENDERECO_DTO).isEqualTo(mapper.enderecoToEnderecoDto(ENDERECO));
+    void enderecoRetornaEnderecoDto() {
+        assertThat(mapper.enderecoToEnderecoDto(ENDERECO)).isEqualTo(ENDERECO_DTO);
     }
 
     @Test
-    public void enderecoNuloRetornaNull() {
-        assertThat(ENDERECO_DTO).isNotEqualTo(mapper.enderecoToEnderecoDto(null));
+    void enderecoNuloRetornaNull() {
+        assertThat(mapper.enderecoToEnderecoDto(null)).isNotEqualTo(ENDERECO_DTO);
     }
 
     @Test
-    public void paisRegistroDtoRetornaPais() {
-        assertThat(PAIS).isEqualTo(mapper.paisRegistroDtoToPais(PAIS_REGISTRO_DTO));
+    void paisRegistroDtoRetornaPais() {
+        assertThat(mapper.paisRegistroDtoToPais(PAIS_REGISTRO_DTO)).isEqualTo(PAIS);
     }
 
     @Test
-    public void paisRegistroDtoNuloRetornaNull() {
-        assertThat(PAIS).isNotEqualTo(mapper.paisRegistroDtoToPais(null));
+    void paisRegistroDtoNuloRetornaNull() {
+        assertThat(mapper.paisRegistroDtoToPais(null)).isNotEqualTo(PAIS);
     }
 
     @Test
-    public void paisRetornaPaisDto() {
-        assertThat(PAIS_DTO).isEqualTo(mapper.paisToPaisDto(PAIS));
+    void paisRetornaPaisDto() {
+        assertThat(mapper.paisToPaisDto(PAIS)).isEqualTo(PAIS_DTO);
     }
 
     @Test
-    public void paisNuloRetornaNull() {
-        assertThat(PAIS_DTO).isNotEqualTo(mapper.paisToPaisDto(null));
+    void paisNuloRetornaNull() {
+        assertThat(mapper.paisToPaisDto(null)).isNotEqualTo(PAIS_DTO);
     }
 
 }

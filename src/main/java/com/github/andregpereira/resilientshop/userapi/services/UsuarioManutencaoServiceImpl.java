@@ -13,12 +13,14 @@ import com.github.andregpereira.resilientshop.userapi.repositories.EnderecoRepos
 import com.github.andregpereira.resilientshop.userapi.repositories.PaisRepository;
 import com.github.andregpereira.resilientshop.userapi.repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -34,6 +36,7 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
 
     public UsuarioDetalhesDto registrar(UsuarioRegistroDto usuarioRegistroDto) {
         if (usuarioRepository.existsByCpf(usuarioRegistroDto.cpf())) {
+            log.info("Usuário já cadastrado com o CPF informado");
             throw new UsuarioAlreadyExistsException(
                     "Não foi possível cadastrar o usuário. Já existe um usuário cadastrado com este CPF. Verifique e tente novamente");
         }
@@ -45,19 +48,24 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
         usuario.setAtivo(true);
         Optional<Pais> optionalPais = paisRepository.findByNomeOrCodigo(pais.getNome(), pais.getCodigo());
         if (optionalPais.isEmpty()) {
+            log.info("País não encontrado. Criando novo país");
             pais = paisRepository.save(pais);
         } else {
+            log.info("Retornando país encontrado");
             pais = optionalPais.get();
         }
         endereco.setPais(pais);
         endereco = enderecoRepository.save(endereco);
         usuario.setEndereco(endereco);
-        return usuarioMapper.toUsuarioDetalhesDto(usuarioRepository.save(usuario));
+        usuario = usuarioRepository.save(usuario);
+        log.info("Usuário criado");
+        return usuarioMapper.toUsuarioDetalhesDto(usuario);
     }
 
     public UsuarioDetalhesDto atualizar(Long id, UsuarioAtualizacaoDto usuarioAtualizacaoDto) {
         Optional<Usuario> usuarioOptional = usuarioRepository.findByIdAndAtivoTrue(id);
         if (usuarioOptional.isEmpty()) {
+            log.info("Usuário com id {} não encontrado", id);
             throw new UsuarioNotFoundException(
                     "Não foi possível encontrar um usuário ativo com este id. Verifique e tente novamente");
         }
@@ -72,21 +80,28 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
         usuarioAtualizado.setAtivo(true);
         Optional<Pais> optionalPais = paisRepository.findByNomeOrCodigo(pais.getNome(), pais.getCodigo());
         if (optionalPais.isEmpty()) {
+            log.info("País não encontrado. Criando novo país");
             pais = paisRepository.save(pais);
         } else {
+            log.info("Retornando país encontrado");
             pais = optionalPais.get();
         }
         endereco.setId(usuarioAntigo.getEndereco().getId());
         endereco.setPais(pais);
         endereco = enderecoRepository.save(endereco);
         usuarioAtualizado.setEndereco(endereco);
-        return usuarioMapper.toUsuarioDetalhesDto(usuarioRepository.save(usuarioAtualizado));
+        Usuario usuario = usuarioRepository.save(usuarioAtualizado);
+        log.info("Usuário com id {} atualizado", id);
+        return usuarioMapper.toUsuarioDetalhesDto(usuario);
     }
 
     public String desativar(Long id) {
         usuarioRepository.findByIdAndAtivoTrue(id).ifPresentOrElse(u -> {
-            usuarioRepository.deactivateById(id);
+            u.setAtivo(false);
+            usuarioRepository.save(u);
+            log.info("Usuário com id {} desativado", id);
         }, () -> {
+            log.info("Usuário ativo com id {} não encontrado", id);
             throw new UsuarioNotFoundException(
                     "Não foi possível encontrar um usuário ativo com este id. Verifique e tente novamente");
         });
@@ -95,8 +110,11 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
 
     public String reativar(Long id) {
         usuarioRepository.findByIdAndAtivoFalse(id).ifPresentOrElse(u -> {
-            usuarioRepository.activateById(id);
+            u.setAtivo(true);
+            usuarioRepository.save(u);
+            log.info("Usuário com id {} reativado", id);
         }, () -> {
+            log.info("Usuário inativo com id {} não encontrado", id);
             throw new UsuarioNotFoundException(
                     "Não foi possível encontrar um usuário inativo com este id. Verifique e tente novamente");
         });

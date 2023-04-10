@@ -23,9 +23,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
-@ActiveProfiles("it")
+@ActiveProfiles("postgresqlcontainer")
 @ContextConfiguration(initializers = PostgreSQLContainerConfig.PostgreSQLContainerInitializer.class)
-public class UsuarioRepositoryIT extends PostgreSQLContainerConfig {
+class UsuarioRepositoryPostgreSQLContainerTest extends PostgreSQLContainerConfig {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -36,7 +36,9 @@ public class UsuarioRepositoryIT extends PostgreSQLContainerConfig {
     @AfterEach
     public void afterEach() {
         USUARIO.setId(null);
+        USUARIO.setAtivo(true);
         USUARIO_INATIVO.setId(null);
+        USUARIO_INATIVO.setAtivo(false);
         USUARIO_ATUALIZADO.setId(null);
         USUARIO_ATUALIZADO_PAIS_NOVO.setId(null);
         ENDERECO.setId(null);
@@ -47,7 +49,7 @@ public class UsuarioRepositoryIT extends PostgreSQLContainerConfig {
     }
 
     @Test
-    public void criarUsuarioComDadosValidosRetornaUsuario() {
+    void criarUsuarioComDadosValidosRetornaUsuario() {
         em.persist(PAIS);
         em.persist(ENDERECO);
         Usuario usuario = usuarioRepository.save(USUARIO);
@@ -65,13 +67,13 @@ public class UsuarioRepositoryIT extends PostgreSQLContainerConfig {
     }
 
     @Test
-    public void criarUsuarioComDadosInvalidosThrowsRuntimeException() {
+    void criarUsuarioComDadosInvalidosThrowsRuntimeException() {
         assertThatThrownBy(() -> usuarioRepository.saveAndFlush(USUARIO_VAZIO)).isInstanceOf(RuntimeException.class);
         assertThatThrownBy(() -> usuarioRepository.save(USUARIO_INVALIDO)).isInstanceOf(RuntimeException.class);
     }
 
     @Test
-    public void criarUsuarioComCpfExistenteThrowsRuntimeException() {
+    void criarUsuarioComCpfExistenteThrowsRuntimeException() {
         em.persist(PAIS);
         em.persist(ENDERECO);
         Usuario sut = em.persistFlushFind(USUARIO);
@@ -80,7 +82,7 @@ public class UsuarioRepositoryIT extends PostgreSQLContainerConfig {
     }
 
     @Test
-    public void atualizarUsuarioComDadosValidosRetornaUsuario() {
+    void atualizarUsuarioComDadosValidosRetornaUsuario() {
         em.persist(PAIS);
         em.persist(ENDERECO);
         Usuario usuarioAntigo = em.persistFlushFind(USUARIO);
@@ -108,7 +110,7 @@ public class UsuarioRepositoryIT extends PostgreSQLContainerConfig {
     }
 
     @Test
-    public void atualizarUsuarioComDadosInvalidosThrowsRuntimeException() {
+    void atualizarUsuarioComDadosInvalidosThrowsRuntimeException() {
         em.persist(PAIS);
         em.persist(ENDERECO);
         Usuario usuarioAntigo = em.persistFlushFind(USUARIO);
@@ -121,29 +123,27 @@ public class UsuarioRepositoryIT extends PostgreSQLContainerConfig {
     }
 
     @Test
-    public void consultarUsuarioPorIdExistenteEAtivoRetornaTrueEUsuario() {
+    void consultarUsuarioPorIdExistenteEAtivoRetornaTrueEUsuario() {
         em.persist(PAIS);
         em.persist(ENDERECO);
-        Usuario sut = em.persistFlushFind(USUARIO);
-        Optional<Usuario> optionalUsuario = usuarioRepository.findByIdAndAtivoTrue(sut.getId());
-        assertThat(usuarioRepository.existsById(sut.getId())).isTrue();
-        assertThat(optionalUsuario).isNotEmpty();
-        assertThat(optionalUsuario.get()).isEqualTo(sut);
+        Usuario usuario = em.persistFlushFind(USUARIO);
+        Optional<Usuario> optionalUsuario = usuarioRepository.findByIdAndAtivoTrue(usuario.getId());
+        assertThat(usuarioRepository.existsById(usuario.getId())).isTrue();
+        assertThat(optionalUsuario).isNotEmpty().contains(usuario);
     }
 
     @Test
-    public void consultarUsuarioPorIdExistenteEInativoRetornaTrueEUsuario() {
+    void consultarUsuarioPorIdExistenteEInativoRetornaTrueEUsuario() {
         em.persist(PAIS);
         em.persist(ENDERECO);
         Usuario sut = em.persistFlushFind(USUARIO_INATIVO);
         Optional<Usuario> optionalUsuario = usuarioRepository.findByIdAndAtivoFalse(sut.getId());
         assertThat(usuarioRepository.existsById(sut.getId())).isTrue();
-        assertThat(optionalUsuario).isNotEmpty();
-        assertThat(optionalUsuario.get()).isEqualTo(sut);
+        assertThat(optionalUsuario).isNotEmpty().contains(sut);
     }
 
     @Test
-    public void consultarUsuarioPorIdInexistenteRetornaFalseEEmpty() {
+    void consultarUsuarioPorIdInexistenteRetornaFalseEEmpty() {
         Optional<Usuario> optionalUsuario = usuarioRepository.findById(1L);
         Optional<Usuario> optionalUsuarioAtivoTrue = usuarioRepository.findByIdAndAtivoTrue(10L);
         Optional<Usuario> optionalUsuarioAtivoFalse = usuarioRepository.findByIdAndAtivoFalse(100L);
@@ -156,7 +156,7 @@ public class UsuarioRepositoryIT extends PostgreSQLContainerConfig {
     }
 
     @Test
-    public void consultarUsuarioPorCpfExistenteEAtivoRetornaTrueEUsuario() {
+    void consultarUsuarioPorCpfExistenteEAtivoRetornaTrueEUsuario() {
         em.persist(PAIS);
         em.persist(ENDERECO);
         Usuario sut = em.persistFlushFind(USUARIO);
@@ -166,7 +166,7 @@ public class UsuarioRepositoryIT extends PostgreSQLContainerConfig {
     }
 
     @Test
-    public void consultarUsuarioPorCpfExistenteEInativoRetornaTrueEEmpty() {
+    void consultarUsuarioPorCpfExistenteEInativoRetornaTrueEEmpty() {
         em.persist(PAIS);
         em.persist(ENDERECO);
         Usuario sut = em.persistFlushFind(USUARIO_INATIVO);
@@ -176,14 +176,14 @@ public class UsuarioRepositoryIT extends PostgreSQLContainerConfig {
     }
 
     @Test
-    public void consultarUsuarioPorCpfInexistenteRetornaFalseEEmpty() {
+    void consultarUsuarioPorCpfInexistenteRetornaFalseEEmpty() {
         Optional<Usuario> optionalUsuario = usuarioRepository.findByCpfAndAtivoTrue("99999999999");
         assertThat(usuarioRepository.existsByCpf("99999999999")).isFalse();
         assertThat(optionalUsuario).isEmpty();
     }
 
     @Test
-    public void consultarUsuarioPorNomeExistenteEAtivoRetornaUsuario() {
+    void consultarUsuarioPorNomeExistenteEAtivoRetornaUsuario() {
         em.persist(PAIS);
         em.persist(ENDERECO);
         Usuario sut = em.persistFlushFind(USUARIO);
@@ -195,7 +195,7 @@ public class UsuarioRepositoryIT extends PostgreSQLContainerConfig {
     }
 
     @Test
-    public void consultarUsuariosExistentesEAtivosPorParametroVazioRetornaUsuarios() {
+    void consultarUsuariosExistentesEAtivosPorParametroVazioRetornaUsuarios() {
         em.persist(PAIS);
         em.persist(ENDERECO);
         Usuario sut = em.persistFlushFind(USUARIO);
@@ -212,7 +212,7 @@ public class UsuarioRepositoryIT extends PostgreSQLContainerConfig {
     }
 
     @Test
-    public void consultarUsuarioPorNomeExistenteEInativoRetornaEmpty() {
+    void consultarUsuarioPorNomeExistenteEInativoRetornaEmpty() {
         em.persist(PAIS);
         em.persist(ENDERECO);
         Usuario sut = em.persistFlushFind(USUARIO_INATIVO);
@@ -223,41 +223,43 @@ public class UsuarioRepositoryIT extends PostgreSQLContainerConfig {
     }
 
     @Test
-    public void consultarUsuarioPorNomeInexistenteRetornaEmpty() {
+    void consultarUsuarioPorNomeInexistenteRetornaEmpty() {
         PageRequest pageable = PageRequest.of(0, 10, Direction.ASC, "nome");
         Page<Usuario> pageUsuarios = usuarioRepository.findByNomeAndAtivoTrue("", "", pageable);
         assertThat(pageUsuarios).isEmpty();
     }
 
     @Test
-    public void desativarUsuarioPorIdExistenteRetornaUsuarioDesativado() {
+    void desativarUsuarioPorIdExistenteRetornaUsuarioDesativado() {
         em.persist(PAIS);
         em.persist(ENDERECO);
-        Usuario sut = em.persistFlushFind(USUARIO);
-        usuarioRepository.deactivateById(sut.getId());
-        Usuario usuarioDesativado = em.find(Usuario.class, sut.getId());
+        Usuario usuario = em.persistFlushFind(USUARIO);
+        usuario.setAtivo(false);
+        usuarioRepository.save(usuario);
+        Usuario usuarioDesativado = em.find(Usuario.class, usuario.getId());
         assertThat(usuarioDesativado).isNotNull();
         assertThat(usuarioDesativado.isAtivo()).isFalse();
     }
 
     @Test
-    public void reativarUsuarioPorIdExistenteRetornaUsuarioAtivado() {
+    void reativarUsuarioPorIdExistenteRetornaUsuarioAtivado() {
         em.persist(PAIS);
         em.persist(ENDERECO);
-        Usuario sut = em.persistFlushFind(USUARIO_INATIVO);
-        usuarioRepository.activateById(sut.getId());
-        Usuario usuarioDesativado = em.find(Usuario.class, sut.getId());
+        Usuario usuario = em.persistFlushFind(USUARIO_INATIVO);
+        usuario.setAtivo(true);
+        usuarioRepository.save(usuario);
+        Usuario usuarioDesativado = em.find(Usuario.class, usuario.getId());
         assertThat(usuarioDesativado).isNotNull();
         assertThat(usuarioDesativado.isAtivo()).isTrue();
     }
 
     @Test
-    public void removerUsuarioPorIdExistenteRetornaNulo() {
+    void removerUsuarioPorIdExistenteRetornaNulo() {
         em.persist(PAIS);
         em.persist(ENDERECO);
-        Usuario sut = em.persistFlushFind(USUARIO);
-        usuarioRepository.deleteById(sut.getId());
-        Usuario usuarioRemovido = em.find(Usuario.class, sut.getId());
+        Usuario usuario = em.persistFlushFind(USUARIO);
+        usuarioRepository.deleteById(usuario.getId());
+        Usuario usuarioRemovido = em.find(Usuario.class, usuario.getId());
         assertThat(usuarioRemovido).isNull();
     }
 

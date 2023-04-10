@@ -31,7 +31,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class UsuarioConsultaServiceTest {
+class UsuarioConsultaServiceTest {
 
     @InjectMocks
     private UsuarioConsultaServiceImpl consultaService;
@@ -43,37 +43,36 @@ public class UsuarioConsultaServiceTest {
     private UsuarioRepository usuarioRepository;
 
     @Test
-    public void consultarUsuarioPorIdExistenteRetornaUsuarioDetalhesDto() {
-        given(usuarioRepository.existsById(1L)).willReturn(true);
+    void consultarUsuarioPorIdExistenteRetornaUsuarioDetalhesDto() {
         when(usuarioRepository.findById(1L)).thenReturn(Optional.of(USUARIO));
         UsuarioDetalhesDto sut = consultaService.consultarPorId(1L);
         assertThat(sut).isNotNull().isEqualTo(USUARIO_DETALHES_DTO);
     }
 
     @Test
-    public void consultarUsuarioPorIdInexistenteThrowsEntityNotFoundException() {
+    void consultarUsuarioPorIdInexistenteThrowsEntityNotFoundException() {
         assertThatThrownBy(() -> consultaService.consultarPorId(10L)).isInstanceOf(
                 UsuarioNotFoundException.class).hasMessage(
                 "Não foi possível encontrar um usuário ativo com este id. Verifique e tente novamente");
     }
 
     @Test
-    public void consultarUsuarioPorCpfExistenteEAtivoRetornaUsuarioDetalhesDto() {
+    void consultarUsuarioPorCpfExistenteEAtivoRetornaUsuarioDetalhesDto() {
         given(usuarioRepository.findByCpfAndAtivoTrue(USUARIO.getCpf())).willReturn(Optional.of(USUARIO));
         UsuarioDetalhesDto sut = consultaService.consultarPorCpf(USUARIO.getCpf());
         assertThat(sut).isNotNull().isEqualTo(USUARIO_DETALHES_DTO);
     }
 
     @Test
-    public void consultarUsuarioPorCpfInexistenteThrowsException() {
-        given(usuarioRepository.findByCpfAndAtivoTrue(USUARIO.getCpf())).willReturn(Optional.empty());
-        assertThatThrownBy(() -> consultaService.consultarPorCpf(USUARIO.getCpf())).isInstanceOf(
+    void consultarUsuarioPorCpfInexistenteThrowsException() {
+        given(usuarioRepository.findByCpfAndAtivoTrue("12345678901")).willReturn(Optional.empty());
+        assertThatThrownBy(() -> consultaService.consultarPorCpf("12345678901")).isInstanceOf(
                 UsuarioNotFoundException.class).hasMessage(
-                "Desculpe, não foi possível encontrar um usuário com este CPF. Verifique e tente novamente");
+                "Desculpe, não foi possível encontrar um usuário ativo com este CPF. Verifique e tente novamente");
     }
 
     @Test
-    public void consultarUsuarioPorCpfInvalidoThrowsException() {
+    void consultarUsuarioPorCpfInvalidoThrowsException() {
         assertThatThrownBy(() -> consultaService.consultarPorCpf(null)).isInstanceOf(
                 InvalidParameterException.class).hasMessage(
                 "Não foi possível realizar a busca por CPF. O CPF não foi digitado corretamente. Verifique e tente novamente");
@@ -86,10 +85,13 @@ public class UsuarioConsultaServiceTest {
         assertThatThrownBy(() -> consultaService.consultarPorCpf("123.456.789-5555")).isInstanceOf(
                 InvalidParameterException.class).hasMessage(
                 "Não foi possível realizar a busca por CPF. O CPF não foi digitado corretamente. Verifique e tente novamente");
+        assertThatThrownBy(() -> consultaService.consultarPorCpf("abc")).isInstanceOf(
+                InvalidParameterException.class).hasMessage(
+                "Não foi possível realizar a busca por CPF. O CPF não foi digitado corretamente. Verifique e tente novamente");
     }
 
     @Test
-    public void consultarUsuarioPorNomeExistenteRetornaUsuarioDto() {
+    void consultarUsuarioPorNomeExistenteRetornaUsuarioDto() {
         PageRequest pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "nome");
         List<Usuario> listaUsuarios = new ArrayList<>();
         listaUsuarios.add(USUARIO);
@@ -101,7 +103,7 @@ public class UsuarioConsultaServiceTest {
     }
 
     @Test
-    public void consultarUsuarioPorSobrenomeExistenteRetornaUsuarioDto() {
+    void consultarUsuarioPorSobrenomeExistenteRetornaUsuarioDto() {
         PageRequest pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "nome");
         List<Usuario> listaUsuarios = new ArrayList<>();
         listaUsuarios.add(USUARIO);
@@ -113,7 +115,7 @@ public class UsuarioConsultaServiceTest {
     }
 
     @Test
-    public void consultarUsuarioPorNomeOuSobrenomeVazioRetornaUsuarioDto() {
+    void consultarUsuarioPorNomeOuSobrenomeVazioRetornaUsuarioDto() {
         PageRequest pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "nome");
         List<Usuario> listaUsuarios = new ArrayList<>();
         listaUsuarios.add(USUARIO);
@@ -127,7 +129,7 @@ public class UsuarioConsultaServiceTest {
     }
 
     @Test
-    public void consultarUsuarioPorNomeInexistenteThrowsException() {
+    void consultarUsuarioPorNomeInexistenteThrowsException() {
         PageRequest pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "nome");
         given(usuarioRepository.findByNomeAndAtivoTrue(anyString(), anyString(), any(Pageable.class))).willReturn(
                 Page.empty());

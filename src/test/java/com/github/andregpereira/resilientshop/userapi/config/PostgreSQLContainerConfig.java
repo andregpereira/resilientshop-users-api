@@ -7,11 +7,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.lifecycle.Startables;
 import org.testcontainers.utility.DockerImageName;
 
-//@Testcontainers
-//@ContextConfiguration(initializers = PostgreSQLContainerConfig.PostgreSQLContainerInitializer.class)
 public abstract class PostgreSQLContainerConfig {
 
-    //    @Container
     private static final PostgreSQLContainer<?> POSTGRESQL_CONTAINER = new PostgreSQLContainer<>(
             DockerImageName.parse("postgres:15.2"));
 

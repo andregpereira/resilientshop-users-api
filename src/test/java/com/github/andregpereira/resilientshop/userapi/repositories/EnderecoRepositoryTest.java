@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
-public class EnderecoRepositoryTest {
+class EnderecoRepositoryTest {
 
     @Autowired
     private EnderecoRepository repository;
@@ -34,7 +34,7 @@ public class EnderecoRepositoryTest {
     }
 
     @Test
-    public void criarEnderecoComDadosValidosRetornaEndereco() {
+    void criarEnderecoComDadosValidosRetornaEndereco() {
         em.persist(PAIS);
         Endereco endereco = repository.save(ENDERECO);
         Endereco sut = em.find(Endereco.class, endereco.getId());
@@ -50,13 +50,13 @@ public class EnderecoRepositoryTest {
     }
 
     @Test
-    public void criarEnderecoComDadosInvalidosThrowsRuntimeException() {
+    void criarEnderecoComDadosInvalidosThrowsRuntimeException() {
         assertThatThrownBy(() -> repository.saveAndFlush(ENDERECO_VAZIO)).isInstanceOf(RuntimeException.class);
         assertThatThrownBy(() -> repository.save(ENDERECO_INVALIDO)).isInstanceOf(RuntimeException.class);
     }
 
     @Test
-    public void atualizarEnderecoComDadosValidosRetornaEndereco() {
+    void atualizarEnderecoComDadosValidosRetornaEndereco() {
         em.persist(PAIS);
         Endereco enderecoAntigo = em.persistFlushFind(ENDERECO);
         Endereco enderecoAtualizado = ENDERECO_ATUALIZADO;
@@ -75,7 +75,7 @@ public class EnderecoRepositoryTest {
     }
 
     @Test
-    public void atualizarEnderecoComDadosInvalidosThrowsRuntimeException() {
+    void atualizarEnderecoComDadosInvalidosThrowsRuntimeException() {
         em.persist(PAIS);
         Endereco enderecoAntigo = em.persistFlushFind(ENDERECO);
         Endereco sutVazio = ENDERECO_VAZIO;
@@ -87,7 +87,7 @@ public class EnderecoRepositoryTest {
     }
 
     @Test
-    public void consultarEnderecoPorIdExistenteRetornaTrueEEndereco() {
+    void consultarEnderecoPorIdExistenteRetornaTrueEEndereco() {
         em.persist(PAIS);
         Endereco endereco = em.persistFlushFind(ENDERECO);
         Optional<Endereco> optionalEndereco = repository.findById(endereco.getId());
@@ -96,14 +96,14 @@ public class EnderecoRepositoryTest {
     }
 
     @Test
-    public void consultarEnderecoPorIdInexistenteRetornaFalseEEmpty() {
+    void consultarEnderecoPorIdInexistenteRetornaFalseEEmpty() {
         Optional<Endereco> optionalEndereco = repository.findById(10L);
         assertThat(repository.existsById(10L)).isFalse();
         assertThat(optionalEndereco).isEmpty();
     }
 
     @Test
-    public void removerEnderecoPorIdExistenteRetornaNulo() {
+    void removerEnderecoPorIdExistenteRetornaNulo() {
         em.persist(PAIS);
         Endereco endereco = em.persistFlushFind(ENDERECO);
         repository.deleteById(endereco.getId());

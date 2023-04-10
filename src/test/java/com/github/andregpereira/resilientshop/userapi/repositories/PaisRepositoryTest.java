@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
-public class PaisRepositoryTest {
+class PaisRepositoryTest {
 
     @Autowired
     private PaisRepository repository;
@@ -29,7 +29,7 @@ public class PaisRepositoryTest {
     }
 
     @Test
-    public void criarPaisComDadosValidosRetornaPais() {
+    void criarPaisComDadosValidosRetornaPais() {
         Pais pais = repository.save(PAIS);
         Pais sut = em.find(Pais.class, pais.getId());
         assertThat(sut).isNotNull();
@@ -38,38 +38,48 @@ public class PaisRepositoryTest {
     }
 
     @Test
-    public void criarPaisComDadosInvalidosThrowsRuntimeException() {
+    void criarPaisComDadosInvalidosThrowsRuntimeException() {
         assertThatThrownBy(() -> repository.saveAndFlush(PAIS_VAZIO)).isInstanceOf(RuntimeException.class);
         assertThatThrownBy(() -> repository.saveAndFlush(PAIS_INVALIDO)).isInstanceOf(RuntimeException.class);
     }
 
     @Test
-    public void consultarPaisPorIdExistenteRetornaTrueEPais() {
+    void consultarPaisPorIdExistenteRetornaTrueEPais() {
         Pais pais = em.persistFlushFind(PAIS);
         Optional<Pais> optionalPais = repository.findById(pais.getId());
         assertThat(repository.existsById(pais.getId())).isTrue();
-        assertThat(optionalPais).isNotEmpty().get().isNotNull().isEqualTo(PAIS);
+        assertThat(optionalPais).isNotEmpty().get().isEqualTo(PAIS);
     }
 
     @Test
-    public void consultarPaisPorIdInexistenteRetornaFalseEEmpty() {
+    void consultarPaisPorIdInexistenteRetornaFalseEEmpty() {
         Optional<Pais> optionalPais = repository.findById(10L);
         assertThat(repository.existsById(10L)).isFalse();
         assertThat(optionalPais).isEmpty();
     }
 
     @Test
-    public void consultarPaisPorNomeOuCodigoExistentesRetornaPais() {
+    void consultarPaisPorNomeOuCodigoExistentesRetornaPais() {
         em.persist(PAIS);
         em.persist(PAIS_NOVO);
         Optional<Pais> brasil = repository.findByNomeOrCodigo("Brasil", null);
-        Optional<Pais> eua = repository.findByNomeOrCodigo(null, "+001");
-        assertThat(brasil).isNotEmpty().get().isNotNull().isEqualTo(PAIS);
-        assertThat(eua).isNotEmpty().get().isNotNull().isEqualTo(PAIS_NOVO);
+        Optional<Pais> eua = repository.findByNomeOrCodigo("EUA", null);
+        assertThat(brasil).isNotEmpty().get().isEqualTo(PAIS);
+        assertThat(eua).isNotEmpty().get().isEqualTo(PAIS_NOVO);
     }
 
     @Test
-    public void removerPaisPorIdExistenteRetornaNulo() {
+    void consultarPaisPorCodigoExistentesRetornaPais() {
+        em.persist(PAIS);
+        em.persist(PAIS_NOVO);
+        Optional<Pais> brasil = repository.findByNomeOrCodigo(null, "+055");
+        Optional<Pais> eua = repository.findByNomeOrCodigo(null, "+001");
+        assertThat(brasil).isNotEmpty().get().isEqualTo(PAIS);
+        assertThat(eua).isNotEmpty().get().isEqualTo(PAIS_NOVO);
+    }
+
+    @Test
+    void removerPaisPorIdExistenteRetornaNulo() {
         em.persist(PAIS);
         Pais pais = em.persistFlushFind(PAIS);
         repository.deleteById(pais.getId());

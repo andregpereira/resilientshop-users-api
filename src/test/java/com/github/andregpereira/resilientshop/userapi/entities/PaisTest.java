@@ -6,30 +6,30 @@ import static com.github.andregpereira.resilientshop.userapi.constants.PaisConst
 import static com.github.andregpereira.resilientshop.userapi.constants.PaisConstants.PAIS_NOVO;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PaisTest {
+class PaisTest {
 
     @Test
-    public void equalsIgualRetornaTrue() {
-        assertThat(PAIS).isEqualTo((Object) PAIS);
-        assertThat(PAIS).isEqualTo(new Pais(null, "Brasil", "+055"));
+    void equalsIgualRetornaTrue() {
+        assertThat((Object) PAIS).isEqualTo(PAIS);
+        assertThat(new Pais(null, "Brasil", "+055")).isEqualTo(PAIS);
     }
 
     @Test
-    public void equalsDivergenteRetornaFalse() {
+    void equalsDivergenteRetornaFalse() {
         assertThat(PAIS).isNotEqualTo(null);
-        assertThat(PAIS).isNotEqualTo(new Object());
-        assertThat(PAIS).isNotEqualTo(new Pais(1L, "", ""));
-        assertThat(PAIS).isNotEqualTo(new Pais(null, "Brasil", ""));
-        assertThat(PAIS).isNotEqualTo(new Pais(null, "", "+055"));
+        assertThat(new Object()).isNotEqualTo(PAIS);
+        assertThat(new Pais(1L, "", "")).isNotEqualTo(PAIS);
+        assertThat(new Pais(null, "Brasil", "")).isNotEqualTo(PAIS);
+        assertThat(new Pais(null, "", "+055")).isNotEqualTo(PAIS);
     }
 
     @Test
-    public void hashCodeIgualRetornaTrue() {
+    void hashCodeIgualRetornaTrue() {
         assertThat(PAIS.hashCode()).isEqualTo((Object) PAIS.hashCode());
     }
 
     @Test
-    public void hashCodeDivergenteRetornaFalse() {
+    void hashCodeDivergenteRetornaFalse() {
         assertThat(PAIS.hashCode()).isNotEqualTo((Object) PAIS_NOVO.hashCode());
     }
 

@@ -10,6 +10,9 @@ public class EnderecoDtoConstants {
     public static final EnderecoDto ENDERECO_DTO = new EnderecoDto(null, "12345-678", "estado", "cidade", "bairro",
             "rua", "20", null, PAIS_DTO);
 
+    public static final EnderecoDto ENDERECO_DTO_PAIS_NOVO = new EnderecoDto(null, "12345-678", "estado", "cidade",
+            "bairro", "rua", "20", null, PAIS_DTO_NOVO);
+
     public static final EnderecoDto ENDERECO_DTO_ATUALIZADO = new EnderecoDto(null, "12345-670", "estado2", "cidade2",
             "bairro2", "rua2", "202", null, PAIS_DTO);
 
