@@ -6,6 +6,7 @@ import com.github.andregpereira.resilientshop.userapi.dtos.usuario.UsuarioDto;
 import com.github.andregpereira.resilientshop.userapi.dtos.usuario.UsuarioRegistroDto;
 import com.github.andregpereira.resilientshop.userapi.services.UsuarioConsultaService;
 import com.github.andregpereira.resilientshop.userapi.services.UsuarioManutencaoService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class UsuarioController {
 
     // Registrar usuário
     @PostMapping
+    @Operation(operationId = "registrar", summary = "Cria um novo usuário")
     public ResponseEntity<UsuarioDetalhesDto> registrar(@RequestBody @Valid UsuarioRegistroDto usuarioRegistroDto) {
         log.info("Criando usuário...");
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioManutencaoService.registrar(usuarioRegistroDto));

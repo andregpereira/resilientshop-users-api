@@ -44,7 +44,7 @@ class UsuarioConsultaServiceTest {
 
     @Test
     void consultarUsuarioPorIdExistenteRetornaUsuarioDetalhesDto() {
-        when(usuarioRepository.findById(1L)).thenReturn(Optional.of(USUARIO));
+        given(usuarioRepository.findById(1L)).willReturn(Optional.of(USUARIO));
         UsuarioDetalhesDto sut = consultaService.consultarPorId(1L);
         assertThat(sut).isNotNull().isEqualTo(USUARIO_DETALHES_DTO);
     }
