@@ -5,8 +5,13 @@ import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
 import java.time.LocalDate;
 
-public record UsuarioDto(Long id, String nome, String sobrenome, String cpf, String telefone,
+public record UsuarioDto(Long id,
+        String nome,
+        String sobrenome,
+        String cpf,
+        String telefone,
         @JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy") LocalDate dataCriacao,
-        @JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy") LocalDate dataModificacao, boolean ativo) {
+        @JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy") LocalDate dataModificacao,
+        boolean ativo) {
 
 }

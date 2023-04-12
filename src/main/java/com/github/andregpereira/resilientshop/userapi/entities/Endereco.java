@@ -46,6 +46,9 @@ public class Endereco {
     @ManyToOne
     @JoinColumn(name = "id_pais", nullable = false, foreignKey = @ForeignKey(name = "fk_id_pais"))
     private Pais pais;
+//    @ManyToOne
+//    @PrimaryKeyJoinColumn(nome = "id_usuario", foreignKey = @ForeignKey(name = "fk_id_usuario"))
+//    private Usuario usuario;
 
     @Override
     public boolean equals(Object o) {

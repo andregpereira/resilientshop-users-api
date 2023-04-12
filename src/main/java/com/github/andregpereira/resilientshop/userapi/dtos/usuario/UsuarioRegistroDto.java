@@ -8,9 +8,8 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.br.CPF;
 
-public record UsuarioRegistroDto(
-        @NotBlank(message = "Insira o nome") @Size(message = "O nome deve ter entre 2 e 255 caracteres", min = 2,
-                max = 255) String nome,
+public record UsuarioRegistroDto(@NotBlank(message = "Insira o nome") @Size(
+        message = "O nome deve ter entre 2 e 255 caracteres", min = 2, max = 255) String nome,
         @NotBlank(message = "Insira o sobrenome") @Size(message = "O sobrenome deve ter entre 2 e 255 caracteres",
                 min = 2, max = 255) String sobrenome,
         @NotBlank(message = "Insira o CPF") @Size(message = "O CPF deve ter 11 números", min = 11) @CPF(

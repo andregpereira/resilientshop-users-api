@@ -14,7 +14,7 @@ import java.security.InvalidParameterException;
 import java.util.stream.Stream;
 
 @RestControllerAdvice
-public class UsuarioServiceExceptionHandler {
+public class TratadorDeErros {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<String> erro400(HttpMessageNotReadableException e) {
@@ -53,7 +53,8 @@ public class UsuarioServiceExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 
-    private record DadoInvalido(String campo, String mensagem) {
+    private record DadoInvalido(String campo,
+            String mensagem) {
 
         public DadoInvalido(FieldError erro) {
             this(erro.getField(), erro.getDefaultMessage());
