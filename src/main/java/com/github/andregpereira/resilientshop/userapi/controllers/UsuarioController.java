@@ -43,7 +43,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "409", descricao = "Usuário já cadastrado",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = String.class))),
-            @ApiResponse(responseCode = "422", descricao = "",
+            @ApiResponse(responseCode = "422", descricao = "Campo inválido",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = String.class)))})
     public ResponseEntity<UsuarioDetalhesDto> registrar(@RequestBody @Valid UsuarioRegistroDto usuarioRegistroDto) {
