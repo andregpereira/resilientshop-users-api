@@ -21,7 +21,6 @@ import java.util.Optional;
 public class UsuarioConsultaServiceImpl implements UsuarioConsultaService {
 
     private final UsuarioRepository usuarioRepository;
-
     private final UsuarioMapper usuarioMapper;
 
     public UsuarioDetalhesDto consultarPorId(Long id) {

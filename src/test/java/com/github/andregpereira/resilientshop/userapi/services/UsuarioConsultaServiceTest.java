@@ -82,7 +82,7 @@ class UsuarioConsultaServiceTest {
         assertThatThrownBy(() -> consultaService.consultarPorCpf("732498")).isInstanceOf(
                 InvalidParameterException.class).hasMessage(
                 "Não foi possível realizar a busca por CPF. O CPF não foi digitado corretamente. Verifique e tente novamente");
-        assertThatThrownBy(() -> consultaService.consultarPorCpf("123.456.789-5555")).isInstanceOf(
+        assertThatThrownBy(() -> consultaService.consultarPorCpf("11223344556677889900")).isInstanceOf(
                 InvalidParameterException.class).hasMessage(
                 "Não foi possível realizar a busca por CPF. O CPF não foi digitado corretamente. Verifique e tente novamente");
         assertThatThrownBy(() -> consultaService.consultarPorCpf("abc")).isInstanceOf(

@@ -27,11 +27,8 @@ import java.util.Optional;
 public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
 
     private final UsuarioRepository usuarioRepository;
-
     private final UsuarioMapper usuarioMapper;
-
     private final EnderecoRepository enderecoRepository;
-
     private final PaisRepository paisRepository;
 
     public UsuarioDetalhesDto registrar(UsuarioRegistroDto usuarioRegistroDto) {

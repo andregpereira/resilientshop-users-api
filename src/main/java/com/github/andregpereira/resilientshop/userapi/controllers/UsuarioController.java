@@ -12,27 +12,28 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
+
+@RequiredArgsConstructor
 @Slf4j
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
-    @Autowired
-    private UsuarioManutencaoService usuarioManutencaoService;
+    private final UsuarioManutencaoService usuarioManutencaoService;
 
-    @Autowired
-    private UsuarioConsultaService usuarioConsultaService;
+    private final UsuarioConsultaService usuarioConsultaService;
 
     // Registrar usuário
     @PostMapping
@@ -40,15 +41,22 @@ public class UsuarioController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", descricao = "Usuário criado", content = {
             @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = UsuarioRegistroDto.class))}),
+            @ApiResponse(responseCode = "400", descricao = "JSON não pode ser nulo",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "409", descricao = "Usuário já cadastrado",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "422", descricao = "Campo inválido",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = String.class)))})
-    public ResponseEntity<UsuarioDetalhesDto> registrar(@RequestBody @Valid UsuarioRegistroDto usuarioRegistroDto) {
+    public ResponseEntity<UsuarioDetalhesDto> registrar(@RequestBody @Valid UsuarioRegistroDto usuarioRegistroDto,
+            UriComponentsBuilder uriBuilder) {
         log.info("Criando usuário...");
-        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioManutencaoService.registrar(usuarioRegistroDto));
+        UsuarioDetalhesDto usuario = usuarioManutencaoService.registrar(usuarioRegistroDto);
+        URI uri = uriBuilder.path("/usuarios/{id}").buildAndExpand(usuario.id()).toUri();
+        log.info("Usuário criado com sucesso");
+        return ResponseEntity.created(uri).body(usuario);
     }
 
     // Atualizar usuário por id
@@ -110,6 +118,8 @@ public class UsuarioController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", descricao = "Usuário encontrado", content = {
             @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = UsuarioDto.class))}),
+            @ApiResponse(responseCode = "400", descricao = "Parâmetro CPF não pode ser nulo",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)),
             @ApiResponse(responseCode = "404", descricao = "Usuário não encontrado",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))})
     public ResponseEntity<UsuarioDetalhesDto> consultarPorCpf(@RequestParam String cpf) {
