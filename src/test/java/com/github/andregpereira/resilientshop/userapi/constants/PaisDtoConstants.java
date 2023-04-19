@@ -1,7 +1,7 @@
 package com.github.andregpereira.resilientshop.userapi.constants;
 
-import com.github.andregpereira.resilientshop.userapi.dtos.pais.PaisDto;
-import com.github.andregpereira.resilientshop.userapi.dtos.pais.PaisRegistroDto;
+import com.github.andregpereira.resilientshop.userapi.app.dtos.pais.PaisDto;
+import com.github.andregpereira.resilientshop.userapi.app.dtos.pais.PaisRegistroDto;
 
 public class PaisDtoConstants {
 

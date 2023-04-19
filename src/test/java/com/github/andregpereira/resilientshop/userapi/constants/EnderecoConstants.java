@@ -1,6 +1,6 @@
 package com.github.andregpereira.resilientshop.userapi.constants;
 
-import com.github.andregpereira.resilientshop.userapi.entities.Endereco;
+import com.github.andregpereira.resilientshop.userapi.infra.entities.Endereco;
 
 import static com.github.andregpereira.resilientshop.userapi.constants.PaisConstants.*;
 

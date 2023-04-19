@@ -1,6 +1,6 @@
 package com.github.andregpereira.resilientshop.userapi.constants;
 
-import com.github.andregpereira.resilientshop.userapi.entities.Usuario;
+import com.github.andregpereira.resilientshop.userapi.infra.entities.Usuario;
 
 import java.time.LocalDate;
 

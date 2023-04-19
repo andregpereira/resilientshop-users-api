@@ -1,7 +1,7 @@
 package com.github.andregpereira.resilientshop.userapi.constants;
 
-import com.github.andregpereira.resilientshop.userapi.dtos.endereco.EnderecoDto;
-import com.github.andregpereira.resilientshop.userapi.dtos.endereco.EnderecoRegistroDto;
+import com.github.andregpereira.resilientshop.userapi.app.dtos.endereco.EnderecoDto;
+import com.github.andregpereira.resilientshop.userapi.app.dtos.endereco.EnderecoRegistroDto;
 
 import static com.github.andregpereira.resilientshop.userapi.constants.PaisDtoConstants.*;
 

@@ -1,6 +1,6 @@
 package com.github.andregpereira.resilientshop.userapi.constants;
 
-import com.github.andregpereira.resilientshop.userapi.entities.Pais;
+import com.github.andregpereira.resilientshop.userapi.infra.entities.Pais;
 
 public class PaisConstants {
 
