@@ -16,7 +16,6 @@ import java.util.stream.Stream;
 @RestControllerAdvice
 public class TratadorDeErros {
 
-
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<String> erro400(HttpMessageNotReadableException e) {
         return ResponseEntity.badRequest().body("Informação inválida. Verifique os dados e tente novamente");
