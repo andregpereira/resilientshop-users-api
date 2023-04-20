@@ -2,9 +2,9 @@ package com.github.andregpereira.resilientshop.userapi.app.services;
 
 import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioDetalhesDto;
 import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioDto;
-import com.github.andregpereira.resilientshop.userapi.infra.entities.Usuario;
 import com.github.andregpereira.resilientshop.userapi.cross.exception.UsuarioNotFoundException;
 import com.github.andregpereira.resilientshop.userapi.cross.mappers.UsuarioMapper;
+import com.github.andregpereira.resilientshop.userapi.infra.entities.Usuario;
 import com.github.andregpereira.resilientshop.userapi.infra.repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,14 +59,14 @@ public class UsuarioConsultaServiceImpl implements UsuarioConsultaService {
             sobrenome = !sobrenome.isBlank() ? sobrenome.trim() : sobrenome;
         else
             sobrenome = "";
-        Page<Usuario> usuarios = usuarioRepository.findByNomeAndAtivoTrue(nome, sobrenome, pageable);
+        Page<Usuario> usuarios = usuarioRepository.findAllByNomeAndAtivoTrue(nome, sobrenome, pageable);
         if (usuarios.isEmpty()) {
             log.info("Nenhum usuário foi encontrado");
             throw new UsuarioNotFoundException(
                     "Desculpe, não foi possível encontrar um usuário com este nome. Verifique e tente novamente");
         } else if (nome.isBlank() && sobrenome.isBlank()) {
             log.info("Retornando todos os usuários");
-            return usuarioRepository.findByAtivoTrue(pageable).map(usuarioMapper::toUsuarioDto);
+            return usuarioRepository.findAllByAtivoTrue(pageable).map(usuarioMapper::toUsuarioDto);
         }
         log.info("Retornando usuários encontrados pelo nome");
         return usuarios.map(usuarioMapper::toUsuarioDto);
