@@ -80,9 +80,8 @@ public class UsuarioController {
     // Remoção lógica de usuário por id
     @DeleteMapping("/{id}")
     @Operation(summary = "Desativa um usuário por id")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", descricao = "Usuário encontrado e desativado",
-            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    schema = @Schema(implementation = String.class))}),
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", descricao = "Usuário desativado", content = {
+            @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = String.class))}),
             @ApiResponse(responseCode = "404", descricao = "Usuário não encontrado",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = String.class)))})
@@ -94,9 +93,8 @@ public class UsuarioController {
     // Reativar por id
     @PatchMapping("/reativar/{id}")
     @Operation(summary = "Reativa um usuário por id")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", descricao = "Usuário encontrado e reativado",
-            content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                    schema = @Schema(implementation = String.class))}),
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", descricao = "Usuário reativado", content = {
+            @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = String.class))}),
             @ApiResponse(responseCode = "404", descricao = "Usuário não encontrado",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = String.class)))})
