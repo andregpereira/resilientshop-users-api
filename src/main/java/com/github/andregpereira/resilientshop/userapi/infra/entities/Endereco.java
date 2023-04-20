@@ -61,16 +61,17 @@ public class Endereco {
         if (o == null || getClass() != o.getClass())
             return false;
         Endereco endereco = (Endereco) o;
-        return Objects.equals(id, endereco.id) && Objects.equals(cep, endereco.cep) && Objects.equals(estado,
-                endereco.estado) && Objects.equals(cidade, endereco.cidade) && Objects.equals(bairro,
-                endereco.bairro) && Objects.equals(rua, endereco.rua) && Objects.equals(numero,
-                endereco.numero) && Objects.equals(complemento, endereco.complemento) && Objects.equals(pais,
-                endereco.pais) && Objects.equals(usuario, endereco.usuario);
+        return Objects.equals(id, endereco.id) && Objects.equals(apelido, endereco.apelido) && Objects.equals(cep,
+                endereco.cep) && Objects.equals(estado, endereco.estado) && Objects.equals(cidade,
+                endereco.cidade) && Objects.equals(bairro, endereco.bairro) && Objects.equals(rua,
+                endereco.rua) && Objects.equals(numero, endereco.numero) && Objects.equals(complemento,
+                endereco.complemento) && Objects.equals(pais, endereco.pais) && Objects.equals(usuario,
+                endereco.usuario);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, cep, estado, cidade, bairro, rua, numero, complemento, pais);
+        return Objects.hash(id, apelido, cep, estado, cidade, bairro, rua, numero, complemento, pais);
     }
 
 }
