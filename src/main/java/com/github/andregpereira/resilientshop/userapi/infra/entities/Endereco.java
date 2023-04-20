@@ -22,6 +22,9 @@ public class Endereco {
     @Column(name = "id_endereco")
     private Long id;
 
+    @Column(length = 45, nullable = false)
+    private String apelido;
+
     @Column(length = 9, nullable = false)
     private String cep;
 

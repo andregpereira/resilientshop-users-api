@@ -7,8 +7,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record EnderecoRegistroDto(@NotBlank(message = "Insira o CEP.") @Pattern(regexp = "\\d{5}-\\d{3}",
-        message = "CEP inválido. Formato: xxxxx-xxx") String cep,
+public record EnderecoRegistroDto(String apelido,
+        @NotBlank(message = "Insira o CEP.") @Pattern(regexp = "\\d{5}-\\d{3}",
+                message = "CEP inválido. Formato: xxxxx-xxx") String cep,
         @NotBlank(message = "Insira o estado.") String estado,
         @NotBlank(message = "Insira a cidade.") String cidade,
         @NotBlank(message = "Insira o bairro.") @Size(message = "O bairro deve ter no máximo 45 caracteres.",
