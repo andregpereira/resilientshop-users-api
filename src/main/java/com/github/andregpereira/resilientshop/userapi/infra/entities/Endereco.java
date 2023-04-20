@@ -46,9 +46,10 @@ public class Endereco {
     @ManyToOne
     @JoinColumn(name = "id_pais", nullable = false, foreignKey = @ForeignKey(name = "fk_id_pais"))
     private Pais pais;
-//    @ManyToOne
-//    @PrimaryKeyJoinColumn(nome = "id_usuario", foreignKey = @ForeignKey(name = "fk_id_usuario"))
-//    private Usuario usuario;
+
+    @ManyToOne
+    @JoinColumn(name = "id_usuario", nullable = false, foreignKey = @ForeignKey(name = "fk_id_usuario"))
+    private Usuario usuario;
 
     @Override
     public boolean equals(Object o) {
@@ -61,7 +62,7 @@ public class Endereco {
                 endereco.estado) && Objects.equals(cidade, endereco.cidade) && Objects.equals(bairro,
                 endereco.bairro) && Objects.equals(rua, endereco.rua) && Objects.equals(numero,
                 endereco.numero) && Objects.equals(complemento, endereco.complemento) && Objects.equals(pais,
-                endereco.pais);
+                endereco.pais) && Objects.equals(usuario, endereco.usuario);
     }
 
     @Override

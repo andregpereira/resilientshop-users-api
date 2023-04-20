@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -28,6 +30,9 @@ public class Pais {
     @Column(name = "codigo", length = 4, nullable = false)
     private String codigo;
 
+    @OneToMany(mappedBy = "pais")
+    private List<Endereco> enderecos = new ArrayList<>();
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -35,12 +40,13 @@ public class Pais {
         if (o == null || getClass() != o.getClass())
             return false;
         Pais pais = (Pais) o;
-        return Objects.equals(id, pais.id) && Objects.equals(nome, pais.nome) && Objects.equals(codigo, pais.codigo);
+        return Objects.equals(id, pais.id) && Objects.equals(nome, pais.nome) && Objects.equals(codigo,
+                pais.codigo) && Objects.equals(enderecos, pais.enderecos);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, codigo);
+        return Objects.hash(id, nome, codigo, enderecos);
     }
 
 }

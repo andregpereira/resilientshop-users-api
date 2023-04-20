@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -44,9 +46,8 @@ public class Usuario {
     @Column(nullable = false)
     private boolean ativo;
 
-    @OneToOne
-    @JoinColumn(name = "id_endereco", nullable = false, foreignKey = @ForeignKey(name = "fk_id_endereco"))
-    private Endereco endereco;
+    @OneToMany(mappedBy = "usuario")
+    private List<Endereco> enderecos = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
@@ -59,12 +60,12 @@ public class Usuario {
                 usuario.nome) && Objects.equals(sobrenome, usuario.sobrenome) && Objects.equals(cpf,
                 usuario.cpf) && Objects.equals(telefone, usuario.telefone) && Objects.equals(dataCriacao,
                 usuario.dataCriacao) && Objects.equals(dataModificacao, usuario.dataModificacao) && Objects.equals(
-                endereco, usuario.endereco);
+                enderecos, usuario.enderecos);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, sobrenome, cpf, telefone, dataCriacao, dataModificacao, ativo, endereco);
+        return Objects.hash(id, nome, sobrenome, cpf, telefone, dataCriacao, dataModificacao, ativo, enderecos);
     }
 
 }
