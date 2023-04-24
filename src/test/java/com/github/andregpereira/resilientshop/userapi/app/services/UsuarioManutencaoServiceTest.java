@@ -53,7 +53,7 @@ class UsuarioManutencaoServiceTest {
     @Test
     void criarUsuarioComDadosValidosEPaisNovoRetornaUsuarioDetalhesDto() {
         given(paisRepository.save(PAIS_NOVO)).willReturn(PAIS_NOVO);
-        given(enderecoRepository.save(ENDERECO_PAIS_NOVO)).willReturn(ENDERECO_PAIS_NOVO);
+        given(enderecoRepository.saveAll(LISTA_ENDERECO_PAIS_NOVO)).willReturn(LISTA_ENDERECO_PAIS_NOVO);
         given(usuarioRepository.save(USUARIO_PAIS_NOVO)).willReturn(USUARIO_PAIS_NOVO);
         assertThat(manutencaoService.registrar(USUARIO_REGISTRO_DTO_PAIS_NOVO)).isEqualTo(
                 USUARIO_DETALHES_DTO_PAIS_NOVO);
@@ -63,7 +63,7 @@ class UsuarioManutencaoServiceTest {
     @Test
     void criarUsuarioComDadosValidosEPaisExistenteRetornaUsuarioDetalhesDto() {
         given(paisRepository.findByNomeOrCodigo(PAIS.getNome(), PAIS.getCodigo())).willReturn(Optional.of(PAIS));
-        given(enderecoRepository.save(ENDERECO)).willReturn(ENDERECO);
+        given(enderecoRepository.saveAll(LISTA_ENDERECO)).willReturn(LISTA_ENDERECO);
         given(usuarioRepository.save(USUARIO)).willReturn(USUARIO);
         assertThat(manutencaoService.registrar(USUARIO_REGISTRO_DTO)).isEqualTo(USUARIO_DETALHES_DTO);
         then(usuarioRepository).should().save(USUARIO);
@@ -92,7 +92,8 @@ class UsuarioManutencaoServiceTest {
         given(paisRepository.findByNomeOrCodigo(PAIS_NOVO.getNome(), PAIS_NOVO.getCodigo())).willReturn(
                 Optional.empty());
         given(paisRepository.save(PAIS_NOVO)).willReturn(PAIS_NOVO);
-        given(enderecoRepository.save(ENDERECO_ATUALIZADO_PAIS_NOVO)).willReturn(ENDERECO_ATUALIZADO_PAIS_NOVO);
+        given(enderecoRepository.saveAll(LISTA_ENDERECO_ATUALIZADO_PAIS_NOVO)).willReturn(
+                LISTA_ENDERECO_ATUALIZADO_PAIS_NOVO);
         given(usuarioRepository.save(USUARIO_ATUALIZADO_PAIS_NOVO)).willReturn(USUARIO_ATUALIZADO_PAIS_NOVO);
         assertThat(
                 manutencaoService.atualizar(USUARIO.getId(), USUARIO_ATUALIZACAO_DTO_PAIS_NOVO)).isNotNull().isEqualTo(
@@ -104,7 +105,7 @@ class UsuarioManutencaoServiceTest {
     void atualizarUsuarioComDadosValidosEPaisExistenteRetornaUsuarioDetalhesDto() {
         given(usuarioRepository.findByIdAndAtivoTrue(USUARIO.getId())).willReturn(Optional.of(USUARIO));
         given(paisRepository.findByNomeOrCodigo(PAIS.getNome(), PAIS.getCodigo())).willReturn(Optional.of(PAIS));
-        when(enderecoRepository.save(ENDERECO_ATUALIZADO)).thenReturn(ENDERECO_ATUALIZADO);
+        when(enderecoRepository.saveAll(LISTA_ENDERECO_ATUALIZADO)).thenReturn(LISTA_ENDERECO_ATUALIZADO);
         when(usuarioRepository.save(USUARIO_ATUALIZADO)).thenReturn(USUARIO_ATUALIZADO);
         assertThat(manutencaoService.atualizar(USUARIO.getId(), USUARIO_ATUALIZACAO_DTO)).isNotNull().isEqualTo(
                 USUARIO_DETALHES_DTO_ATUALIZADO);

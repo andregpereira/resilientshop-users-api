@@ -2,9 +2,9 @@ package com.github.andregpereira.resilientshop.userapi.app.services;
 
 import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioDetalhesDto;
 import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioDto;
-import com.github.andregpereira.resilientshop.userapi.infra.entities.Usuario;
 import com.github.andregpereira.resilientshop.userapi.cross.exception.UsuarioNotFoundException;
 import com.github.andregpereira.resilientshop.userapi.cross.mappers.UsuarioMapper;
+import com.github.andregpereira.resilientshop.userapi.infra.entities.Usuario;
 import com.github.andregpereira.resilientshop.userapi.infra.repositories.UsuarioRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -96,7 +96,7 @@ class UsuarioConsultaServiceTest {
         List<Usuario> listaUsuarios = new ArrayList<>();
         listaUsuarios.add(USUARIO);
         Page<Usuario> pageUsuarios = new PageImpl<>(listaUsuarios, pageable, 10);
-        given(usuarioRepository.findByNomeAndAtivoTrue("nome", "", pageable)).willReturn(pageUsuarios);
+        given(usuarioRepository.findAllByNomeAndAtivoTrue("nome", "", pageable)).willReturn(pageUsuarios);
         Page<UsuarioDto> sut = consultaService.consultarPorNome("nome", null, pageable);
         assertThat(sut).isNotEmpty().hasSize(1);
         assertThat(sut.getContent().get(0)).isEqualTo(USUARIO_DTO);
@@ -108,7 +108,7 @@ class UsuarioConsultaServiceTest {
         List<Usuario> listaUsuarios = new ArrayList<>();
         listaUsuarios.add(USUARIO);
         Page<Usuario> pageUsuarios = new PageImpl<>(listaUsuarios, pageable, 10);
-        given(usuarioRepository.findByNomeAndAtivoTrue("", "sobrenome", pageable)).willReturn(pageUsuarios);
+        given(usuarioRepository.findAllByNomeAndAtivoTrue("", "sobrenome", pageable)).willReturn(pageUsuarios);
         Page<UsuarioDto> sut = consultaService.consultarPorNome(null, "sobrenome", pageable);
         assertThat(sut).isNotEmpty().hasSize(1);
         assertThat(sut.getContent().get(0)).isEqualTo(USUARIO_DTO);
@@ -120,9 +120,9 @@ class UsuarioConsultaServiceTest {
         List<Usuario> listaUsuarios = new ArrayList<>();
         listaUsuarios.add(USUARIO);
         Page<Usuario> pageUsuarios = new PageImpl<>(listaUsuarios, pageable, 10);
-        given(usuarioRepository.findByNomeAndAtivoTrue(anyString(), anyString(), any(Pageable.class))).willReturn(
+        given(usuarioRepository.findAllByNomeAndAtivoTrue(anyString(), anyString(), any(Pageable.class))).willReturn(
                 pageUsuarios);
-        when(usuarioRepository.findByAtivoTrue(any(Pageable.class))).thenReturn(pageUsuarios);
+        when(usuarioRepository.findAllByAtivoTrue(any(Pageable.class))).thenReturn(pageUsuarios);
         Page<UsuarioDto> sut = consultaService.consultarPorNome("", "", pageable);
         assertThat(sut).isNotEmpty().hasSize(1);
         assertThat(sut.getContent().get(0)).isEqualTo(USUARIO_DTO);
@@ -131,7 +131,7 @@ class UsuarioConsultaServiceTest {
     @Test
     void consultarUsuarioPorNomeInexistenteThrowsException() {
         PageRequest pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "nome");
-        given(usuarioRepository.findByNomeAndAtivoTrue(anyString(), anyString(), any(Pageable.class))).willReturn(
+        given(usuarioRepository.findAllByNomeAndAtivoTrue(anyString(), anyString(), any(Pageable.class))).willReturn(
                 Page.empty());
         assertThatThrownBy(() -> consultaService.consultarPorNome("Fulano", "de Tal", pageable)).isInstanceOf(
                 UsuarioNotFoundException.class).hasMessage(
