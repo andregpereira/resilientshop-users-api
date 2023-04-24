@@ -1,9 +1,9 @@
-#spring:
-#  application:
-#    name: resilientshop-user-api
-#
-#management:
-#  endpoints:
-#    web:
-#      exposure:
-#        include: '*'
+spring:
+  application:
+    name: resilientshop-user-api
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
