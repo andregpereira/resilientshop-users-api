@@ -1,17 +1,14 @@
 package com.github.andregpereira.resilientshop.userapi.infra.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -31,7 +28,7 @@ public class Pais {
     private String codigo;
 
     @OneToMany(mappedBy = "pais")
-    private List<Endereco> enderecos = new ArrayList<>();
+    private List<Endereco> enderecos;
 
     @Override
     public boolean equals(Object o) {
@@ -40,13 +37,12 @@ public class Pais {
         if (o == null || getClass() != o.getClass())
             return false;
         Pais pais = (Pais) o;
-        return Objects.equals(id, pais.id) && Objects.equals(nome, pais.nome) && Objects.equals(codigo,
-                pais.codigo) && Objects.equals(enderecos, pais.enderecos);
+        return Objects.equals(id, pais.id) && Objects.equals(nome, pais.nome) && Objects.equals(codigo, pais.codigo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, codigo, enderecos);
+        return Objects.hash(id, nome, codigo);
     }
 
 }

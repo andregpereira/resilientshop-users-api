@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,13 +46,13 @@ public class Usuario {
     private boolean ativo;
 
     @OneToMany(mappedBy = "usuario")
-    private List<Endereco> enderecos = new ArrayList<>();
+    private List<Endereco> enderecos;
 
     @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (o == null || getClass() != o.getClass())
+        if (!(o instanceof Usuario))
             return false;
         Usuario usuario = (Usuario) o;
         return ativo == usuario.ativo && Objects.equals(id, usuario.id) && Objects.equals(nome,
