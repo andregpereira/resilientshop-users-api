@@ -2,10 +2,10 @@ package com.github.andregpereira.resilientshop.userapi.app.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioDto;
-import com.github.andregpereira.resilientshop.userapi.cross.exception.UsuarioAlreadyExistsException;
-import com.github.andregpereira.resilientshop.userapi.cross.exception.UsuarioNotFoundException;
 import com.github.andregpereira.resilientshop.userapi.app.services.UsuarioConsultaService;
 import com.github.andregpereira.resilientshop.userapi.app.services.UsuarioManutencaoService;
+import com.github.andregpereira.resilientshop.userapi.cross.exception.UsuarioAlreadyExistsException;
+import com.github.andregpereira.resilientshop.userapi.cross.exception.UsuarioNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

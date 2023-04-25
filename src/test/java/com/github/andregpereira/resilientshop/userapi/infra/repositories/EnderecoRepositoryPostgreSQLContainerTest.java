@@ -1,6 +1,7 @@
 package com.github.andregpereira.resilientshop.userapi.infra.repositories;
 
 import com.github.andregpereira.resilientshop.userapi.infra.entities.Endereco;
+import com.github.andregpereira.resilientshop.userapi.infra.repositories.config.PostgreSQLContainerConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
-class EnderecoRepositoryTest {
+class EnderecoRepositoryPostgreSQLContainerTest extends PostgreSQLContainerConfig {
 
     @Autowired
     private EnderecoRepository repository;
