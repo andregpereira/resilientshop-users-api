@@ -39,23 +39,23 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
         Usuario usuario = usuarioMapper.toUsuario(usuarioRegistroDto);
         usuario.getEnderecos().stream().forEach(e -> {
             Pais pais = e.getPais();
-            Optional<Pais> optionalPais = paisRepository.findByNomeOrCodigo(pais.getNome(), pais.getCodigo());
-            if (optionalPais.isEmpty()) {
-                log.info("País não encontrado. Criando novo país");
-                pais = paisRepository.save(pais);
-                log.info("País criado com sucesso");
-            } else {
-                log.info("Retornando país encontrado");
-                pais = optionalPais.get();
-            }
+            paisRepository.findByNomeOrCodigo(pais.getNome(), pais.getCodigo()).ifPresentOrElse(e::setPais,
+                    () -> paisRepository.save(pais));
+//            if (optionalPais.isEmpty()) {
+//                log.info("País não encontrado. Criando novo país");
+//                paisRepository.save(pais);
+//                log.info("País criado com sucesso");
+//            } else {
+//                log.info("Retornando país encontrado");
+////                pais = optionalPais.get();
+//            }
             e.setUsuario(usuario);
-            e.setPais(pais);
         });
         usuario.setDataCriacao(LocalDate.now());
         usuario.setDataModificacao(LocalDate.now());
         usuario.setAtivo(true);
         usuarioRepository.save(usuario);
-        usuario.setEnderecos(enderecoRepository.saveAll(usuario.getEnderecos()));
+        enderecoRepository.saveAll(usuario.getEnderecos());
         return usuarioMapper.toUsuarioDetalhesDto(usuario);
     }
 
@@ -71,17 +71,17 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
         Usuario usuarioAtualizado = usuarioMapper.toUsuario(usuarioAtualizacaoDto);
         usuarioAtualizado.getEnderecos().stream().forEach(e -> {
             Pais pais = e.getPais();
-            Optional<Pais> optionalPais = paisRepository.findByNomeOrCodigo(pais.getNome(), pais.getCodigo());
-            if (optionalPais.isEmpty()) {
-                log.info("País não encontrado. Criando novo país");
-                pais = paisRepository.save(pais);
-                log.info("País criado com sucesso");
-            } else {
-                log.info("Retornando país encontrado");
-                pais = optionalPais.get();
-            }
+            paisRepository.findByNomeOrCodigo(pais.getNome(), pais.getCodigo()).ifPresentOrElse(e::setPais,
+                    () -> paisRepository.save(pais));
+//            if (optionalPais.isEmpty()) {
+//                log.info("País não encontrado. Criando novo país");
+//                pais = paisRepository.save(pais);
+//                log.info("País criado com sucesso");
+//            } else {
+//                log.info("Retornando país encontrado");
+//                pais = optionalPais.get();
+//            }
             e.setUsuario(usuarioAtualizado);
-            e.setPais(pais);
         });
         usuarioAtualizado.setId(id);
         usuarioAtualizado.setCpf(usuarioAntigo.getCpf());
@@ -89,7 +89,7 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
         usuarioAtualizado.setDataModificacao(LocalDate.now());
         usuarioAtualizado.setAtivo(true);
         usuarioRepository.save(usuarioAtualizado);
-        usuarioAtualizado.setEnderecos(enderecoRepository.saveAll(usuarioAtualizado.getEnderecos()));
+        enderecoRepository.saveAll(usuarioAtualizado.getEnderecos());
         log.info("Usuário com id {} atualizado com sucesso", id);
         return usuarioMapper.toUsuarioDetalhesDto(usuarioAtualizado);
     }
