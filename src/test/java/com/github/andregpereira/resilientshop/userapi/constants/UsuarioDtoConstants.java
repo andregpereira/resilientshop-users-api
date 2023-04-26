@@ -17,34 +17,34 @@ public class UsuarioDtoConstants {
             null, LOCAL_DATE, LOCAL_DATE, true);
 
     public static final UsuarioDetalhesDto USUARIO_DETALHES_DTO = new UsuarioDetalhesDto(null, "nome", "sobrenome",
-            "22426853093", null, LOCAL_DATE, LOCAL_DATE, true, LISTA_ENDERECO_DTO);
+            "22426853093", null, LOCAL_DATE, LOCAL_DATE, true, LISTA_ENDERECOS_DTO);
 
     public static final UsuarioDetalhesDto USUARIO_DETALHES_DTO_PAIS_NOVO = new UsuarioDetalhesDto(null, "nome",
-            "sobrenome", "22426853093", null, LOCAL_DATE, LOCAL_DATE, true, LISTA_ENDERECO_DTO_PAIS_NOVO);
+            "sobrenome", "22426853093", null, LOCAL_DATE, LOCAL_DATE, true, LISTA_ENDERECOS_DTO_PAIS_NOVO);
 
     public static final UsuarioDetalhesDto USUARIO_DETALHES_DTO_ATUALIZADO = new UsuarioDetalhesDto(null, "nome2",
-            "sobrenome2", "22426853093", null, LOCAL_DATE, LOCAL_DATE, true, LISTA_ENDERECO_DTO_ATUALIZADO);
+            "sobrenome2", "22426853093", null, LOCAL_DATE, LOCAL_DATE, true, LISTA_ENDERECOS_DTO_ATUALIZADO);
 
     public static final UsuarioDetalhesDto USUARIO_DETALHES_DTO_ATUALIZADO_PAIS_NOVO = new UsuarioDetalhesDto(null,
             "nome2", "sobrenome2", "22426853093", null, LOCAL_DATE, LOCAL_DATE, true,
-            LISTA_ENDERECO_DTO_ATUALIZADO_PAIS_NOVO);
+            LISTA_ENDERECOS_DTO_ATUALIZADO_PAIS_NOVO);
 
     public static final UsuarioRegistroDto USUARIO_REGISTRO_DTO = new UsuarioRegistroDto("nome", "sobrenome",
-            "22426853093", null, LISTA_ENDERECO_REGISTRO_DTO);
+            "22426853093", null, LISTA_ENDERECOS_REGISTRO_DTO);
 
     public static final UsuarioRegistroDto USUARIO_REGISTRO_DTO_PAIS_NOVO = new UsuarioRegistroDto("nome", "sobrenome",
-            "22426853093", null, LISTA_ENDERECO_REGISTRO_DTO_PAIS_NOVO);
+            "22426853093", null, LISTA_ENDERECOS_REGISTRO_DTO_PAIS_NOVO);
 
     public static final UsuarioRegistroDto USUARIO_REGISTRO_DTO_INVALIDO = new UsuarioRegistroDto("", "", "", null,
-            LISTA_ENDERECO_REGISTRO_DTO_INVALIDO);
+            LISTA_ENDERECOS_REGISTRO_DTO_INVALIDO);
 
     public static final UsuarioAtualizacaoDto USUARIO_ATUALIZACAO_DTO = new UsuarioAtualizacaoDto("nome2", "sobrenome2",
-            null, LISTA_ENDERECO_REGISTRO_DTO_ATUALIZADO);
+            null, LISTA_ENDERECOS_REGISTRO_DTO_ATUALIZADO);
 
     public static final UsuarioAtualizacaoDto USUARIO_ATUALIZACAO_DTO_PAIS_NOVO = new UsuarioAtualizacaoDto("nome2",
-            "sobrenome2", null, LISTA_ENDERECO_REGISTRO_DTO_ATUALIZADO_PAIS_NOVO);
+            "sobrenome2", null, LISTA_ENDERECOS_REGISTRO_DTO_ATUALIZADO_PAIS_NOVO);
 
     public static final UsuarioAtualizacaoDto USUARIO_ATUALIZACAO_DTO_INVALIDO = new UsuarioAtualizacaoDto("", "", null,
-            LISTA_ENDERECO_REGISTRO_DTO_INVALIDO);
+            LISTA_ENDERECOS_REGISTRO_DTO_INVALIDO);
 
 }

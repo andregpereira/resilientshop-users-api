@@ -10,8 +10,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static com.github.andregpereira.resilientshop.userapi.constants.EnderecoConstants.ENDERECO;
-import static com.github.andregpereira.resilientshop.userapi.constants.EnderecoDtoConstants.ENDERECO_DTO;
-import static com.github.andregpereira.resilientshop.userapi.constants.EnderecoDtoConstants.ENDERECO_REGISTRO_DTO;
+import static com.github.andregpereira.resilientshop.userapi.constants.EnderecoConstants.LISTA_ENDERECOS;
+import static com.github.andregpereira.resilientshop.userapi.constants.EnderecoDtoConstants.*;
 import static com.github.andregpereira.resilientshop.userapi.constants.PaisConstants.PAIS;
 import static com.github.andregpereira.resilientshop.userapi.constants.PaisDtoConstants.PAIS_DTO;
 import static com.github.andregpereira.resilientshop.userapi.constants.PaisDtoConstants.PAIS_REGISTRO_DTO;
@@ -104,6 +104,27 @@ class UsuarioMapperTest {
     @Test
     void paisNuloRetornaNull() {
         assertThat(mapper.paisToPaisDto(null)).isNotEqualTo(PAIS_DTO);
+    }
+
+    @Test
+    void listaEnderecoRegistroDtoRetornaListaEndereco() {
+        assertThat(mapper.enderecoRegistroDtoListToEnderecoList(LISTA_ENDERECOS_REGISTRO_DTO)).isEqualTo(
+                LISTA_ENDERECOS);
+    }
+
+    @Test
+    void listaEnderecoRegistroDtoNuloRetornaNull() {
+        assertThat(mapper.enderecoRegistroDtoListToEnderecoList(null)).isNotEqualTo(LISTA_ENDERECOS);
+    }
+
+    @Test
+    void listaEnderecoRetornaListaEnderecoDto() {
+        assertThat(mapper.enderecoListToEnderecoDtoList(LISTA_ENDERECOS)).isEqualTo(LISTA_ENDERECOS_DTO);
+    }
+
+    @Test
+    void listaEnderecoNuloRetornaNull() {
+        assertThat(mapper.enderecoListToEnderecoDtoList(null)).isNotEqualTo(LISTA_ENDERECOS_DTO);
     }
 
 }
