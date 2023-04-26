@@ -2,7 +2,7 @@ package com.github.andregpereira.resilientshop.userapi.app.services;
 
 import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioDetalhesDto;
 import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioDto;
-import com.github.andregpereira.resilientshop.userapi.cross.exception.UsuarioNotFoundException;
+import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioNotFoundException;
 import com.github.andregpereira.resilientshop.userapi.cross.mappers.UsuarioMapper;
 import com.github.andregpereira.resilientshop.userapi.infra.entities.Usuario;
 import com.github.andregpereira.resilientshop.userapi.infra.repositories.UsuarioRepository;
@@ -24,14 +24,13 @@ public class UsuarioConsultaServiceImpl implements UsuarioConsultaService {
     private final UsuarioMapper usuarioMapper;
 
     public UsuarioDetalhesDto consultarPorId(Long id) {
-        Optional<Usuario> optionalUsuario = usuarioRepository.findById(id);
-        if (optionalUsuario.isEmpty()) {
+        return usuarioRepository.findById(id).map(u -> {
+            log.info("Retornando usuário encontrado com id {}", id);
+            return usuarioMapper.toUsuarioDetalhesDto(u);
+        }).orElseThrow(() -> {
             log.info("Usuário com id {} não encontrado", id);
-            throw new UsuarioNotFoundException(
-                    "Não foi possível encontrar um usuário ativo com este id. Verifique e tente novamente");
-        }
-        log.info("Retornando usuário encontrado com id {}", id);
-        return usuarioMapper.toUsuarioDetalhesDto(optionalUsuario.get());
+            return new UsuarioNotFoundException(id);
+        });
     }
 
     public UsuarioDetalhesDto consultarPorCpf(String cpf) {
@@ -40,25 +39,19 @@ public class UsuarioConsultaServiceImpl implements UsuarioConsultaService {
             throw new InvalidParameterException(
                     "Não foi possível realizar a busca por CPF. O CPF não foi digitado corretamente. Verifique e tente novamente");
         }
-        Optional<Usuario> optionalUsuario = usuarioRepository.findByCpfAndAtivoTrue(cpf);
-        if (optionalUsuario.isEmpty()) {
+        return usuarioRepository.findByCpfAndAtivoTrue(cpf).map(u -> {
+            log.info("Retornando usuário encontrado com CPF");
+            return usuarioMapper.toUsuarioDetalhesDto(u);
+        }).orElseThrow(() -> {
             log.info("Usuário não encontrado com o CPF informado");
-            throw new UsuarioNotFoundException(
+            return new UsuarioNotFoundException(
                     "Desculpe, não foi possível encontrar um usuário ativo com este CPF. Verifique e tente novamente");
-        }
-        log.info("Retornando usuário encontrado pelo CPF");
-        return usuarioMapper.toUsuarioDetalhesDto(optionalUsuario.get());
+        });
     }
 
     public Page<UsuarioDto> consultarPorNome(String nome, String sobrenome, Pageable pageable) {
-        if (nome != null)
-            nome = !nome.isBlank() ? nome.trim() : nome;
-        else
-            nome = "";
-        if (sobrenome != null)
-            sobrenome = !sobrenome.isBlank() ? sobrenome.trim() : sobrenome;
-        else
-            sobrenome = "";
+        nome = Optional.ofNullable(nome).map(String::trim).orElse("");
+        sobrenome = Optional.ofNullable(sobrenome).map(String::trim).orElse("");
         Page<Usuario> usuarios = usuarioRepository.findAllByNomeAndAtivoTrue(nome, sobrenome, pageable);
         if (usuarios.isEmpty()) {
             log.info("Nenhum usuário foi encontrado");

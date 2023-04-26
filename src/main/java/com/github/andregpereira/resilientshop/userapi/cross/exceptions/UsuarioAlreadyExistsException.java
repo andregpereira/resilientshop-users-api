@@ -1,4 +1,4 @@
-package com.github.andregpereira.resilientshop.userapi.cross.exception;
+package com.github.andregpereira.resilientshop.userapi.cross.exceptions;
 
 public class UsuarioAlreadyExistsException extends RuntimeException {
 

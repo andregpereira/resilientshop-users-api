@@ -3,8 +3,8 @@ package com.github.andregpereira.resilientshop.userapi.app.services;
 import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioAtualizacaoDto;
 import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioDetalhesDto;
 import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioRegistroDto;
-import com.github.andregpereira.resilientshop.userapi.cross.exception.UsuarioAlreadyExistsException;
-import com.github.andregpereira.resilientshop.userapi.cross.exception.UsuarioNotFoundException;
+import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioAlreadyExistsException;
+import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioNotFoundException;
 import com.github.andregpereira.resilientshop.userapi.cross.mappers.UsuarioMapper;
 import com.github.andregpereira.resilientshop.userapi.infra.entities.Pais;
 import com.github.andregpereira.resilientshop.userapi.infra.entities.Usuario;
@@ -17,10 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
-@Slf4j
 @RequiredArgsConstructor
+@Slf4j
 @Service
 @Transactional
 public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
@@ -30,25 +29,23 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
     private final EnderecoRepository enderecoRepository;
     private final PaisRepository paisRepository;
 
-    public UsuarioDetalhesDto registrar(UsuarioRegistroDto usuarioRegistroDto) {
-        if (usuarioRepository.existsByCpf(usuarioRegistroDto.cpf())) {
+    public UsuarioDetalhesDto registrar(UsuarioRegistroDto dto) {
+        if (usuarioRepository.existsByCpf(dto.cpf())) {
             log.info("Usuário já cadastrado com o CPF informado");
             throw new UsuarioAlreadyExistsException(
                     "Não foi possível cadastrar o usuário. Já existe um usuário cadastrado com este CPF. Verifique e tente novamente");
         }
-        Usuario usuario = usuarioMapper.toUsuario(usuarioRegistroDto);
+        Usuario usuario = usuarioMapper.toUsuario(dto);
         usuario.getEnderecos().stream().forEach(e -> {
             Pais pais = e.getPais();
-            paisRepository.findByNomeOrCodigo(pais.getNome(), pais.getCodigo()).ifPresentOrElse(e::setPais,
-                    () -> paisRepository.save(pais));
-//            if (optionalPais.isEmpty()) {
-//                log.info("País não encontrado. Criando novo país");
-//                paisRepository.save(pais);
-//                log.info("País criado com sucesso");
-//            } else {
-//                log.info("Retornando país encontrado");
-////                pais = optionalPais.get();
-//            }
+            paisRepository.findByNomeOrCodigo(pais.getNome(), pais.getCodigo()).ifPresentOrElse(p -> {
+                log.info("Retornando país encontrado");
+                e.setPais(p);
+            }, () -> {
+                log.info("País não encontrado. Criando novo país");
+                paisRepository.save(pais);
+                log.info("País criado com sucesso");
+            });
             e.setUsuario(usuario);
         });
         usuario.setDataCriacao(LocalDate.now());
@@ -59,39 +56,36 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
         return usuarioMapper.toUsuarioDetalhesDto(usuario);
     }
 
-    public UsuarioDetalhesDto atualizar(Long id, UsuarioAtualizacaoDto usuarioAtualizacaoDto) {
-        Optional<Usuario> usuarioOptional = usuarioRepository.findByIdAndAtivoTrue(id);
-        if (usuarioOptional.isEmpty()) {
+    public UsuarioDetalhesDto atualizar(Long id, UsuarioAtualizacaoDto dto) {
+        return usuarioRepository.findByIdAndAtivoTrue(id).map(usuarioAntigo -> {
+            Usuario usuarioAtualizado = usuarioMapper.toUsuario(dto);
+            enderecoRepository.deleteByUsuario(usuarioAntigo);
+            usuarioAtualizado.getEnderecos().stream().forEach(e -> {
+                Pais pais = e.getPais();
+                log.info("Procurando país...");
+                paisRepository.findByNomeOrCodigo(pais.getNome(), pais.getCodigo()).ifPresentOrElse(p -> {
+                    log.info("Retornando país encontrado");
+                    e.setPais(p);
+                }, () -> {
+                    log.info("País não encontrado. Criando novo país");
+                    paisRepository.save(pais);
+                    log.info("País criado com sucesso");
+                });
+                e.setUsuario(usuarioAtualizado);
+            });
+            usuarioAtualizado.setId(id);
+            usuarioAtualizado.setCpf(usuarioAntigo.getCpf());
+            usuarioAtualizado.setDataCriacao(usuarioAntigo.getDataCriacao());
+            usuarioAtualizado.setDataModificacao(LocalDate.now());
+            usuarioAtualizado.setAtivo(true);
+            usuarioRepository.save(usuarioAtualizado);
+            enderecoRepository.saveAll(usuarioAtualizado.getEnderecos());
+            log.info("Usuário com id {} atualizado com sucesso", id);
+            return usuarioMapper.toUsuarioDetalhesDto(usuarioAtualizado);
+        }).orElseThrow(() -> {
             log.info("Usuário com id {} não encontrado", id);
-            throw new UsuarioNotFoundException(
-                    "Não foi possível encontrar um usuário ativo com este id. Verifique e tente novamente");
-        }
-        Usuario usuarioAntigo = usuarioOptional.get();
-        enderecoRepository.deleteByUsuario(usuarioAntigo);
-        Usuario usuarioAtualizado = usuarioMapper.toUsuario(usuarioAtualizacaoDto);
-        usuarioAtualizado.getEnderecos().stream().forEach(e -> {
-            Pais pais = e.getPais();
-            paisRepository.findByNomeOrCodigo(pais.getNome(), pais.getCodigo()).ifPresentOrElse(e::setPais,
-                    () -> paisRepository.save(pais));
-//            if (optionalPais.isEmpty()) {
-//                log.info("País não encontrado. Criando novo país");
-//                pais = paisRepository.save(pais);
-//                log.info("País criado com sucesso");
-//            } else {
-//                log.info("Retornando país encontrado");
-//                pais = optionalPais.get();
-//            }
-            e.setUsuario(usuarioAtualizado);
+            return new UsuarioNotFoundException(id);
         });
-        usuarioAtualizado.setId(id);
-        usuarioAtualizado.setCpf(usuarioAntigo.getCpf());
-        usuarioAtualizado.setDataCriacao(usuarioAntigo.getDataCriacao());
-        usuarioAtualizado.setDataModificacao(LocalDate.now());
-        usuarioAtualizado.setAtivo(true);
-        usuarioRepository.save(usuarioAtualizado);
-        enderecoRepository.saveAll(usuarioAtualizado.getEnderecos());
-        log.info("Usuário com id {} atualizado com sucesso", id);
-        return usuarioMapper.toUsuarioDetalhesDto(usuarioAtualizado);
     }
 
     public String desativar(Long id) {
@@ -108,16 +102,16 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
     }
 
     public String reativar(Long id) {
-        usuarioRepository.findByIdAndAtivoFalse(id).ifPresentOrElse(u -> {
+        return usuarioRepository.findByIdAndAtivoFalse(id).map(u -> {
             u.setAtivo(true);
             usuarioRepository.save(u);
-        }, () -> {
+            log.info("Usuário com id {} reativado com sucesso", id);
+            return "Usuário reativado";
+        }).orElseThrow(() -> {
             log.info("Usuário inativo com id {} não encontrado", id);
             throw new UsuarioNotFoundException(
                     "Não foi possível encontrar um usuário inativo com este id. Verifique e tente novamente");
         });
-        log.info("Usuário com id {} reativado com sucesso", id);
-        return "Usuário reativado";
     }
 
 }

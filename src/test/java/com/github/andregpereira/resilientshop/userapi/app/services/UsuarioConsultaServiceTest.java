@@ -2,7 +2,7 @@ package com.github.andregpereira.resilientshop.userapi.app.services;
 
 import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioDetalhesDto;
 import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioDto;
-import com.github.andregpereira.resilientshop.userapi.cross.exception.UsuarioNotFoundException;
+import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioNotFoundException;
 import com.github.andregpereira.resilientshop.userapi.cross.mappers.UsuarioMapper;
 import com.github.andregpereira.resilientshop.userapi.infra.entities.Usuario;
 import com.github.andregpereira.resilientshop.userapi.infra.repositories.UsuarioRepository;

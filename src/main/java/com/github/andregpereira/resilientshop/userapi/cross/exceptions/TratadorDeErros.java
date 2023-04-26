@@ -1,4 +1,4 @@
-package com.github.andregpereira.resilientshop.userapi.cross.exception;
+package com.github.andregpereira.resilientshop.userapi.cross.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,12 +43,12 @@ public class TratadorDeErros {
                 new DadoInvalido(e.getParameterName(), "O campo " + e.getParameterName() + " é obrigatório"));
     }
 
-    @ExceptionHandler(UsuarioNotFoundException.class)
+    @ExceptionHandler(com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioNotFoundException.class)
     public ResponseEntity<String> erro404(UsuarioNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
-    @ExceptionHandler(UsuarioAlreadyExistsException.class)
+    @ExceptionHandler(com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioAlreadyExistsException.class)
     private ResponseEntity<String> erro409(UsuarioAlreadyExistsException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
