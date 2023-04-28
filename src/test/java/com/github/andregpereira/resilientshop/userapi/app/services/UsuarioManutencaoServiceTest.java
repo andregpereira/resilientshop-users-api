@@ -131,7 +131,7 @@ class UsuarioManutencaoServiceTest {
         given(usuarioRepository.findByIdAndAtivoTrue(100L)).willReturn(Optional.empty());
         assertThatThrownBy(() -> manutencaoService.atualizar(100L, USUARIO_ATUALIZACAO_DTO)).isInstanceOf(
                 UsuarioNotFoundException.class).hasMessage(
-                "Não foi possível encontrar um usuário ativo com este id. Verifique e tente novamente");
+                "Não foi possível encontrar um usuário ativo com o id 100. Verifique e tente novamente");
         then(usuarioRepository).should(never()).save(USUARIO);
     }
 

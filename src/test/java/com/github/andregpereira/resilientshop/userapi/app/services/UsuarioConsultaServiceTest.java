@@ -53,7 +53,7 @@ class UsuarioConsultaServiceTest {
     void consultarUsuarioPorIdInexistenteThrowsEntityNotFoundException() {
         assertThatThrownBy(() -> consultaService.consultarPorId(10L)).isInstanceOf(
                 UsuarioNotFoundException.class).hasMessage(
-                "Não foi possível encontrar um usuário ativo com este id. Verifique e tente novamente");
+                "Não foi possível encontrar um usuário ativo com o id 10. Verifique e tente novamente");
     }
 
     @Test

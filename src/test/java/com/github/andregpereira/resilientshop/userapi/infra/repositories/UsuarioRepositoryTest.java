@@ -55,7 +55,6 @@ class UsuarioRepositoryTest {
         assertThat(sut.getDataModificacao()).isEqualTo(USUARIO.getDataModificacao());
         assertThat(sut.isAtivo()).isEqualTo(USUARIO.isAtivo());
         assertThat(sut.getEnderecos()).isEqualTo(USUARIO.getEnderecos());
-//        assertThat(sut.getEnderecos().getPais()).isEqualTo(USUARIO.getEnderecos().getPais());
     }
 
     @Test
@@ -80,25 +79,23 @@ class UsuarioRepositoryTest {
         em.persist(ENDERECO);
         Usuario usuarioAtualizado = USUARIO_ATUALIZADO;
         usuarioAtualizado.setId(usuarioAntigo.getId());
-        usuarioAtualizado.setCpf(USUARIO_ATUALIZADO.getCpf());
-        usuarioAtualizado.setDataCriacao(USUARIO_ATUALIZADO.getDataCriacao());
+        usuarioAtualizado.setCpf(usuarioAntigo.getCpf());
+        usuarioAtualizado.setDataCriacao(usuarioAntigo.getDataCriacao());
         usuarioAtualizado.setDataModificacao(LOCAL_DATE);
         usuarioAtualizado.setAtivo(true);
-//        usuarioAtualizado.getEnderecos().setId(USUARIO_ATUALIZADO.getEndereco().getId());
-//        usuarioAtualizado.getEnderecos().setPais(USUARIO_ATUALIZADO.getEndereco().getPais());
-        em.persist(ENDERECO_ATUALIZADO);
+        usuarioAtualizado.setEnderecos(usuarioAntigo.getEnderecos());
+        em.persist(ENDERECO);
         Usuario sut = repository.save(usuarioAtualizado);
         assertThat(sut).isNotNull();
         assertThat(sut.getId()).isEqualTo(usuarioAntigo.getId());
-        assertThat(sut.getNome()).isEqualTo(USUARIO_ATUALIZADO.getNome());
-        assertThat(sut.getSobrenome()).isEqualTo(USUARIO_ATUALIZADO.getSobrenome());
-        assertThat(sut.getCpf()).isEqualTo(USUARIO_ATUALIZADO.getCpf());
-        assertThat(sut.getTelefone()).isEqualTo(USUARIO_ATUALIZADO.getTelefone());
-        assertThat(sut.getDataCriacao()).isEqualTo(USUARIO_ATUALIZADO.getDataCriacao());
-        assertThat(sut.getDataModificacao()).isEqualTo(USUARIO_ATUALIZADO.getDataModificacao());
-        assertThat(sut.isAtivo()).isEqualTo(USUARIO_ATUALIZADO.isAtivo());
-//        assertThat(sut.getEnderecos()).isEqualTo(USUARIO_ATUALIZADO.getEnderecos());
-//        assertThat(sut.getEnderecos().getPais()).isEqualTo(USUARIO_ATUALIZADO.getEnderecos().getPais());
+        assertThat(sut.getNome()).isEqualTo(usuarioAtualizado.getNome());
+        assertThat(sut.getSobrenome()).isEqualTo(usuarioAtualizado.getSobrenome());
+        assertThat(sut.getCpf()).isEqualTo(usuarioAtualizado.getCpf());
+        assertThat(sut.getTelefone()).isEqualTo(usuarioAtualizado.getTelefone());
+        assertThat(sut.getDataCriacao()).isEqualTo(usuarioAtualizado.getDataCriacao());
+        assertThat(sut.getDataModificacao()).isEqualTo(usuarioAtualizado.getDataModificacao());
+        assertThat(sut.isAtivo()).isEqualTo(usuarioAtualizado.isAtivo());
+        assertThat(sut.getEnderecos()).isEqualTo(usuarioAtualizado.getEnderecos());
     }
 
     @Test

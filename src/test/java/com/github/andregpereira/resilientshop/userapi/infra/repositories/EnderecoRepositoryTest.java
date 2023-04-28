@@ -2,6 +2,7 @@ package com.github.andregpereira.resilientshop.userapi.infra.repositories;
 
 import com.github.andregpereira.resilientshop.userapi.infra.entities.Endereco;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -35,6 +36,11 @@ class EnderecoRepositoryTest {
         PAIS_NOVO.setId(null);
     }
 
+    @BeforeEach
+    void beforeEach() {
+        ENDERECO.setUsuario(USUARIO);
+    }
+
     @Test
     void criarEnderecoComDadosValidosRetornaEndereco() {
         em.persist(PAIS);
@@ -50,12 +56,13 @@ class EnderecoRepositoryTest {
         assertThat(sut.getNumero()).isEqualTo(ENDERECO.getNumero());
         assertThat(sut.getComplemento()).isEqualTo(ENDERECO.getComplemento());
         assertThat(sut.getPais()).isEqualTo(ENDERECO.getPais());
+        assertThat(sut.getUsuario()).isEqualTo(ENDERECO.getUsuario());
     }
 
     @Test
     void criarEnderecoComDadosInvalidosThrowsRuntimeException() {
         assertThatThrownBy(() -> repository.saveAndFlush(ENDERECO_VAZIO)).isInstanceOf(RuntimeException.class);
-        assertThatThrownBy(() -> repository.save(ENDERECO_INVALIDO)).isInstanceOf(RuntimeException.class);
+        assertThatThrownBy(() -> repository.saveAndFlush(ENDERECO_INVALIDO)).isInstanceOf(RuntimeException.class);
     }
 
     @Test
@@ -76,6 +83,7 @@ class EnderecoRepositoryTest {
         assertThat(sut.getNumero()).isEqualTo(enderecoAntigo.getNumero());
         assertThat(sut.getComplemento()).isEqualTo(enderecoAntigo.getComplemento());
         assertThat(sut.getPais()).isEqualTo(enderecoAntigo.getPais());
+        assertThat(sut.getUsuario()).isEqualTo(enderecoAntigo.getUsuario());
     }
 
     @Test
