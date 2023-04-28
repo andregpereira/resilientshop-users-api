@@ -32,8 +32,7 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
     public UsuarioDetalhesDto registrar(UsuarioRegistroDto dto) {
         if (usuarioRepository.existsByCpf(dto.cpf())) {
             log.info("Usuário já cadastrado com o CPF informado");
-            throw new UsuarioAlreadyExistsException(
-                    "Não foi possível cadastrar o usuário. Já existe um usuário cadastrado com este CPF. Verifique e tente novamente");
+            throw new UsuarioAlreadyExistsException();
         }
         Usuario usuario = usuarioMapper.toUsuario(dto);
         usuario.getEnderecos().stream().forEach(e -> {
@@ -48,8 +47,9 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
             });
             e.setUsuario(usuario);
         });
-        usuario.setDataCriacao(LocalDate.now());
-        usuario.setDataModificacao(LocalDate.now());
+        LocalDate agora = LocalDate.now();
+        usuario.setDataCriacao(agora);
+        usuario.setDataModificacao(agora);
         usuario.setAtivo(true);
         usuarioRepository.save(usuario);
         enderecoRepository.saveAll(usuario.getEnderecos());
@@ -89,16 +89,16 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
     }
 
     public String desativar(Long id) {
-        usuarioRepository.findByIdAndAtivoTrue(id).ifPresentOrElse(u -> {
+        return usuarioRepository.findByIdAndAtivoTrue(id).map(u -> {
             u.setAtivo(false);
             usuarioRepository.save(u);
-        }, () -> {
+            log.info("Usuário com id {} desativado com sucesso", id);
+            return "Usuário desativado";
+        }).orElseThrow(() -> {
             log.info("Usuário ativo com id {} não encontrado", id);
-            throw new UsuarioNotFoundException(
+            return new UsuarioNotFoundException(
                     "Não foi possível encontrar um usuário ativo com este id. Verifique e tente novamente");
         });
-        log.info("Usuário com id {} desativado com sucesso", id);
-        return "Usuário desativado";
     }
 
     public String reativar(Long id) {
