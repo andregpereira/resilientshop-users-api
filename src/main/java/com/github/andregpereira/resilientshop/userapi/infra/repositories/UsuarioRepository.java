@@ -25,8 +25,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
             select * from tb_usuarios u
             where u.nome ilike %:nome% and u.sobrenome ilike %:sobrenome% and u.ativo=true
             """, nativeQuery = true)
-    Page<Usuario> findAllByNomeAndAtivoTrue(@Param("nome") String nome, @Param("sobrenome") String sobrenome,
-            Pageable pageable);
+    Page<Usuario> findAllByNomeAndSobrenomeAndAtivoTrue(@Param("nome") String nome,
+            @Param("sobrenome") String sobrenome, Pageable pageable);
 
     Page<Usuario> findAllByAtivoTrue(Pageable pageable);
 
