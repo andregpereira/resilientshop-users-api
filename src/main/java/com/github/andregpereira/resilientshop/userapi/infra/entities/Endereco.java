@@ -59,9 +59,8 @@ public class Endereco {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (o == null || getClass() != o.getClass())
+        if (!(o instanceof Endereco endereco))
             return false;
-        Endereco endereco = (Endereco) o;
         return Objects.equals(id, endereco.id) && Objects.equals(apelido, endereco.apelido) && Objects.equals(cep,
                 endereco.cep) && Objects.equals(estado, endereco.estado) && Objects.equals(cidade,
                 endereco.cidade) && Objects.equals(bairro, endereco.bairro) && Objects.equals(rua,
