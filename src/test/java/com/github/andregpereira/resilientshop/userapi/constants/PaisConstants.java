@@ -7,7 +7,8 @@ import static com.github.andregpereira.resilientshop.userapi.constants.EnderecoC
 public class PaisConstants {
 
     public static final Pais PAIS = new Pais(null, "Brasil", "+055", LISTA_ENDERECOS);
-//    public static final Pais PAIS_USUARIO_INATIVO = new Pais(null, "Brasil", "+055", LISTA_ENDERECOS_USUARIO_INATIVO);
+
+    public static final Pais PAIS_MAPEADO = new Pais(null, "Brasil", "+055", LISTA_ENDERECOS_MAPEADO);
 
     public static final Pais PAIS_NOVO = new Pais(null, "EUA", "+001", LISTA_ENDERECOS_PAIS_NOVO);
 
