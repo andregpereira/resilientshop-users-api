@@ -6,6 +6,7 @@ import com.github.andregpereira.resilientshop.userapi.app.services.UsuarioConsul
 import com.github.andregpereira.resilientshop.userapi.app.services.UsuarioManutencaoService;
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioAlreadyExistsException;
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -13,12 +14,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.security.InvalidParameterException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +49,7 @@ class UsuarioControllerTest {
     @Test
     void criarUsuarioComDadosValidosRetornaCreated() throws Exception {
         given(manutencaoService.registrar(USUARIO_REGISTRO_DTO)).willReturn(USUARIO_DETALHES_DTO);
-        mockMvc.perform(MockMvcRequestBuilders.post("/usuarios").content(
-                objectMapper.writeValueAsString(USUARIO_REGISTRO_DTO)).contentType(
+        mockMvc.perform(post("/usuarios").content(objectMapper.writeValueAsString(USUARIO_REGISTRO_DTO)).contentType(
                 MediaType.APPLICATION_JSON)).andExpect(status().isCreated()).andExpectAll(
                 jsonPath("$.nome").value(USUARIO_DETALHES_DTO.nome()),
                 jsonPath("$.sobrenome").value(USUARIO_DETALHES_DTO.sobrenome()),
@@ -77,7 +76,7 @@ class UsuarioControllerTest {
     @Test
     void atualizarUsuarioComDadosValidosRetornaUsuarioDetalhesDto() throws Exception {
         given(manutencaoService.atualizar(1L, USUARIO_ATUALIZACAO_DTO)).willReturn(USUARIO_DETALHES_DTO_ATUALIZADO);
-        mockMvc.perform(MockMvcRequestBuilders.put("/usuarios/1").content(
+        mockMvc.perform(put("/usuarios/1").content(
                 objectMapper.writeValueAsString(USUARIO_ATUALIZACAO_DTO)).contentType(
                 MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andExpectAll(
                 jsonPath("$.nome").value(USUARIO_DETALHES_DTO_ATUALIZADO.nome()),
@@ -130,6 +129,24 @@ class UsuarioControllerTest {
     }
 
     @Test
+    void listarUsuariosExistentesRetornaPageUsuarioDto() throws Exception {
+        PageRequest pageable = PageRequest.of(0, 10, Direction.ASC, "id");
+        List<UsuarioDto> listaUsuarios = new ArrayList<>();
+        listaUsuarios.add(USUARIO_DTO);
+        listaUsuarios.add(USUARIO_DTO_ATUALIZADO);
+        Page<UsuarioDto> pageUsuarios = new PageImpl<>(listaUsuarios, pageable, 10);
+        given(consultaService.listar(pageable)).willReturn(pageUsuarios);
+        mockMvc.perform(get("/usuarios")).andExpect(status().isOk()).andExpectAll(jsonPath("$.empty").value(false),
+                jsonPath("$.numberOfElements").value(2));
+    }
+
+    @Test
+    void listarUsuariosInexistentesThrowsException() throws Exception {
+        given(consultaService.listar(any(Pageable.class))).willThrow(UsuarioNotFoundException.class);
+        mockMvc.perform(get("/usuarios")).andExpect(status().isNotFound());
+    }
+
+    @Test
     void consultarUsuarioPorIdExistenteRetornaUsuarioDetalhesDto() throws Exception {
         given(consultaService.consultarPorId(1L)).willReturn(USUARIO_DETALHES_DTO);
         mockMvc.perform(get("/usuarios/1")).andExpect(status().isOk()).andExpectAll(
@@ -144,12 +161,12 @@ class UsuarioControllerTest {
     @Test
     void consultarUsuarioPorIdInexistenteRetornaNotFound() throws Exception {
         given(consultaService.consultarPorId(10L)).willThrow(UsuarioNotFoundException.class);
-        mockMvc.perform(MockMvcRequestBuilders.get("/usuarios/10")).andExpect(status().isNotFound());
+        mockMvc.perform(get("/usuarios/10")).andExpect(status().isNotFound());
     }
 
     @Test
     void consultarUsuarioPorIdInvalidoThrowsException() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/usuarios/a")).andExpect(status().isBadRequest()).andExpectAll(
+        mockMvc.perform(get("/usuarios/a")).andExpect(status().isBadRequest()).andExpectAll(
                 jsonPath("$").value("Parâmetro inválido. Verifique e tente novamente"));
     }
 
@@ -173,20 +190,8 @@ class UsuarioControllerTest {
 
     @Test
     void consultarUsuarioPorCpfInvalidoThrowsException() throws Exception {
-        given(consultaService.consultarPorCpf("")).willThrow(InvalidParameterException.class);
+        given(consultaService.consultarPorCpf("")).willThrow(ConstraintViolationException.class);
         mockMvc.perform(get("/usuarios/cpf").param("cpf", "")).andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void consultarUsuariosExistentesRetornaPageUsuarioDto() throws Exception {
-        PageRequest pageable = PageRequest.of(0, 10, Direction.ASC, "nome");
-        List<UsuarioDto> listaUsuarios = new ArrayList<>();
-        listaUsuarios.add(USUARIO_DTO);
-        listaUsuarios.add(USUARIO_DTO_ATUALIZADO);
-        Page<UsuarioDto> pageUsuarios = new PageImpl<>(listaUsuarios, pageable, 10);
-        given(consultaService.consultarPorNome(null, null, pageable)).willReturn(pageUsuarios);
-        mockMvc.perform(MockMvcRequestBuilders.get("/usuarios/nome")).andExpect(status().isOk()).andExpectAll(
-                jsonPath("$.empty").value(false), jsonPath("$.numberOfElements").value(2));
     }
 
     @Test
@@ -195,12 +200,10 @@ class UsuarioControllerTest {
         List<UsuarioDto> listaUsuarios = new ArrayList<>();
         listaUsuarios.add(USUARIO_DTO_ATUALIZADO);
         Page<UsuarioDto> pageUsuarios = new PageImpl<>(listaUsuarios, pageable, 10);
-        given(consultaService.consultarPorNome(null, USUARIO_DTO_ATUALIZADO.sobrenome(), pageable)).willReturn(
-                pageUsuarios);
-        mockMvc.perform(MockMvcRequestBuilders.get("/usuarios/nome").param("sobrenome",
-                USUARIO_DTO_ATUALIZADO.sobrenome())).andExpect(status().isOk()).andExpectAll(
-                jsonPath("$.empty").value(false), jsonPath("$.numberOfElements").value(1),
-                jsonPath("$.content[0].sobrenome").value(USUARIO_DTO_ATUALIZADO.sobrenome()));
+        given(consultaService.consultarPorNome(USUARIO_DTO_ATUALIZADO.nome(), null, pageable)).willReturn(pageUsuarios);
+        mockMvc.perform(get("/usuarios/nome").param("nome", USUARIO_DTO_ATUALIZADO.nome())).andExpect(
+                status().isOk()).andExpectAll(jsonPath("$.empty").value(false), jsonPath("$.numberOfElements").value(1),
+                jsonPath("$.content[0].nome").value(USUARIO_DTO_ATUALIZADO.nome()));
     }
 
     @Test
@@ -212,16 +215,15 @@ class UsuarioControllerTest {
 
     @Test
     void criarUsuarioComRequestBodyNuloRetornaBadRequest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/usuarios").content(
-                objectMapper.writeValueAsString(null)).contentType(MediaType.APPLICATION_JSON)).andExpectAll(
-                status().isBadRequest(),
+        mockMvc.perform(post("/usuarios").content(objectMapper.writeValueAsString(null)).contentType(
+                MediaType.APPLICATION_JSON)).andExpectAll(status().isBadRequest(),
                 jsonPath("$").value("Informação inválida. Verifique os dados e tente novamente"));
     }
 
     @Test
     void inserirParametroCpfNuloThrowsException() throws Exception {
         mockMvc.perform(get("/usuarios/cpf")).andExpect(status().isBadRequest()).andExpectAll(
-                jsonPath("$.campo").value("cpf"), jsonPath("$.mensagem").value("O campo cpf é obrigatório"));
+                jsonPath("$.campo").value("cpf"), jsonPath("$.mensagem").value("O campo CPF é obrigatório"));
     }
 
 }

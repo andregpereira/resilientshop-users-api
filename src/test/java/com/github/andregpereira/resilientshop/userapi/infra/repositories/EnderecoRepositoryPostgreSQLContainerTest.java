@@ -3,10 +3,12 @@ package com.github.andregpereira.resilientshop.userapi.infra.repositories;
 import com.github.andregpereira.resilientshop.userapi.infra.entities.Endereco;
 import com.github.andregpereira.resilientshop.userapi.infra.repositories.config.PostgreSQLContainerConfig;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.util.Optional;
 
@@ -18,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
+@ContextConfiguration(initializers = PostgreSQLContainerConfig.PostgreSQLContainerInitializer.class)
 class EnderecoRepositoryPostgreSQLContainerTest extends PostgreSQLContainerConfig {
 
     @Autowired
@@ -34,6 +37,12 @@ class EnderecoRepositoryPostgreSQLContainerTest extends PostgreSQLContainerConfi
         ENDERECO_ATUALIZADO_PAIS_NOVO.setId(null);
         PAIS.setId(null);
         PAIS_NOVO.setId(null);
+    }
+
+    @BeforeEach
+    void beforeEach() {
+        ENDERECO.setPais(PAIS);
+        ENDERECO.setUsuario(USUARIO);
     }
 
     @Test

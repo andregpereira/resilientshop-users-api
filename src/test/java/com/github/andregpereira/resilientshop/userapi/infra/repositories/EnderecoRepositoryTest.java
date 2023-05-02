@@ -38,6 +38,7 @@ class EnderecoRepositoryTest {
 
     @BeforeEach
     void beforeEach() {
+        ENDERECO.setPais(PAIS);
         ENDERECO.setUsuario(USUARIO);
     }
 

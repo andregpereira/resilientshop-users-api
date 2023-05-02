@@ -3,17 +3,15 @@ package com.github.andregpereira.resilientshop.userapi.app.services;
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioAlreadyExistsException;
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioNotFoundException;
 import com.github.andregpereira.resilientshop.userapi.cross.mappers.UsuarioMapper;
+import com.github.andregpereira.resilientshop.userapi.cross.validations.PaisValidation;
 import com.github.andregpereira.resilientshop.userapi.infra.repositories.EnderecoRepository;
-import com.github.andregpereira.resilientshop.userapi.infra.repositories.PaisRepository;
 import com.github.andregpereira.resilientshop.userapi.infra.repositories.UsuarioRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
@@ -33,8 +31,8 @@ class UsuarioManutencaoServiceTest {
     @InjectMocks
     private UsuarioManutencaoServiceImpl manutencaoService;
 
-    @Spy
-    private UsuarioMapper mapper = Mappers.getMapper(UsuarioMapper.class);
+    @Mock
+    private UsuarioMapper mapper;
 
     @Mock
     private UsuarioRepository usuarioRepository;
@@ -43,25 +41,38 @@ class UsuarioManutencaoServiceTest {
     private EnderecoRepository enderecoRepository;
 
     @Mock
-    private PaisRepository paisRepository;
+    private PaisValidation paisValidation;
 
     @AfterEach
     public void afterEach() {
         USUARIO.setAtivo(true);
         USUARIO_INATIVO.setAtivo(false);
+        USUARIO_MAPEADO.setAtivo(false);
+        USUARIO_MAPEADO.setDataCriacao(null);
+        USUARIO_MAPEADO.setDataModificacao(null);
+        USUARIO_ATUALIZADO_MAPEADO.setCpf(null);
+        USUARIO_ATUALIZADO_MAPEADO.setAtivo(false);
+        USUARIO_ATUALIZADO_MAPEADO.setDataCriacao(null);
+        USUARIO_ATUALIZADO_MAPEADO.setDataModificacao(null);
     }
 
     @BeforeEach
     void beforeEach() {
         USUARIO.setEnderecos(LISTA_ENDERECOS);
-        ENDERECO.setPais(PAIS);
+        USUARIO_MAPEADO.setEnderecos(LISTA_ENDERECOS_MAPEADO);
+        USUARIO_ATUALIZADO_MAPEADO.setEnderecos(LISTA_ENDERECOS_ATUALIZADO_MAPEADO);
+        USUARIO_PAIS_NOVO.setEnderecos(LISTA_ENDERECOS_PAIS_NOVO);
+        USUARIO_ATUALIZADO.setEnderecos(LISTA_ENDERECOS_ATUALIZADO);
+        USUARIO_ATUALIZADO_PAIS_NOVO.setEnderecos(LISTA_ENDERECOS_ATUALIZADO_PAIS_NOVO);
     }
 
     @Test
     void criarUsuarioComDadosValidosEPaisNovoRetornaUsuarioDetalhesDto() {
-        given(paisRepository.save(PAIS_NOVO)).willReturn(PAIS_NOVO);
+        given(mapper.toUsuario(USUARIO_REGISTRO_DTO_PAIS_NOVO)).willReturn(USUARIO_PAIS_NOVO);
+        given(paisValidation.validarPais(PAIS_NOVO)).willReturn(PAIS_NOVO);
         given(usuarioRepository.save(USUARIO_PAIS_NOVO)).willReturn(USUARIO_PAIS_NOVO);
         given(enderecoRepository.saveAll(LISTA_ENDERECOS_PAIS_NOVO)).willReturn(LISTA_ENDERECOS_PAIS_NOVO);
+        given(mapper.toUsuarioDetalhesDto(USUARIO_PAIS_NOVO)).willReturn(USUARIO_DETALHES_DTO_PAIS_NOVO);
         assertThat(manutencaoService.registrar(USUARIO_REGISTRO_DTO_PAIS_NOVO)).isEqualTo(
                 USUARIO_DETALHES_DTO_PAIS_NOVO);
         then(usuarioRepository).should().save(USUARIO_PAIS_NOVO);
@@ -69,16 +80,17 @@ class UsuarioManutencaoServiceTest {
 
     @Test
     void criarUsuarioComDadosValidosEPaisExistenteRetornaUsuarioDetalhesDto() {
-        given(paisRepository.findByNomeOrCodigo(PAIS.getNome(), PAIS.getCodigo())).willReturn(Optional.of(PAIS));
+        given(mapper.toUsuario(USUARIO_REGISTRO_DTO)).willReturn(USUARIO_MAPEADO);
+        given(paisValidation.validarPais(PAIS)).willReturn(PAIS);
         given(usuarioRepository.save(USUARIO)).willReturn(USUARIO);
         given(enderecoRepository.saveAll(LISTA_ENDERECOS)).willReturn(LISTA_ENDERECOS);
+        given(mapper.toUsuarioDetalhesDto(USUARIO)).willReturn(USUARIO_DETALHES_DTO);
         assertThat(manutencaoService.registrar(USUARIO_REGISTRO_DTO)).isEqualTo(USUARIO_DETALHES_DTO);
         then(usuarioRepository).should().save(USUARIO);
     }
 
     @Test
     void criarUsuarioComDadosInvalidosThrowsRuntimeException() {
-        given(usuarioRepository.save(USUARIO_INVALIDO)).willThrow(RuntimeException.class);
         assertThatThrownBy(() -> manutencaoService.registrar(USUARIO_REGISTRO_DTO_INVALIDO)).isInstanceOf(
                 RuntimeException.class);
         then(usuarioRepository).should(never()).save(USUARIO);
@@ -86,35 +98,37 @@ class UsuarioManutencaoServiceTest {
 
     @Test
     void criarUsuarioComCpfRepetidoThrowsException() {
+        given(mapper.toUsuario(USUARIO_REGISTRO_DTO)).willReturn(USUARIO);
         given(usuarioRepository.existsByCpf(anyString())).willReturn(true);
         assertThatThrownBy(() -> manutencaoService.registrar(USUARIO_REGISTRO_DTO)).isInstanceOf(
-                UsuarioAlreadyExistsException.class).hasMessage(
-                "Não foi possível cadastrar o usuário. Já existe um usuário cadastrado com este CPF. Verifique e tente novamente");
+                UsuarioAlreadyExistsException.class).hasMessage("Opa! Já existe um usuário cadastrado com esse CPF");
         then(usuarioRepository).should(never()).save(USUARIO);
     }
 
     @Test
     void atualizarUsuarioComDadosValidosEPaisNovoRetornaUsuarioDetalhesDto() {
-        given(usuarioRepository.findByIdAndAtivoTrue(USUARIO.getId())).willReturn(Optional.of(USUARIO));
-        given(paisRepository.findByNomeOrCodigo(PAIS_NOVO.getNome(), PAIS_NOVO.getCodigo())).willReturn(
-                Optional.empty());
-        given(paisRepository.save(PAIS_NOVO)).willReturn(PAIS_NOVO);
+        given(usuarioRepository.findByIdAndAtivoTrue(5L)).willReturn(Optional.of(USUARIO));
+        given(mapper.toUsuario(USUARIO_ATUALIZACAO_DTO_PAIS_NOVO)).willReturn(USUARIO_ATUALIZADO_PAIS_NOVO);
+        given(paisValidation.validarPais(PAIS_NOVO)).willReturn(PAIS_NOVO);
         given(usuarioRepository.save(USUARIO_ATUALIZADO_PAIS_NOVO)).willReturn(USUARIO_ATUALIZADO_PAIS_NOVO);
         given(enderecoRepository.saveAll(LISTA_ENDERECOS_ATUALIZADO_PAIS_NOVO)).willReturn(
                 LISTA_ENDERECOS_ATUALIZADO_PAIS_NOVO);
-        assertThat(
-                manutencaoService.atualizar(USUARIO.getId(), USUARIO_ATUALIZACAO_DTO_PAIS_NOVO)).isNotNull().isEqualTo(
+        given(mapper.toUsuarioDetalhesDto(USUARIO_ATUALIZADO_PAIS_NOVO)).willReturn(
+                USUARIO_DETALHES_DTO_ATUALIZADO_PAIS_NOVO);
+        assertThat(manutencaoService.atualizar(5L, USUARIO_ATUALIZACAO_DTO_PAIS_NOVO)).isNotNull().isEqualTo(
                 USUARIO_DETALHES_DTO_ATUALIZADO_PAIS_NOVO);
         then(usuarioRepository).should().save(USUARIO_ATUALIZADO_PAIS_NOVO);
     }
 
     @Test
     void atualizarUsuarioComDadosValidosEPaisExistenteRetornaUsuarioDetalhesDto() {
-        given(usuarioRepository.findByIdAndAtivoTrue(USUARIO.getId())).willReturn(Optional.of(USUARIO));
-        given(paisRepository.findByNomeOrCodigo(PAIS.getNome(), PAIS.getCodigo())).willReturn(Optional.of(PAIS));
+        given(usuarioRepository.findByIdAndAtivoTrue(5L)).willReturn(Optional.of(USUARIO));
+        given(mapper.toUsuario(USUARIO_ATUALIZACAO_DTO)).willReturn(USUARIO_ATUALIZADO_MAPEADO);
+        given(paisValidation.validarPais(PAIS)).willReturn(PAIS);
         when(usuarioRepository.save(USUARIO_ATUALIZADO)).thenReturn(USUARIO_ATUALIZADO);
         when(enderecoRepository.saveAll(LISTA_ENDERECOS_ATUALIZADO)).thenReturn(LISTA_ENDERECOS_ATUALIZADO);
-        assertThat(manutencaoService.atualizar(USUARIO.getId(), USUARIO_ATUALIZACAO_DTO)).isNotNull().isEqualTo(
+        given(mapper.toUsuarioDetalhesDto(USUARIO_ATUALIZADO)).willReturn(USUARIO_DETALHES_DTO_ATUALIZADO);
+        assertThat(manutencaoService.atualizar(5L, USUARIO_ATUALIZACAO_DTO)).isNotNull().isEqualTo(
                 USUARIO_DETALHES_DTO_ATUALIZADO);
         then(usuarioRepository).should().save(USUARIO_ATUALIZADO);
     }
@@ -138,34 +152,32 @@ class UsuarioManutencaoServiceTest {
     @Test
     void desativarUsuarioAtivoComIdExistenteRetornaString() {
         given(usuarioRepository.findByIdAndAtivoTrue(10L)).willReturn(Optional.of(USUARIO));
-        assertThat(manutencaoService.desativar(10L)).isEqualTo("Usuário desativado");
-        then(usuarioRepository).should().findByIdAndAtivoTrue(10L);
-        then(usuarioRepository).should().save(USUARIO_INATIVO);
+        assertThat(manutencaoService.desativar(10L)).isEqualTo("Usuário com id 10 desativado com sucesso");
+        then(usuarioRepository).should().save(USUARIO);
     }
 
     @Test
     void desativarUsuarioInativoOuComIdInexistenteThrowsException() {
-        given(usuarioRepository.findByIdAndAtivoTrue(10L)).willReturn(Optional.empty());
+        given(usuarioRepository.findByIdAndAtivoTrue(anyLong())).willReturn(Optional.empty());
         assertThatThrownBy(() -> manutencaoService.desativar(10L)).isInstanceOf(
                 UsuarioNotFoundException.class).hasMessage(
-                "Não foi possível encontrar um usuário ativo com este id. Verifique e tente novamente");
+                "Não foi possível encontrar um usuário ativo com o id 10. Verifique e tente novamente");
         then(usuarioRepository).should(never()).save(USUARIO_INATIVO);
     }
 
     @Test
     void reativarUsuarioInativoComIdExistenteRetornaString() {
-        given(usuarioRepository.findByIdAndAtivoFalse(10L)).willReturn(Optional.of(USUARIO_INATIVO));
-        assertThat(manutencaoService.reativar(10L)).isEqualTo("Usuário reativado");
-        then(usuarioRepository).should().findByIdAndAtivoFalse(10L);
-        then(usuarioRepository).should().save(USUARIO);
+        given(usuarioRepository.findByIdAndAtivoFalse(15L)).willReturn(Optional.of(USUARIO_INATIVO));
+        assertThat(manutencaoService.reativar(15L)).isEqualTo("Usuário com id 15 reativado com sucesso");
+        then(usuarioRepository).should().save(USUARIO_INATIVO);
     }
 
     @Test
     void reativarUsuarioAtivoOuComIdInexistenteThrowsExecption() {
-        given(usuarioRepository.findByIdAndAtivoFalse(10L)).willReturn(Optional.empty());
-        assertThatThrownBy(() -> manutencaoService.reativar(10L)).isInstanceOf(
+        given(usuarioRepository.findByIdAndAtivoFalse(anyLong())).willReturn(Optional.empty());
+        assertThatThrownBy(() -> manutencaoService.reativar(20L)).isInstanceOf(
                 UsuarioNotFoundException.class).hasMessage(
-                "Não foi possível encontrar um usuário inativo com este id. Verifique e tente novamente");
+                "Não foi possível encontrar um usuário inativo com o id 20. Verifique e tente novamente");
         then(usuarioRepository).should(never()).save(USUARIO);
     }
 
