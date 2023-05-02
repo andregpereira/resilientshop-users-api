@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.security.InvalidParameterException;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -22,6 +21,17 @@ public class UsuarioConsultaServiceImpl implements UsuarioConsultaService {
 
     private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
+
+    public Page<UsuarioDto> listar(Pageable pageable) {
+        Page<Usuario> usuarios = usuarioRepository.findAllByAtivoTrue(pageable);
+        if (usuarios.isEmpty()) {
+            log.info("Nenhum usuário foi encontrado");
+            throw new UsuarioNotFoundException();
+        } else {
+            log.info("Retornando todos os usuários");
+            return usuarios.map(usuarioMapper::toUsuarioDto);
+        }
+    }
 
     public UsuarioDetalhesDto consultarPorId(Long id) {
         return usuarioRepository.findById(id).map(u -> {
@@ -34,34 +44,24 @@ public class UsuarioConsultaServiceImpl implements UsuarioConsultaService {
     }
 
     public UsuarioDetalhesDto consultarPorCpf(String cpf) {
-        if (cpf == null || cpf.isBlank() || !cpf.matches("\\d+") || cpf.length() < 11 || cpf.length() > 14) {
-            log.info("CPF inválido");
-            throw new InvalidParameterException(
-                    "Não foi possível realizar a busca por CPF. O CPF não foi digitado corretamente. Verifique e tente novamente");
-        }
         return usuarioRepository.findByCpfAndAtivoTrue(cpf).map(u -> {
             log.info("Retornando usuário encontrado com CPF");
             return usuarioMapper.toUsuarioDetalhesDto(u);
         }).orElseThrow(() -> {
             log.info("Usuário não encontrado com o CPF informado");
-            return new UsuarioNotFoundException(
-                    "Desculpe, não foi possível encontrar um usuário ativo com este CPF. Verifique e tente novamente");
+            return new UsuarioNotFoundException("CPF", cpf);
         });
     }
 
     public Page<UsuarioDto> consultarPorNome(String nome, String sobrenome, Pageable pageable) {
-        nome = Optional.ofNullable(nome).map(String::trim).orElse("");
+        nome = nome.trim();
         sobrenome = Optional.ofNullable(sobrenome).map(String::trim).orElse("");
-        Page<Usuario> usuarios = usuarioRepository.findAllByNomeAndAtivoTrue(nome, sobrenome, pageable);
+        Page<Usuario> usuarios = usuarioRepository.findAllByNomeAndSobrenomeAndAtivoTrue(nome, sobrenome, pageable);
         if (usuarios.isEmpty()) {
-            log.info("Nenhum usuário foi encontrado");
-            throw new UsuarioNotFoundException(
-                    "Desculpe, não foi possível encontrar um usuário com este nome. Verifique e tente novamente");
-        } else if (nome.isBlank() && sobrenome.isBlank()) {
-            log.info("Retornando todos os usuários");
-            return usuarioRepository.findAllByAtivoTrue(pageable).map(usuarioMapper::toUsuarioDto);
+            log.info("Nenhum usuário foi encontrado pelo nome {}", String.join(" ", nome, sobrenome).trim());
+            throw new UsuarioNotFoundException("nome", String.join(" ", nome, sobrenome).trim());
         }
-        log.info("Retornando usuários encontrados pelo nome");
+        log.info("Retornando usuários encontrados com o nome {}", String.join(" ", nome, sobrenome).trim());
         return usuarios.map(usuarioMapper::toUsuarioDto);
     }
 

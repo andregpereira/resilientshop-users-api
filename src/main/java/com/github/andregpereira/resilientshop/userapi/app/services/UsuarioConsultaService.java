@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 
 public interface UsuarioConsultaService {
 
+    Page<UsuarioDto> listar(Pageable pageable);
+
     UsuarioDetalhesDto consultarPorId(Long id);
 
     UsuarioDetalhesDto consultarPorCpf(String cpf);
