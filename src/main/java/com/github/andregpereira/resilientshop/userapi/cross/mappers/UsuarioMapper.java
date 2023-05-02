@@ -5,11 +5,13 @@ import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioDe
 import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioDto;
 import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioRegistroDto;
 import com.github.andregpereira.resilientshop.userapi.infra.entities.Usuario;
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants.ComponentModel;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = ComponentModel.SPRING, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = ComponentModel.SPRING, uses = EnderecoMapper.class,
+        injectionStrategy = InjectionStrategy.CONSTRUCTOR, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UsuarioMapper {
 
     Usuario toUsuario(UsuarioRegistroDto usuarioRegistroDto);
