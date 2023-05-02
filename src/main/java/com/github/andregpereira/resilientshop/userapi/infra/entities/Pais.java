@@ -1,14 +1,17 @@
 package com.github.andregpereira.resilientshop.userapi.infra.entities;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -34,15 +37,20 @@ public class Pais {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (o == null || getClass() != o.getClass())
+        if (!(o instanceof Pais pais))
             return false;
-        Pais pais = (Pais) o;
         return Objects.equals(id, pais.id) && Objects.equals(nome, pais.nome) && Objects.equals(codigo, pais.codigo);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, nome, codigo);
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Pais.class.getSimpleName() + "[", "]").add("id=" + id).add(
+                "nome='" + nome + "'").add("codigo='" + codigo + "'").toString();
     }
 
 }
