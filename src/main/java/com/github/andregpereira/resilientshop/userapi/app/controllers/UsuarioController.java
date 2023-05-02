@@ -13,6 +13,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -28,6 +31,7 @@ import java.net.URI;
 
 @RequiredArgsConstructor
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
@@ -103,6 +107,14 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioManutencaoService.reativar(id));
     }
 
+    // Listar usuários
+    @GetMapping
+    public ResponseEntity<Page<UsuarioDto>> listar(
+            @PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 10) Pageable pageable) {
+        log.info("Listando usuários...");
+        return ResponseEntity.ok(usuarioConsultaService.listar(pageable));
+    }
+
     // Pesquisar por id
     @GetMapping("/{id}")
     @Operation(summary = "Consulta um usuário por id")
@@ -129,9 +141,12 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", descricao = "Usuário não encontrado",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = String.class)))})
-    public ResponseEntity<UsuarioDetalhesDto> consultarPorCpf(@RequestParam String cpf) {
+    public ResponseEntity<UsuarioDetalhesDto> consultarPorCpf(
+            @RequestParam @Size(message = "O CPF deve ter 11 números", min = 11) @Pattern(
+                    message = "CPF inválido. Formatos aceitos: xxx.xxx.xxx-xx, xxxxxxxxx-xx ou xxxxxxxxxxx",
+                    regexp = "^(\\d{3}[.]\\d{3}[.]\\d{3}-\\d{2})|(\\d{9}-\\d{2})|(\\d{11})$") String cpf) {
         log.info("Consultando usuário por CPF...");
-        return ResponseEntity.ok(usuarioConsultaService.consultarPorCpf(cpf));
+        return ResponseEntity.ok(usuarioConsultaService.consultarPorCpf(cpf.replace(".", "").replace("-", "")));
     }
 
     // Pesquisar por nome
@@ -143,7 +158,8 @@ public class UsuarioController {
             @ApiResponse(responseCode = "404", descricao = "Usuário não encontrado",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = String.class)))})
-    public ResponseEntity<Page<UsuarioDto>> consultarPorNome(@RequestParam(required = false) String nome,
+    public ResponseEntity<Page<UsuarioDto>> consultarPorNome(
+            @RequestParam @Size(message = "O nome deve ter pelo menos 2 caracteres", min = 2) String nome,
             @RequestParam(required = false) String sobrenome,
             @PageableDefault(sort = "nome", direction = Direction.ASC, page = 0, size = 10) Pageable pageable) {
         log.info("Consultando usuário por nome...");
