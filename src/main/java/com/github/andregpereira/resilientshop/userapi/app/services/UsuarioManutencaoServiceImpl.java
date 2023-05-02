@@ -6,16 +6,16 @@ import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioRe
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioAlreadyExistsException;
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioNotFoundException;
 import com.github.andregpereira.resilientshop.userapi.cross.mappers.UsuarioMapper;
-import com.github.andregpereira.resilientshop.userapi.infra.entities.Pais;
+import com.github.andregpereira.resilientshop.userapi.cross.validations.PaisValidation;
 import com.github.andregpereira.resilientshop.userapi.infra.entities.Usuario;
 import com.github.andregpereira.resilientshop.userapi.infra.repositories.EnderecoRepository;
-import com.github.andregpereira.resilientshop.userapi.infra.repositories.PaisRepository;
 import com.github.andregpereira.resilientshop.userapi.infra.repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.MessageFormat;
 import java.time.LocalDate;
 
 @RequiredArgsConstructor
@@ -27,24 +27,17 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
     private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
     private final EnderecoRepository enderecoRepository;
-    private final PaisRepository paisRepository;
+    private final PaisValidation paisValidation;
 
     public UsuarioDetalhesDto registrar(UsuarioRegistroDto dto) {
-        if (usuarioRepository.existsByCpf(dto.cpf())) {
+        Usuario usuario = usuarioMapper.toUsuario(dto);
+        usuario.setCpf(usuario.getCpf().replace(".", "").replace("-", ""));
+        if (usuarioRepository.existsByCpf(usuario.getCpf())) {
             log.info("Usuário já cadastrado com o CPF informado");
             throw new UsuarioAlreadyExistsException();
         }
-        Usuario usuario = usuarioMapper.toUsuario(dto);
         usuario.getEnderecos().stream().forEach(e -> {
-            Pais pais = e.getPais();
-            paisRepository.findByNomeOrCodigo(pais.getNome(), pais.getCodigo()).ifPresentOrElse(p -> {
-                log.info("Retornando país encontrado");
-                e.setPais(p);
-            }, () -> {
-                log.info("País não encontrado. Criando novo país");
-                paisRepository.save(pais);
-                log.info("País criado com sucesso");
-            });
+            e.setPais(paisValidation.validarPais(e.getPais()));
             e.setUsuario(usuario);
         });
         LocalDate agora = LocalDate.now();
@@ -61,19 +54,10 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
             Usuario usuarioAtualizado = usuarioMapper.toUsuario(dto);
             enderecoRepository.deleteByUsuario(usuarioAntigo);
             usuarioAtualizado.getEnderecos().stream().forEach(e -> {
-                Pais pais = e.getPais();
-                log.info("Procurando país...");
-                paisRepository.findByNomeOrCodigo(pais.getNome(), pais.getCodigo()).ifPresentOrElse(p -> {
-                    log.info("Retornando país encontrado");
-                    e.setPais(p);
-                }, () -> {
-                    log.info("País não encontrado. Criando novo país");
-                    paisRepository.save(pais);
-                    log.info("País criado com sucesso");
-                });
+                e.setPais(paisValidation.validarPais(e.getPais()));
                 e.setUsuario(usuarioAtualizado);
             });
-            usuarioAtualizado.setId(id);
+            usuarioAtualizado.setId(usuarioAntigo.getId());
             usuarioAtualizado.setCpf(usuarioAntigo.getCpf());
             usuarioAtualizado.setDataCriacao(usuarioAntigo.getDataCriacao());
             usuarioAtualizado.setDataModificacao(LocalDate.now());
@@ -84,7 +68,7 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
             return usuarioMapper.toUsuarioDetalhesDto(usuarioAtualizado);
         }).orElseThrow(() -> {
             log.info("Usuário com id {} não encontrado", id);
-            return new UsuarioNotFoundException(id);
+            return new UsuarioNotFoundException(id, true);
         });
     }
 
@@ -93,11 +77,10 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
             u.setAtivo(false);
             usuarioRepository.save(u);
             log.info("Usuário com id {} desativado com sucesso", id);
-            return "Usuário desativado";
+            return MessageFormat.format("Usuário com id {0} desativado com sucesso", id);
         }).orElseThrow(() -> {
             log.info("Usuário ativo com id {} não encontrado", id);
-            return new UsuarioNotFoundException(
-                    "Não foi possível encontrar um usuário ativo com este id. Verifique e tente novamente");
+            return new UsuarioNotFoundException(id, true);
         });
     }
 
@@ -106,11 +89,10 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
             u.setAtivo(true);
             usuarioRepository.save(u);
             log.info("Usuário com id {} reativado com sucesso", id);
-            return "Usuário reativado";
+            return MessageFormat.format("Usuário com id {0} reativado com sucesso", id);
         }).orElseThrow(() -> {
             log.info("Usuário inativo com id {} não encontrado", id);
-            throw new UsuarioNotFoundException(
-                    "Não foi possível encontrar um usuário inativo com este id. Verifique e tente novamente");
+            return new UsuarioNotFoundException(id, false);
         });
     }
 
