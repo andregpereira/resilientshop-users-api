@@ -1,5 +1,7 @@
 package com.github.andregpereira.resilientshop.userapi.cross.exceptions;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -10,26 +12,20 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import java.security.InvalidParameterException;
 import java.util.stream.Stream;
 
 @RestControllerAdvice
 public class TratadorDeErros {
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Stream<DadoInvalido>> erro400(ConstraintViolationException e) {
+        Stream<ConstraintViolation<?>> erros = e.getConstraintViolations().stream();
+        return ResponseEntity.badRequest().body(erros.map(DadoInvalido::new));
+    }
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<String> erro400(HttpMessageNotReadableException e) {
         return ResponseEntity.badRequest().body("Informação inválida. Verifique os dados e tente novamente");
-    }
-
-    @ExceptionHandler(InvalidParameterException.class)
-    public ResponseEntity<String> erro400(InvalidParameterException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Stream<DadoInvalido>> erro422(MethodArgumentNotValidException e) {
-        Stream<FieldError> erros = e.getFieldErrors().stream();
-        return ResponseEntity.unprocessableEntity().body(erros.map(DadoInvalido::new));
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -39,8 +35,8 @@ public class TratadorDeErros {
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<DadoInvalido> erro400(MissingServletRequestParameterException e) {
-        return ResponseEntity.badRequest().body(
-                new DadoInvalido(e.getParameterName(), "O campo " + e.getParameterName() + " é obrigatório"));
+        return ResponseEntity.badRequest().body(new DadoInvalido(e.getParameterName(),
+                "O campo " + e.getParameterName().replace("cpf", "CPF") + " é obrigatório"));
     }
 
     @ExceptionHandler(com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioNotFoundException.class)
@@ -53,11 +49,22 @@ public class TratadorDeErros {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Stream<DadoInvalido>> erro422(MethodArgumentNotValidException e) {
+        Stream<FieldError> erros = e.getFieldErrors().stream();
+        return ResponseEntity.unprocessableEntity().body(erros.map(DadoInvalido::new));
+    }
+
     private record DadoInvalido(String campo,
             String mensagem) {
 
         public DadoInvalido(FieldError erro) {
             this(erro.getField(), erro.getDefaultMessage());
+        }
+
+        public DadoInvalido(ConstraintViolation<?> erro) {
+            this(new StringBuffer(erro.getPropertyPath().toString()).replace(0,
+                    erro.getPropertyPath().toString().indexOf(".") + 1, "").toString(), erro.getMessageTemplate());
         }
 
     }
