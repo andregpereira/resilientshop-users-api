@@ -46,7 +46,8 @@ public class Usuario {
     @Column(nullable = false)
     private boolean ativo;
 
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany(mappedBy = "usuario",
+            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE})
     private List<Endereco> enderecos;
 
     @Override
