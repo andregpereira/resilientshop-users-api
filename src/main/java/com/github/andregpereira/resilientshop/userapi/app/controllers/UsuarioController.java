@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -163,7 +164,8 @@ public class UsuarioController {
             @RequestParam(required = false) String sobrenome,
             @PageableDefault(sort = "nome", direction = Direction.ASC, page = 0, size = 10) Pageable pageable) {
         log.info("Consultando usuário por nome...");
-        return ResponseEntity.ok(usuarioConsultaService.consultarPorNome(nome, sobrenome, pageable));
+        return ResponseEntity.ok(usuarioConsultaService.consultarPorNome(nome.trim(), Optional.ofNullable(
+                sobrenome).map(String::trim).orElse(""), pageable));
     }
 
 }
