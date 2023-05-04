@@ -45,14 +45,13 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
         usuario.setDataModificacao(agora);
         usuario.setAtivo(true);
         usuarioRepository.save(usuario);
-        enderecoRepository.saveAll(usuario.getEnderecos());
         return usuarioMapper.toUsuarioDetalhesDto(usuario);
     }
 
     public UsuarioDetalhesDto atualizar(Long id, UsuarioAtualizacaoDto dto) {
         return usuarioRepository.findByIdAndAtivoTrue(id).map(usuarioAntigo -> {
             Usuario usuarioAtualizado = usuarioMapper.toUsuario(dto);
-            enderecoRepository.deleteByUsuario(usuarioAntigo);
+            enderecoRepository.deleteByUsuarioId(usuarioAntigo.getId());
             usuarioAtualizado.getEnderecos().stream().forEach(e -> {
                 e.setPais(paisValidation.validarPais(e.getPais()));
                 e.setUsuario(usuarioAtualizado);
@@ -62,12 +61,11 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
             usuarioAtualizado.setDataCriacao(usuarioAntigo.getDataCriacao());
             usuarioAtualizado.setDataModificacao(LocalDate.now());
             usuarioAtualizado.setAtivo(true);
-            usuarioRepository.save(usuarioAtualizado);
-            enderecoRepository.saveAll(usuarioAtualizado.getEnderecos());
+            usuarioAtualizado.setEnderecos(usuarioRepository.save(usuarioAtualizado).getEnderecos());
             log.info("Usuário com id {} atualizado com sucesso", id);
             return usuarioMapper.toUsuarioDetalhesDto(usuarioAtualizado);
         }).orElseThrow(() -> {
-            log.info("Usuário com id {} não encontrado", id);
+            log.info("Usuário ativo com id {} não encontrado", id);
             return new UsuarioNotFoundException(id, true);
         });
     }

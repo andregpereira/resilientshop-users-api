@@ -12,8 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @RequiredArgsConstructor
 @Slf4j
 @Service
@@ -54,11 +52,9 @@ public class UsuarioConsultaServiceImpl implements UsuarioConsultaService {
     }
 
     public Page<UsuarioDto> consultarPorNome(String nome, String sobrenome, Pageable pageable) {
-        nome = nome.trim();
-        sobrenome = Optional.ofNullable(sobrenome).map(String::trim).orElse("");
         Page<Usuario> usuarios = usuarioRepository.findAllByNomeAndSobrenomeAndAtivoTrue(nome, sobrenome, pageable);
         if (usuarios.isEmpty()) {
-            log.info("Nenhum usuário foi encontrado pelo nome {}", String.join(" ", nome, sobrenome).trim());
+            log.info("Nenhum usuário foi encontrado com o nome {}", String.join(" ", nome, sobrenome).trim());
             throw new UsuarioNotFoundException("nome", String.join(" ", nome, sobrenome).trim());
         }
         log.info("Retornando usuários encontrados com o nome {}", String.join(" ", nome, sobrenome).trim());
