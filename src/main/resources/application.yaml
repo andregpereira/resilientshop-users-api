@@ -28,5 +28,6 @@ eureka:
   client:
     registerWithEureka: true
     fetchRegistry: false
+    instance-info-replication-interval-seconds: 5
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:8761/eureka

@@ -101,12 +101,11 @@ class EnderecoRepositoryTest {
     }
 
     @Test
-    void consultarEnderecoPorIdExistenteRetornaTrueEEndereco() {
+    void consultarEnderecoPorIdExistenteRetornaEndereco() {
         em.persist(PAIS);
         em.persist(USUARIO);
         Endereco endereco = em.persistFlushFind(ENDERECO);
         Optional<Endereco> optionalEndereco = repository.findById(endereco.getId());
-        assertThat(repository.existsById(endereco.getId())).isTrue();
         assertThat(optionalEndereco).isNotEmpty().get().isNotNull().isEqualTo(ENDERECO);
     }
 

@@ -51,8 +51,8 @@ class UsuarioRepositoryTest {
 
     @Test
     void criarUsuarioComDadosValidosRetornaUsuario() {
-        Usuario usuario = repository.save(USUARIO);
         em.persist(PAIS);
+        Usuario usuario = repository.save(USUARIO);
         em.persist(ENDERECO);
         Usuario sut = em.find(Usuario.class, usuario.getId());
         assertThat(sut).isNotNull();
@@ -74,8 +74,14 @@ class UsuarioRepositoryTest {
 
     @Test
     void criarUsuarioComCpfExistenteThrowsRuntimeException() {
-        Usuario sut = em.persistFlushFind(USUARIO);
+        System.out.println(ENDERECO.getId());
+        System.out.println(ENDERECO.getId());
+        System.out.println(ENDERECO.getId());
+        System.out.println(ENDERECO.getId());
+        System.out.println(ENDERECO.getId());
+        System.out.println(ENDERECO.getId());
         em.persist(PAIS);
+        Usuario sut = em.persistFlushFind(USUARIO);
         em.persist(ENDERECO);
         sut.setId(null);
         assertThatThrownBy(() -> repository.saveAndFlush(sut)).isInstanceOf(RuntimeException.class);
@@ -83,8 +89,8 @@ class UsuarioRepositoryTest {
 
     @Test
     void consultarUsuarioPorIdExistenteEAtivoRetornaTrueEUsuario() {
-        Usuario sut = em.persistFlushFind(USUARIO);
         em.persist(PAIS);
+        Usuario sut = em.persistFlushFind(USUARIO);
         em.persist(ENDERECO);
         Optional<Usuario> optionalUsuario = repository.findByIdAndAtivoTrue(sut.getId());
         assertThat(repository.existsById(sut.getId())).isTrue();
@@ -110,8 +116,8 @@ class UsuarioRepositoryTest {
 
     @Test
     void consultarUsuarioPorCpfExistenteEAtivoRetornaTrueEUsuario() {
-        Usuario usuario = em.persistFlushFind(USUARIO);
         em.persist(PAIS);
+        Usuario usuario = em.persistFlushFind(USUARIO);
         em.persist(ENDERECO);
         Optional<Usuario> optionalUsuario = repository.findByCpfAndAtivoTrue(usuario.getCpf());
         assertThat(repository.existsByCpf(usuario.getCpf())).isTrue();
@@ -120,8 +126,8 @@ class UsuarioRepositoryTest {
 
     @Test
     void consultarUsuarioPorCpfExistenteEInativoRetornaTrueEEmpty() {
-        Usuario usuario = em.persistFlushFind(USUARIO_INATIVO);
         em.persist(PAIS);
+        Usuario usuario = em.persistFlushFind(USUARIO_INATIVO);
         em.persist(ENDERECO_USUARIO_INATIVO);
         Optional<Usuario> optionalUsuario = repository.findByCpfAndAtivoTrue(usuario.getCpf());
         assertThat(repository.existsByCpf(usuario.getCpf())).isTrue();
@@ -137,8 +143,8 @@ class UsuarioRepositoryTest {
 
     @Test
     void consultarUsuarioPorNomeExistenteEAtivoRetornaUsuario() {
-        Usuario usuario = em.persistFlushFind(USUARIO);
         em.persist(PAIS);
+        Usuario usuario = em.persistFlushFind(USUARIO);
         em.persist(ENDERECO);
         PageRequest pageable = PageRequest.of(0, 10, Direction.ASC, "nome");
         Page<Usuario> pageUsuarios = repository.findAllByNomeAndSobrenomeAndAtivoTrue(usuario.getNome(),
@@ -149,8 +155,8 @@ class UsuarioRepositoryTest {
 
     @Test
     void consultarUsuariosExistentesEAtivosPorParametroVazioRetornaUsuarios() {
-        Usuario sut = em.persistFlushFind(USUARIO);
         em.persist(PAIS);
+        Usuario sut = em.persistFlushFind(USUARIO);
         em.persist(ENDERECO);
         PageRequest pageable = PageRequest.of(0, 10, Direction.ASC, "nome");
         Page<Usuario> pageUsuarios = repository.findAllByNomeAndSobrenomeAndAtivoTrue("", "", pageable);
@@ -178,8 +184,8 @@ class UsuarioRepositoryTest {
 
     @Test
     void desativarUsuarioPorIdExistenteRetornaUsuarioDesativado() {
-        Usuario usuario = em.persistFlushFind(USUARIO);
         em.persist(PAIS);
+        Usuario usuario = em.persistFlushFind(USUARIO);
         em.persist(ENDERECO);
         usuario.setAtivo(false);
         repository.save(usuario);
@@ -190,8 +196,8 @@ class UsuarioRepositoryTest {
 
     @Test
     void reativarUsuarioPorIdExistenteRetornaUsuarioAtivado() {
-        Usuario usuario = em.persistFlushFind(USUARIO_INATIVO);
         em.persist(PAIS);
+        Usuario usuario = em.persistFlushFind(USUARIO_INATIVO);
         em.persist(ENDERECO_USUARIO_INATIVO);
         usuario.setAtivo(true);
         repository.save(usuario);
@@ -202,8 +208,8 @@ class UsuarioRepositoryTest {
 
     @Test
     void removerUsuarioPorIdExistenteRetornaNulo() {
-        Usuario sut = em.persistFlushFind(USUARIO);
         em.persist(PAIS);
+        Usuario sut = em.persistFlushFind(USUARIO);
         em.persist(ENDERECO);
         repository.deleteById(sut.getId());
         Usuario usuarioRemovido = em.find(Usuario.class, sut.getId());

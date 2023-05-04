@@ -200,7 +200,7 @@ class UsuarioControllerTest {
         List<UsuarioDto> listaUsuarios = new ArrayList<>();
         listaUsuarios.add(USUARIO_DTO_ATUALIZADO);
         Page<UsuarioDto> pageUsuarios = new PageImpl<>(listaUsuarios, pageable, 10);
-        given(consultaService.consultarPorNome(USUARIO_DTO_ATUALIZADO.nome(), null, pageable)).willReturn(pageUsuarios);
+        given(consultaService.consultarPorNome(USUARIO_DTO_ATUALIZADO.nome(), "", pageable)).willReturn(pageUsuarios);
         mockMvc.perform(get("/usuarios/nome").param("nome", USUARIO_DTO_ATUALIZADO.nome())).andExpect(
                 status().isOk()).andExpectAll(jsonPath("$.empty").value(false), jsonPath("$.numberOfElements").value(1),
                 jsonPath("$.content[0].nome").value(USUARIO_DTO_ATUALIZADO.nome()));
@@ -209,7 +209,7 @@ class UsuarioControllerTest {
     @Test
     void consultarUsuarioPorNomeInexistenteRetornaNotFound() throws Exception {
         PageRequest pageable = PageRequest.of(0, 10, Direction.ASC, "nome");
-        given(consultaService.consultarPorNome("nome", null, pageable)).willThrow(UsuarioNotFoundException.class);
+        given(consultaService.consultarPorNome("nome", "", pageable)).willThrow(UsuarioNotFoundException.class);
         mockMvc.perform(get("/usuarios/nome").param("nome", "nome")).andExpect(status().isNotFound());
     }
 

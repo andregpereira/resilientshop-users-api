@@ -103,7 +103,7 @@ class UsuarioConsultaServiceTest {
         Page<Usuario> pageUsuarios = new PageImpl<>(listaUsuarios, pageable, 10);
         given(usuarioRepository.findAllByNomeAndSobrenomeAndAtivoTrue("nome", "", pageable)).willReturn(pageUsuarios);
         given(mapper.toUsuarioDto(USUARIO)).willReturn(USUARIO_DTO);
-        Page<UsuarioDto> sut = consultaService.consultarPorNome("nome", null, pageable);
+        Page<UsuarioDto> sut = consultaService.consultarPorNome("nome", "", pageable);
         assertThat(sut).isNotEmpty().hasSize(1);
         assertThat(sut.getContent().get(0)).isEqualTo(USUARIO_DTO);
     }

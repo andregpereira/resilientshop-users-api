@@ -71,7 +71,6 @@ class UsuarioManutencaoServiceTest {
         given(mapper.toUsuario(USUARIO_REGISTRO_DTO_PAIS_NOVO)).willReturn(USUARIO_PAIS_NOVO);
         given(paisValidation.validarPais(PAIS_NOVO)).willReturn(PAIS_NOVO);
         given(usuarioRepository.save(USUARIO_PAIS_NOVO)).willReturn(USUARIO_PAIS_NOVO);
-        given(enderecoRepository.saveAll(LISTA_ENDERECOS_PAIS_NOVO)).willReturn(LISTA_ENDERECOS_PAIS_NOVO);
         given(mapper.toUsuarioDetalhesDto(USUARIO_PAIS_NOVO)).willReturn(USUARIO_DETALHES_DTO_PAIS_NOVO);
         assertThat(manutencaoService.registrar(USUARIO_REGISTRO_DTO_PAIS_NOVO)).isEqualTo(
                 USUARIO_DETALHES_DTO_PAIS_NOVO);
@@ -83,7 +82,6 @@ class UsuarioManutencaoServiceTest {
         given(mapper.toUsuario(USUARIO_REGISTRO_DTO)).willReturn(USUARIO_MAPEADO);
         given(paisValidation.validarPais(PAIS)).willReturn(PAIS);
         given(usuarioRepository.save(USUARIO)).willReturn(USUARIO);
-        given(enderecoRepository.saveAll(LISTA_ENDERECOS)).willReturn(LISTA_ENDERECOS);
         given(mapper.toUsuarioDetalhesDto(USUARIO)).willReturn(USUARIO_DETALHES_DTO);
         assertThat(manutencaoService.registrar(USUARIO_REGISTRO_DTO)).isEqualTo(USUARIO_DETALHES_DTO);
         then(usuarioRepository).should().save(USUARIO);
@@ -111,8 +109,6 @@ class UsuarioManutencaoServiceTest {
         given(mapper.toUsuario(USUARIO_ATUALIZACAO_DTO_PAIS_NOVO)).willReturn(USUARIO_ATUALIZADO_PAIS_NOVO);
         given(paisValidation.validarPais(PAIS_NOVO)).willReturn(PAIS_NOVO);
         given(usuarioRepository.save(USUARIO_ATUALIZADO_PAIS_NOVO)).willReturn(USUARIO_ATUALIZADO_PAIS_NOVO);
-        given(enderecoRepository.saveAll(LISTA_ENDERECOS_ATUALIZADO_PAIS_NOVO)).willReturn(
-                LISTA_ENDERECOS_ATUALIZADO_PAIS_NOVO);
         given(mapper.toUsuarioDetalhesDto(USUARIO_ATUALIZADO_PAIS_NOVO)).willReturn(
                 USUARIO_DETALHES_DTO_ATUALIZADO_PAIS_NOVO);
         assertThat(manutencaoService.atualizar(5L, USUARIO_ATUALIZACAO_DTO_PAIS_NOVO)).isNotNull().isEqualTo(
@@ -126,7 +122,6 @@ class UsuarioManutencaoServiceTest {
         given(mapper.toUsuario(USUARIO_ATUALIZACAO_DTO)).willReturn(USUARIO_ATUALIZADO_MAPEADO);
         given(paisValidation.validarPais(PAIS)).willReturn(PAIS);
         when(usuarioRepository.save(USUARIO_ATUALIZADO)).thenReturn(USUARIO_ATUALIZADO);
-        when(enderecoRepository.saveAll(LISTA_ENDERECOS_ATUALIZADO)).thenReturn(LISTA_ENDERECOS_ATUALIZADO);
         given(mapper.toUsuarioDetalhesDto(USUARIO_ATUALIZADO)).willReturn(USUARIO_DETALHES_DTO_ATUALIZADO);
         assertThat(manutencaoService.atualizar(5L, USUARIO_ATUALIZACAO_DTO)).isNotNull().isEqualTo(
                 USUARIO_DETALHES_DTO_ATUALIZADO);
