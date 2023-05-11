@@ -60,6 +60,7 @@ class UsuarioManutencaoServiceTest {
     void beforeEach() {
         USUARIO.setEnderecos(LISTA_ENDERECOS);
         USUARIO_MAPEADO.setEnderecos(LISTA_ENDERECOS_MAPEADO);
+        USUARIO_MAPEADO.setId(null);
         USUARIO_ATUALIZADO_MAPEADO.setEnderecos(LISTA_ENDERECOS_ATUALIZADO_MAPEADO);
         USUARIO_PAIS_NOVO.setEnderecos(LISTA_ENDERECOS_PAIS_NOVO);
         USUARIO_ATUALIZADO.setEnderecos(LISTA_ENDERECOS_ATUALIZADO);
@@ -105,8 +106,9 @@ class UsuarioManutencaoServiceTest {
 
     @Test
     void atualizarUsuarioComDadosValidosEPaisNovoRetornaUsuarioDetalhesDto() {
-        given(usuarioRepository.findByIdAndAtivoTrue(5L)).willReturn(Optional.of(USUARIO));
+        given(usuarioRepository.findByIdAndAtivoTrue(anyLong())).willReturn(Optional.of(USUARIO));
         given(mapper.toUsuario(USUARIO_ATUALIZACAO_DTO_PAIS_NOVO)).willReturn(USUARIO_ATUALIZADO_PAIS_NOVO);
+        willDoNothing().given(enderecoRepository).deleteByUsuarioId(any());
         given(paisValidation.validarPais(PAIS_NOVO)).willReturn(PAIS_NOVO);
         given(usuarioRepository.save(USUARIO_ATUALIZADO_PAIS_NOVO)).willReturn(USUARIO_ATUALIZADO_PAIS_NOVO);
         given(mapper.toUsuarioDetalhesDto(USUARIO_ATUALIZADO_PAIS_NOVO)).willReturn(
@@ -118,13 +120,13 @@ class UsuarioManutencaoServiceTest {
 
     @Test
     void atualizarUsuarioComDadosValidosEPaisExistenteRetornaUsuarioDetalhesDto() {
-        given(usuarioRepository.findByIdAndAtivoTrue(5L)).willReturn(Optional.of(USUARIO));
-        given(mapper.toUsuario(USUARIO_ATUALIZACAO_DTO)).willReturn(USUARIO_ATUALIZADO_MAPEADO);
+        given(usuarioRepository.findByIdAndAtivoTrue(anyLong())).willReturn(Optional.of(USUARIO));
+        given(mapper.toUsuario(USUARIO_ATUALIZACAO_DTO)).willReturn(USUARIO_ATUALIZADO);
+        willDoNothing().given(enderecoRepository).deleteByUsuarioId(any());
         given(paisValidation.validarPais(PAIS)).willReturn(PAIS);
-        when(usuarioRepository.save(USUARIO_ATUALIZADO)).thenReturn(USUARIO_ATUALIZADO);
+        given(usuarioRepository.save(USUARIO_ATUALIZADO)).willReturn(USUARIO_ATUALIZADO);
         given(mapper.toUsuarioDetalhesDto(USUARIO_ATUALIZADO)).willReturn(USUARIO_DETALHES_DTO_ATUALIZADO);
-        assertThat(manutencaoService.atualizar(5L, USUARIO_ATUALIZACAO_DTO)).isNotNull().isEqualTo(
-                USUARIO_DETALHES_DTO_ATUALIZADO);
+        assertThat(manutencaoService.atualizar(5L, USUARIO_ATUALIZACAO_DTO)).isEqualTo(USUARIO_DETALHES_DTO_ATUALIZADO);
         then(usuarioRepository).should().save(USUARIO_ATUALIZADO);
     }
 
@@ -137,7 +139,7 @@ class UsuarioManutencaoServiceTest {
 
     @Test
     void atualizarUsuarioComIdInexistenteThrowsException() {
-        given(usuarioRepository.findByIdAndAtivoTrue(100L)).willReturn(Optional.empty());
+        given(usuarioRepository.findByIdAndAtivoTrue(anyLong())).willReturn(Optional.empty());
         assertThatThrownBy(() -> manutencaoService.atualizar(100L, USUARIO_ATUALIZACAO_DTO)).isInstanceOf(
                 UsuarioNotFoundException.class).hasMessage(
                 "Não foi possível encontrar um usuário ativo com o id 100. Verifique e tente novamente");
@@ -146,7 +148,7 @@ class UsuarioManutencaoServiceTest {
 
     @Test
     void desativarUsuarioAtivoComIdExistenteRetornaString() {
-        given(usuarioRepository.findByIdAndAtivoTrue(10L)).willReturn(Optional.of(USUARIO));
+        given(usuarioRepository.findByIdAndAtivoTrue(anyLong())).willReturn(Optional.of(USUARIO));
         assertThat(manutencaoService.desativar(10L)).isEqualTo("Usuário com id 10 desativado com sucesso");
         then(usuarioRepository).should().save(USUARIO);
     }
@@ -162,7 +164,7 @@ class UsuarioManutencaoServiceTest {
 
     @Test
     void reativarUsuarioInativoComIdExistenteRetornaString() {
-        given(usuarioRepository.findByIdAndAtivoFalse(15L)).willReturn(Optional.of(USUARIO_INATIVO));
+        given(usuarioRepository.findByIdAndAtivoFalse(anyLong())).willReturn(Optional.of(USUARIO_INATIVO));
         assertThat(manutencaoService.reativar(15L)).isEqualTo("Usuário com id 15 reativado com sucesso");
         then(usuarioRepository).should().save(USUARIO_INATIVO);
     }

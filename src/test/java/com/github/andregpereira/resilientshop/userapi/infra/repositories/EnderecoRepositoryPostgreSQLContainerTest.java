@@ -69,26 +69,6 @@ class EnderecoRepositoryPostgreSQLContainerTest extends PostgreSQLContainerConfi
     }
 
     @Test
-    void atualizarEnderecoComDadosValidosRetornaEndereco() {
-        em.persist(PAIS);
-        em.persist(USUARIO);
-        Endereco enderecoAntigo = em.persistFlushFind(ENDERECO);
-        Endereco enderecoAtualizado = ENDERECO_ATUALIZADO;
-        enderecoAtualizado.setId(enderecoAntigo.getId());
-        Endereco sut = repository.save(enderecoAtualizado);
-        assertThat(sut).isNotNull();
-        assertThat(sut.getId()).isEqualTo(enderecoAntigo.getId());
-        assertThat(sut.getCep()).isEqualTo(enderecoAntigo.getCep());
-        assertThat(sut.getEstado()).isEqualTo(enderecoAntigo.getEstado());
-        assertThat(sut.getCidade()).isEqualTo(enderecoAntigo.getCidade());
-        assertThat(sut.getBairro()).isEqualTo(enderecoAntigo.getBairro());
-        assertThat(sut.getRua()).isEqualTo(enderecoAntigo.getRua());
-        assertThat(sut.getNumero()).isEqualTo(enderecoAntigo.getNumero());
-        assertThat(sut.getComplemento()).isEqualTo(enderecoAntigo.getComplemento());
-        assertThat(sut.getPais()).isEqualTo(enderecoAntigo.getPais());
-    }
-
-    @Test
     void atualizarEnderecoComDadosInvalidosThrowsRuntimeException() {
         em.persist(PAIS);
         em.persist(USUARIO);
@@ -128,4 +108,3 @@ class EnderecoRepositoryPostgreSQLContainerTest extends PostgreSQLContainerConfi
     }
 
 }
-
