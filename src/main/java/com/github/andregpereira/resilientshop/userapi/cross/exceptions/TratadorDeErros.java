@@ -39,12 +39,17 @@ public class TratadorDeErros {
                 "O campo " + e.getParameterName().replace("cpf", "CPF") + " é obrigatório"));
     }
 
-    @ExceptionHandler(com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioNotFoundException.class)
+    @ExceptionHandler(EnderecoNotFoundException.class)
+    public ResponseEntity<String> erro404(EnderecoNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler(UsuarioNotFoundException.class)
     public ResponseEntity<String> erro404(UsuarioNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
-    @ExceptionHandler(com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioAlreadyExistsException.class)
+    @ExceptionHandler(UsuarioAlreadyExistsException.class)
     private ResponseEntity<String> erro409(UsuarioAlreadyExistsException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }

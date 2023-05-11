@@ -8,10 +8,6 @@ import java.text.MessageFormat;
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class EnderecoNotFoundException extends RuntimeException {
 
-    public EnderecoNotFoundException() {
-        super("Opa! Não há endereços cadastrados");
-    }
-
     public EnderecoNotFoundException(Long id) {
         super(MessageFormat.format("Não foi possível encontrar um endereço com o id {0}. Verifique e tente novamente",
                 id));
