@@ -56,7 +56,7 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
                 e.setPais(paisValidation.validarPais(e.getPais()));
                 e.setUsuario(usuarioAtualizado);
             });
-            usuarioAtualizado.setId(usuarioAntigo.getId());
+            usuarioAtualizado.setId(id);
             usuarioAtualizado.setCpf(usuarioAntigo.getCpf());
             usuarioAtualizado.setDataCriacao(usuarioAntigo.getDataCriacao());
             usuarioAtualizado.setDataModificacao(LocalDate.now());
