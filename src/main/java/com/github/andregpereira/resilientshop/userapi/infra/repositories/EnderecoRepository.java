@@ -28,6 +28,6 @@ public interface EnderecoRepository extends JpaRepository<Endereco, Long> {
 
     List<Endereco> findByUsuario(Usuario usuario);
 
-    List<Endereco> deleteByUsuarioId(Long idUsuario);
+    void deleteByUsuarioId(Long idUsuario);
 
 }
