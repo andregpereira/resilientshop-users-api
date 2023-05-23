@@ -157,6 +157,7 @@ public class UsuarioController {
      *
      * @param nome      o nome dos usuários a serem consultados.
      * @param sobrenome (opcional) o sobrenome dos usuários a serem consultados.
+     * @param pageable  o pageable padrão.
      *
      * @return uma sublista de uma lista com todos os usuários encontrados pelo {@code nome} e {@code sobrenome}.
      */
