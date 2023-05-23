@@ -18,6 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 
+/**
+ * Classe de serviço de manutenção de {@linkplain Usuario usuário}.
+ */
 @RequiredArgsConstructor
 @Slf4j
 @Service
@@ -48,9 +51,12 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
     private final PaisValidation paisValidation;
 
     /**
+     * Cadastra um {@linkplain UsuarioRegistroDto usuário}.
+     * Retorna um {@linkplain UsuarioDetalhesDto usuário detalhado}.
+     *
      * @param dto o usuário a ser cadastrado.
      *
-     * @return o usuário salvo no banco de dados com {@code id}.
+     * @return o usuário salvo no banco de dados.
      */
     @Override
     public UsuarioDetalhesDto registrar(UsuarioRegistroDto dto) {
@@ -73,12 +79,15 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
     }
 
     /**
+     * Atualiza um {@linkplain UsuarioAtualizacaoDto usuário} por {@code id}.
+     * Retorna um {@linkplain UsuarioDetalhesDto usuário detalhado}.
+     *
      * @param id  o id do usuário a ser atualizado.
      * @param dto o usuário a ser atualizado.
      *
-     * @return
+     * @return o usuário atualizado no banco de dados.
      *
-     * @throws UsuarioNotFoundException caso o usuário não seja encontrado.
+     * @throws UsuarioNotFoundException caso o usuário não seja encontrado ou esteja desativado.
      */
     @Override
     public UsuarioDetalhesDto atualizar(Long id, UsuarioAtualizacaoDto dto) {
@@ -104,11 +113,13 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
     }
 
     /**
+     * Desativa um {@linkplain Usuario usuário} ativo por {@code id}.
+     *
      * @param id o id do usuário a ser desativado.
      *
      * @return uma mensagem de confirmação de desativação.
      *
-     * @throws UsuarioNotFoundException caso o usuário não seja encontrado.
+     * @throws UsuarioNotFoundException caso o usuário não seja encontrado ou já esteja desativado.
      */
     @Override
     public String desativar(Long id) {
@@ -124,11 +135,13 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
     }
 
     /**
-     * @param id o id do usuário a ser reativado.
+     * Reativa um {@linkplain Usuario usuário} inativo por {@code id}.
+     *
+     * @param id o id do usuário inativo a ser reativado.
      *
      * @return uma mensagem de confirmação de reativação.
      *
-     * @throws UsuarioNotFoundException caso o usuário não seja encontrado.
+     * @throws UsuarioNotFoundException caso o usuário não seja encontrado ou já esteja ativo.
      */
     @Override
     public String reativar(Long id) {
