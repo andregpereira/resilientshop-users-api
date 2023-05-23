@@ -7,14 +7,29 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Classe de validação de país.
+ */
 @RequiredArgsConstructor
 @Slf4j
 @Component
 @Transactional
 public class PaisValidationImpl implements PaisValidation {
 
+    /**
+     * Injeção da dependência {@link PaisRepository} para realizar operações de
+     * consulta e manutenção na tabela de países no banco de dados.
+     */
     private final PaisRepository repository;
 
+    /**
+     * O {@linkplain Pais país} passado como argumento é validado. Se existir,
+     * retorna o país do banco de dados, senão o país é criado.
+     *
+     * @param pais o país a ser validado.
+     *
+     * @return um {@code Pais} existente ou criado, caso não seja encontrado no banco de dados.
+     */
     @Override
     public Pais validarPais(Pais pais) {
         log.info("Procurando país {}...", pais.getNome());
