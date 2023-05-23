@@ -52,6 +52,7 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
      *
      * @return o usuário salvo no banco de dados com {@code id}.
      */
+    @Override
     public UsuarioDetalhesDto registrar(UsuarioRegistroDto dto) {
         Usuario usuario = usuarioMapper.toUsuario(dto);
         usuario.setCpf(usuario.getCpf().replace(".", "").replace("-", ""));
@@ -79,6 +80,7 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
      *
      * @throws UsuarioNotFoundException caso o usuário não seja encontrado.
      */
+    @Override
     public UsuarioDetalhesDto atualizar(Long id, UsuarioAtualizacaoDto dto) {
         return usuarioRepository.findByIdAndAtivoTrue(id).map(usuarioAntigo -> {
             Usuario usuarioAtualizado = usuarioMapper.toUsuario(dto);
@@ -108,6 +110,7 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
      *
      * @throws UsuarioNotFoundException caso o usuário não seja encontrado.
      */
+    @Override
     public String desativar(Long id) {
         return usuarioRepository.findByIdAndAtivoTrue(id).map(u -> {
             u.setAtivo(false);
@@ -127,6 +130,7 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
      *
      * @throws UsuarioNotFoundException caso o usuário não seja encontrado.
      */
+    @Override
     public String reativar(Long id) {
         return usuarioRepository.findByIdAndAtivoFalse(id).map(u -> {
             u.setAtivo(true);
