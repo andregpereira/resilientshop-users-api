@@ -12,14 +12,36 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+/**
+ * Classe de serviço de manutenção de {@linkplain Usuario usuário}.
+ */
+
 @RequiredArgsConstructor
 @Slf4j
 @Service
 public class UsuarioConsultaServiceImpl implements UsuarioConsultaService {
 
+    /**
+     * Injeção da dependência {@link UsuarioRepository} para realizar operações de
+     * consulta na tabela de usuários no banco de dados.
+     */
     private final UsuarioRepository usuarioRepository;
+
+    /**
+     * Injeção da dependência {@link UsuarioMapper} para realizar
+     * conversões de entidade para DTO de usuário.
+     */
     private final UsuarioMapper usuarioMapper;
 
+    /**
+     * Lista todos os {@linkplain Usuario usuários} cadastrados.
+     * Retorna uma {@linkplain Page sublista} de {@linkplain UsuarioDto usuários}.
+     *
+     * @param pageable o pageable padrão.
+     *
+     * @return uma sublista de uma lista com todos os usuários cadastrados.
+     */
+    @Override
     public Page<UsuarioDto> listar(Pageable pageable) {
         Page<Usuario> usuarios = usuarioRepository.findAllByAtivoTrue(pageable);
         if (usuarios.isEmpty()) {
@@ -31,6 +53,15 @@ public class UsuarioConsultaServiceImpl implements UsuarioConsultaService {
         }
     }
 
+    /**
+     * Pesquisa um {@linkplain Usuario usuário} por {@code id}.
+     * Retorna um {@linkplain  UsuarioDetalhesDto usuário detalhado}.
+     *
+     * @param id o id do usuário.
+     *
+     * @return um usuário encontrado pelo {@code id}.
+     */
+    @Override
     public UsuarioDetalhesDto consultarPorId(Long id) {
         return usuarioRepository.findById(id).map(u -> {
             log.info("Retornando usuário encontrado com id {}", id);
@@ -41,6 +72,15 @@ public class UsuarioConsultaServiceImpl implements UsuarioConsultaService {
         });
     }
 
+    /**
+     * Pesquisa um {@linkplain Usuario usuário} por {@code cpf}.
+     * Retorna um {@linkplain  UsuarioDetalhesDto usuário detalhado}.
+     *
+     * @param cpf o CPF do usuário.
+     *
+     * @return um usuário encontrado pelo {@code cpf}.
+     */
+    @Override
     public UsuarioDetalhesDto consultarPorCpf(String cpf) {
         return usuarioRepository.findByCpfAndAtivoTrue(cpf).map(u -> {
             log.info("Retornando usuário encontrado com CPF");
@@ -51,6 +91,17 @@ public class UsuarioConsultaServiceImpl implements UsuarioConsultaService {
         });
     }
 
+    /**
+     * Pesquisa {@linkplain Usuario usuários} por {@code nome} e {@code sobrenome}.
+     * Retorna uma {@linkplain Page sublista} de {@linkplain UsuarioDto usuários}.
+     *
+     * @param nome      o nome do usuário.
+     * @param sobrenome (opcional) o sobrenome do usuário.
+     * @param pageable  o pageable padrão.
+     *
+     * @return uma sublista de ma lista de usuários encontrados pelo {@code nome} e {@code sobrenome}.
+     */
+    @Override
     public Page<UsuarioDto> consultarPorNome(String nome, String sobrenome, Pageable pageable) {
         Page<Usuario> usuarios = usuarioRepository.findAllByNomeAndSobrenomeAndAtivoTrue(nome, sobrenome, pageable);
         if (usuarios.isEmpty()) {
