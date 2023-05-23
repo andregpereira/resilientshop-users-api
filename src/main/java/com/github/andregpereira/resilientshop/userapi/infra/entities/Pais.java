@@ -15,7 +15,8 @@ import java.util.StringJoiner;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "tb_paises")
+@Table(name = "tb_paises", uniqueConstraints = {@UniqueConstraint(name = "uc_nome", columnNames = "nome"),
+        @UniqueConstraint(name = "uc_codigo", columnNames = "codigo")})
 @SequenceGenerator(name = "pais", sequenceName = "sq_paises", allocationSize = 1)
 public class Pais {
 
@@ -24,10 +25,10 @@ public class Pais {
     @Column(name = "id_pais")
     private Long id;
 
-    @Column(name = "nome", length = 45, nullable = false)
+    @Column(length = 45, nullable = false)
     private String nome;
 
-    @Column(name = "codigo", length = 4, nullable = false)
+    @Column(length = 4, nullable = false)
     private String codigo;
 
     @OneToMany(mappedBy = "pais")

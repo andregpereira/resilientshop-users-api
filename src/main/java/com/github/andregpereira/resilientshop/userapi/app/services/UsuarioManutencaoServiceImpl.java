@@ -37,10 +37,14 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
     private final UsuarioMapper usuarioMapper;
 
     /**
-     * Injeção da dependência {@link EnderecoRepository} para realizar
-     * operações na tabela de endereços no banco de dados.
+     * Injeção da dependência {@link EnderecoRepository} para realizar operações de
+     * manutenção na tabela de endereços no banco de dados.
      */
     private final EnderecoRepository enderecoRepository;
+
+    /**
+     * Injeção da dependência {@link PaisValidation} para validar o país.
+     */
     private final PaisValidation paisValidation;
 
     /**
