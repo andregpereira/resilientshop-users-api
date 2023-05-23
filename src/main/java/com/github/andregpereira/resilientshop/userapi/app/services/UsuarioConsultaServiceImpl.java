@@ -40,6 +40,8 @@ public class UsuarioConsultaServiceImpl implements UsuarioConsultaService {
      * @param pageable o pageable padrão.
      *
      * @return uma sublista de uma lista com todos os usuários cadastrados.
+     *
+     * @throws UsuarioNotFoundException caso nenhum usuário não seja encontrado.
      */
     @Override
     public Page<UsuarioDto> listar(Pageable pageable) {
@@ -60,6 +62,8 @@ public class UsuarioConsultaServiceImpl implements UsuarioConsultaService {
      * @param id o id do usuário.
      *
      * @return um usuário encontrado pelo {@code id}.
+     *
+     * @throws UsuarioNotFoundException caso o usuário não seja encontrado.
      */
     @Override
     public UsuarioDetalhesDto consultarPorId(Long id) {
@@ -79,6 +83,8 @@ public class UsuarioConsultaServiceImpl implements UsuarioConsultaService {
      * @param cpf o CPF do usuário.
      *
      * @return um usuário encontrado pelo {@code cpf}.
+     *
+     * @throws UsuarioNotFoundException caso o usuário não seja encontrado.
      */
     @Override
     public UsuarioDetalhesDto consultarPorCpf(String cpf) {
@@ -100,6 +106,8 @@ public class UsuarioConsultaServiceImpl implements UsuarioConsultaService {
      * @param pageable  o pageable padrão.
      *
      * @return uma sublista de ma lista de usuários encontrados pelo {@code nome} e {@code sobrenome}.
+     *
+     * @throws UsuarioNotFoundException caso nenhum usuário não seja encontrado.
      */
     @Override
     public Page<UsuarioDto> consultarPorNome(String nome, String sobrenome, Pageable pageable) {
