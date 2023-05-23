@@ -24,11 +24,30 @@ import java.time.LocalDate;
 @Transactional
 public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
 
+    /**
+     * Injeção da dependência {@link UsuarioRepository} para realizar operações de
+     * manutenção na tabela de usuários no banco de dados.
+     */
     private final UsuarioRepository usuarioRepository;
+
+    /**
+     * Injeção da dependência {@link UsuarioMapper} para realizar
+     * conversões de DTO e entidade de usuário.
+     */
     private final UsuarioMapper usuarioMapper;
+
+    /**
+     * Injeção da dependência {@link EnderecoRepository} para realizar
+     * operações na tabela de endereços no banco de dados.
+     */
     private final EnderecoRepository enderecoRepository;
     private final PaisValidation paisValidation;
 
+    /**
+     * @param dto o usuário a ser cadastrado.
+     *
+     * @return o usuário salvo no banco de dados com {@code id}.
+     */
     public UsuarioDetalhesDto registrar(UsuarioRegistroDto dto) {
         Usuario usuario = usuarioMapper.toUsuario(dto);
         usuario.setCpf(usuario.getCpf().replace(".", "").replace("-", ""));
@@ -48,6 +67,14 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
         return usuarioMapper.toUsuarioDetalhesDto(usuario);
     }
 
+    /**
+     * @param id  o id do usuário a ser atualizado.
+     * @param dto o usuário a ser atualizado.
+     *
+     * @return
+     *
+     * @throws UsuarioNotFoundException caso o usuário não seja encontrado.
+     */
     public UsuarioDetalhesDto atualizar(Long id, UsuarioAtualizacaoDto dto) {
         return usuarioRepository.findByIdAndAtivoTrue(id).map(usuarioAntigo -> {
             Usuario usuarioAtualizado = usuarioMapper.toUsuario(dto);
@@ -70,6 +97,13 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
         });
     }
 
+    /**
+     * @param id o id do usuário a ser desativado.
+     *
+     * @return uma mensagem de confirmação de desativação.
+     *
+     * @throws UsuarioNotFoundException caso o usuário não seja encontrado.
+     */
     public String desativar(Long id) {
         return usuarioRepository.findByIdAndAtivoTrue(id).map(u -> {
             u.setAtivo(false);
@@ -82,6 +116,13 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
         });
     }
 
+    /**
+     * @param id o id do usuário a ser reativado.
+     *
+     * @return uma mensagem de confirmação de reativação.
+     *
+     * @throws UsuarioNotFoundException caso o usuário não seja encontrado.
+     */
     public String reativar(Long id) {
         return usuarioRepository.findByIdAndAtivoFalse(id).map(u -> {
             u.setAtivo(true);
