@@ -8,6 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Controller de endereços da API de Usuários
+ *
+ * @author André Garcia
+ */
 @RequiredArgsConstructor
 @Slf4j
 @Validated
