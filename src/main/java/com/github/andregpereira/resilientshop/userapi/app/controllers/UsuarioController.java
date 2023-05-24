@@ -26,6 +26,8 @@ import java.util.Optional;
 
 /**
  * Controller de usuários da API de Usuários
+ *
+ * @author André Garcia
  */
 @RequiredArgsConstructor
 @Slf4j
