@@ -20,6 +20,8 @@ import java.time.LocalDate;
 
 /**
  * Classe de serviço de manutenção de {@linkplain Usuario usuário}.
+ *
+ * @author André Garcia
  */
 @RequiredArgsConstructor
 @Slf4j
