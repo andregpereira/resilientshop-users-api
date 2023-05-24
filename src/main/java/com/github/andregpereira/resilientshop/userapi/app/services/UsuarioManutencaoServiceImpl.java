@@ -19,7 +19,7 @@ import java.text.MessageFormat;
 import java.time.LocalDate;
 
 /**
- * Classe de serviço de manutenção de {@linkplain Usuario usuário}.
+ * Classe de serviço de manutenção de {@link Usuario}.
  *
  * @author André Garcia
  */

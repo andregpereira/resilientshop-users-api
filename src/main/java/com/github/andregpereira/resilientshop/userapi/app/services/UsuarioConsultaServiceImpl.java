@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
- * Classe de serviço de consulta de {@linkplain Usuario usuário}.
+ * Classe de serviço de consulta de {@link Usuario}.
  *
  * @author André Garcia
  */
