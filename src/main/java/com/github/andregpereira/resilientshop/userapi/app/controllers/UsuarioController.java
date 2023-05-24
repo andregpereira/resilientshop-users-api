@@ -25,7 +25,7 @@ import java.net.URI;
 import java.util.Optional;
 
 /**
- * Controller de usuários da API de Usuários
+ * Controller de usuários da API de Usuários.
  *
  * @author André Garcia
  */

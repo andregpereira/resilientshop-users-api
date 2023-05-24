@@ -9,7 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Controller de endereços da API de Usuários
+ * Controller de endereços da API de Usuários.
  *
  * @author André Garcia
  */
