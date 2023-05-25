@@ -42,7 +42,7 @@ public class UsuarioConsultaServiceImpl implements UsuarioConsultaService {
      *
      * @return uma sublista de uma lista com todos os usuários cadastrados.
      *
-     * @throws UsuarioNotFoundException caso nenhum usuário não seja encontrado.
+     * @throws UsuarioNotFoundException caso nenhum usuário      seja encontrado.
      */
     @Override
     public Page<UsuarioDto> listar(Pageable pageable) {
