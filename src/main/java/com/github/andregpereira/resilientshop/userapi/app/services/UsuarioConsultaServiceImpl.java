@@ -106,9 +106,9 @@ public class UsuarioConsultaServiceImpl implements UsuarioConsultaService {
      * @param sobrenome (opcional) o sobrenome do usuário.
      * @param pageable  o pageable padrão.
      *
-     * @return uma sublista de ma lista de usuários encontrados pelo {@code nome} e {@code sobrenome}.
+     * @return uma sublista de uma lista de usuários encontrados pelo {@code nome} e {@code sobrenome}.
      *
-     * @throws UsuarioNotFoundException caso nenhum usuário não seja encontrado.
+     * @throws UsuarioNotFoundException caso nenhum usuário seja encontrado.
      */
     @Override
     public Page<UsuarioDto> consultarPorNome(String nome, String sobrenome, Pageable pageable) {
