@@ -22,6 +22,7 @@ import java.time.LocalDate;
  * Classe de serviço de manutenção de {@link Usuario}.
  *
  * @author André Garcia
+ * @see UsuarioManutencaoService
  */
 @RequiredArgsConstructor
 @Slf4j
@@ -59,6 +60,8 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
      * @param dto o usuário a ser cadastrado.
      *
      * @return o usuário salvo no banco de dados.
+     *
+     * @throws UsuarioAlreadyExistsException caso exista um usuário com o CPF já cadastrado.
      */
     @Override
     public UsuarioDetalhesDto registrar(UsuarioRegistroDto dto) {
@@ -116,6 +119,7 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
 
     /**
      * Desativa um {@linkplain Usuario usuário} ativo por {@code id}.
+     * Retorna uma mensagem de confirmação de desativação.
      *
      * @param id o id do usuário a ser desativado.
      *
@@ -138,6 +142,7 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
 
     /**
      * Reativa um {@linkplain Usuario usuário} inativo por {@code id}.
+     * Retorna uma mensagem de confirmação de reativação.
      *
      * @param id o id do usuário inativo a ser reativado.
      *
