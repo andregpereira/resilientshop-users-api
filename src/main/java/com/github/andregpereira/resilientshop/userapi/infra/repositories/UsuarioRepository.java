@@ -21,13 +21,13 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     Optional<Usuario> findByCpfAndAtivoTrue(String cpf);
 
+    Page<Usuario> findAllByAtivoTrue(Pageable pageable);
+
     @Query(value = """
-            select * from tb_usuarios u
-            where u.nome ilike %:nome% and u.sobrenome ilike %:sobrenome% and u.ativo=true
+            SELECT * FROM tb_usuarios u
+            WHERE u.nome ilike %:nome% AND u.sobrenome ilike %:sobrenome% AND u.ativo=true
             """, nativeQuery = true)
     Page<Usuario> findAllByNomeAndSobrenomeAndAtivoTrue(@Param("nome") String nome,
             @Param("sobrenome") String sobrenome, Pageable pageable);
-
-    Page<Usuario> findAllByAtivoTrue(Pageable pageable);
 
 }
