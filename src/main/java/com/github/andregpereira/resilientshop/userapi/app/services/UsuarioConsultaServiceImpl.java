@@ -12,6 +12,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
+import static java.util.function.Predicate.not;
+
 /**
  * Classe de serviço de consulta de {@link Usuario}.
  *
@@ -47,14 +51,13 @@ public class UsuarioConsultaServiceImpl implements UsuarioConsultaService {
      */
     @Override
     public Page<UsuarioDto> listar(Pageable pageable) {
-        Page<Usuario> usuarios = usuarioRepository.findAllByAtivoTrue(pageable);
-        if (usuarios.isEmpty()) {
-            log.info("Nenhum usuário foi encontrado");
-            throw new UsuarioNotFoundException();
-        } else {
+        return Optional.of(usuarioRepository.findAllByAtivoTrue(pageable)).filter(not(Page::isEmpty)).map(p -> {
             log.info("Retornando todos os usuários");
-            return usuarios.map(usuarioMapper::toUsuarioDto);
-        }
+            return p.map(usuarioMapper::toUsuarioDto);
+        }).orElseThrow(() -> {
+            log.info("Nenhum usuário foi encontrado");
+            return new UsuarioNotFoundException();
+        });
     }
 
     /**
@@ -113,13 +116,14 @@ public class UsuarioConsultaServiceImpl implements UsuarioConsultaService {
      */
     @Override
     public Page<UsuarioDto> consultarPorNome(String nome, String sobrenome, Pageable pageable) {
-        Page<Usuario> usuarios = usuarioRepository.findAllByNomeAndSobrenomeAndAtivoTrue(nome, sobrenome, pageable);
-        if (usuarios.isEmpty()) {
-            log.info("Nenhum usuário foi encontrado com o nome {}", String.join(" ", nome, sobrenome).trim());
-            throw new UsuarioNotFoundException("nome", String.join(" ", nome, sobrenome).trim());
-        }
-        log.info("Retornando usuários encontrados com o nome {}", String.join(" ", nome, sobrenome).trim());
-        return usuarios.map(usuarioMapper::toUsuarioDto);
+        return Optional.of(usuarioRepository.findAllByNomeAndSobrenomeAndAtivoTrue(nome, sobrenome, pageable)).filter(
+                not(Page::isEmpty)).map(p -> {
+            log.info("Retornando usuários encontrados com o nome {}", String.join(" ", nome, sobrenome).trim());
+            return p.map(usuarioMapper::toUsuarioDto);
+        }).orElseThrow(() -> {
+            log.info("Nenhum usuário foi encontrado com o nome {}", String.join(" ", nome, sobrenome));
+            return new UsuarioNotFoundException("nome", String.join(" ", nome, sobrenome).trim());
+        });
     }
 
 }
