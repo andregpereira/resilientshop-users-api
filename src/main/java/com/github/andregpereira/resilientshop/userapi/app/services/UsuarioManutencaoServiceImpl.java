@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
-import java.time.LocalDate;
 
 /**
  * Classe de serviço de manutenção de {@link Usuario}.
@@ -75,9 +74,6 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
             e.setPais(paisValidation.validarPais(e.getPais()));
             e.setUsuario(usuario);
         });
-        LocalDate agora = LocalDate.now();
-        usuario.setDataCriacao(agora);
-        usuario.setDataModificacao(agora);
         usuario.setAtivo(true);
         usuarioRepository.save(usuario);
         return usuarioMapper.toUsuarioDetalhesDto(usuario);
@@ -105,8 +101,6 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
             });
             usuarioAtualizado.setId(id);
             usuarioAtualizado.setCpf(usuarioAntigo.getCpf());
-            usuarioAtualizado.setDataCriacao(usuarioAntigo.getDataCriacao());
-            usuarioAtualizado.setDataModificacao(LocalDate.now());
             usuarioAtualizado.setAtivo(true);
             usuarioAtualizado.setEnderecos(usuarioRepository.save(usuarioAtualizado).getEnderecos());
             log.info("Usuário com id {} atualizado com sucesso", id);

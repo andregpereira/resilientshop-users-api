@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,6 +19,7 @@ import java.util.StringJoiner;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "tb_usuarios", uniqueConstraints = {@UniqueConstraint(name = "uc_cpf", columnNames = "cpf")})
 @SequenceGenerator(name = "usuario", sequenceName = "sq_usuarios", allocationSize = 1)
 public class Usuario {
@@ -37,9 +41,11 @@ public class Usuario {
     @Column(length = 20)
     private String telefone;
 
+    @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDate dataCriacao;
 
+    @LastModifiedDate
     @Column(nullable = false)
     private LocalDate dataModificacao;
 
