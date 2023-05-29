@@ -93,7 +93,7 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
     @Override
     public UsuarioDetalhesDto atualizar(Long id, UsuarioAtualizacaoDto dto) {
         return usuarioRepository.findByIdAndAtivoTrue(id).map(u -> {
-            enderecoRepository.deleteByUsuarioId(u.getId());
+            enderecoRepository.deleteByUsuarioId(id);
             return u;
         }).map(u -> {
             u.setNome(dto.nome());
