@@ -47,6 +47,9 @@ public class Endereco {
     @Column(length = 45)
     private String complemento;
 
+    @Column
+    private boolean padrao;
+
     @ManyToOne
     @JoinColumn(name = "id_pais", nullable = false, foreignKey = @ForeignKey(name = "fk_id_pais"))
     private Pais pais;
