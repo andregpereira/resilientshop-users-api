@@ -22,7 +22,7 @@ paths:
   /usuarios:
     get:
       tags:
-      - Usuários
+        - Usuários
       operationId: listar
       summary: |-
         Retorna todos os usuários
@@ -41,7 +41,7 @@ paths:
 
     post:
       tags:
-      - Usuários
+        - Usuários
       operationId: registrar
       summary: |-
         Cria um novo usuário
@@ -65,7 +65,7 @@ paths:
   /usuarios/{id}:
     get:
       tags:
-      - Usuários
+        - Usuários
       operationId: consultarPorId
       summary: |-
         Consulta um usuário por id
@@ -78,7 +78,7 @@ paths:
           $ref: '#/components/responses/NotFound'
 
         "200":
-          description: |- 
+          description: |-
             Usuário encontrado
           content:
             application/json:
@@ -87,7 +87,7 @@ paths:
 
     put:
       tags:
-      - Usuários
+        - Usuários
       operationId: atualizar
       summary: |-
         Atualiza um usuário por id
@@ -115,7 +115,7 @@ paths:
 
     delete:
       tags:
-      - Usuários
+        - Usuários
       operationId: desativar
       summary: |-
         Desativa um usuário por id
@@ -139,13 +139,13 @@ paths:
   /usuarios/cpf:
     get:
       tags:
-      - Usuários
+        - Usuários
       operationId: consultarPorCpf
       summary: |-
         Consulta um usuário por CPF
 
       parameters:
-      - $ref: '#/components/parameters/Cpf'
+        - $ref: '#/components/parameters/Cpf'
 
       responses:
         "404":
@@ -165,13 +165,13 @@ paths:
   /usuarios/nome:
     get:
       tags:
-      - Usuários
+        - Usuários
       operationId: consultarPorNome
       summary: |-
         Consulta um usuário por nome
       parameters:
-      - $ref: '#/components/parameters/Nome'
-      - $ref: '#/components/parameters/Sobrenome'
+        - $ref: '#/components/parameters/Nome'
+        - $ref: '#/components/parameters/Sobrenome'
 
       responses:
         "404":
@@ -191,7 +191,7 @@ paths:
   /usuarios/reativar/{id}:
     patch:
       tags:
-      - Usuários
+        - Usuários
       operationId: reativar
       summary: |-
         Reativa um usuário por id
@@ -215,14 +215,14 @@ components:
   schemas:
     EnderecoRegistroDto:
       required:
-      - apelido
-      - bairro
-      - cep
-      - cidade
-      - estado
-      - numero
-      - pais
-      - rua
+        - apelido
+        - bairro
+        - cep
+        - cidade
+        - estado
+        - numero
+        - pais
+        - rua
       type: object
       properties:
         apelido:
@@ -255,8 +255,8 @@ components:
 
     PaisRegistroDto:
       required:
-      - codigo
-      - nome
+        - codigo
+        - nome
       type: object
       properties:
         nome:
@@ -271,9 +271,9 @@ components:
 
     UsuarioAtualizacaoDto:
       required:
-      - enderecos
-      - nome
-      - sobrenome
+        - enderecos
+        - nome
+        - sobrenome
       type: object
       properties:
         nome:
@@ -359,10 +359,10 @@ components:
 
     UsuarioRegistroDto:
       required:
-      - cpf
-      - enderecos
-      - nome
-      - sobrenome
+        - cpf
+        - enderecos
+        - nome
+        - sobrenome
       type: object
       properties:
         nome:
@@ -529,7 +529,7 @@ components:
           type: string
         mensagem:
           type: string
-          
+
     ResponseConflict:
       type: string
       example: |-
