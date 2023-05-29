@@ -1,4 +1,4 @@
-package com.github.andregpereira.resilientshop.userapi.app.dtos.pais;
+package com.github.andregpereira.resilientshop.userapi.app.representantion.pais;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

@@ -76,7 +76,8 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDetalhesDto> atualizar(@PathVariable Long id,
             @RequestBody @Valid UsuarioAtualizacaoDto dto) {
         log.info("Atualizando usuário...");
-        return ResponseEntity.ok(usuarioManutencaoService.atualizar(id, dto));
+        return ResponseEntity.ok().location(UriComponentsBuilder.fromPath("/usuarios/{id}").buildAndExpand(id).toUri())
+                .body(usuarioManutencaoService.atualizar(id, dto));
     }
 
     /**
@@ -169,8 +170,8 @@ public class UsuarioController {
             @RequestParam(required = false) String sobrenome,
             @PageableDefault(sort = "nome", direction = Direction.ASC, page = 0, size = 10) Pageable pageable) {
         log.info("Consultando usuário por nome...");
-        return ResponseEntity.ok(usuarioConsultaService.consultarPorNome(nome.trim(), Optional.ofNullable(
-                sobrenome).map(String::trim).orElse(""), pageable));
+        return ResponseEntity.ok(usuarioConsultaService.consultarPorNome(nome.trim(), Optional.ofNullable(sobrenome)
+                .map(String::trim).orElse(""), pageable));
     }
 
 }
