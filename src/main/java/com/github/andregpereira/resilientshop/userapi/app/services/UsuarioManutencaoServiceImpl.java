@@ -119,14 +119,14 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
     @Override
     public String desativar(Long id) {
         return usuarioRepository.findByIdAndAtivoTrue(id).map(u -> {
-                    u.setAtivo(false);
-                    log.info("Usuário com id {} desativado com sucesso", id);
-                    return u;
-                }).map(usuarioRepository::save).map(u -> MessageFormat.format("Usuário com id {0} desativado com sucesso", id))
-                .orElseThrow(() -> {
-                    log.info("Usuário ativo com id {} não encontrado", id);
-                    return new UsuarioNotFoundException(id, true);
-                });
+            u.setAtivo(false);
+            log.info("Usuário com id {} desativado com sucesso", id);
+            return u;
+        }).map(usuarioRepository::save).map(
+                u -> MessageFormat.format("Usuário com id {0} desativado com sucesso", id)).orElseThrow(() -> {
+            log.info("Usuário ativo com id {} não encontrado", id);
+            return new UsuarioNotFoundException(id, true);
+        });
     }
 
     /**
@@ -142,14 +142,14 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
     @Override
     public String reativar(Long id) {
         return usuarioRepository.findByIdAndAtivoFalse(id).map(u -> {
-                    u.setAtivo(true);
-                    log.info("Usuário com id {} reativado com sucesso", id);
-                    return u;
-                }).map(usuarioRepository::save).map(u -> MessageFormat.format("Usuário com id {0} reativado com sucesso", id))
-                .orElseThrow(() -> {
-                    log.info("Usuário inativo com id {} não encontrado", id);
-                    return new UsuarioNotFoundException(id, false);
-                });
+            u.setAtivo(true);
+            log.info("Usuário com id {} reativado com sucesso", id);
+            return u;
+        }).map(usuarioRepository::save).map(
+                u -> MessageFormat.format("Usuário com id {0} reativado com sucesso", id)).orElseThrow(() -> {
+            log.info("Usuário inativo com id {} não encontrado", id);
+            return new UsuarioNotFoundException(id, false);
+        });
     }
 
     private List<Endereco> configurarEnderecos(Usuario usuario, List<Endereco> enderecos) {
