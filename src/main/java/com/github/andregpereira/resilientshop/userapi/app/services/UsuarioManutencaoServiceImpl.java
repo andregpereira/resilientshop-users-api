@@ -75,8 +75,7 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
         }
         usuario.setEnderecos(configurarEnderecos(usuario, usuario.getEnderecos()));
         usuario.setAtivo(true);
-        usuarioRepository.save(usuario);
-        return usuarioMapper.toUsuarioDetalhesDto(usuario);
+        return usuarioMapper.toUsuarioDetalhesDto(usuarioRepository.save(usuario));
     }
 
     /**
