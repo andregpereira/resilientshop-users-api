@@ -58,8 +58,8 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDetalhesDto> registrar(@RequestBody @Valid UsuarioRegistroDto dto) {
         log.info("Criando usuário...");
         UsuarioDetalhesDto usuario = usuarioManutencaoService.registrar(dto);
-        URI uri = UriComponentsBuilder.fromPath("/usuarios/{id}").buildAndExpand(usuario.id()).toUri();
         log.info("Usuário criado com sucesso");
+        URI uri = UriComponentsBuilder.fromPath("/usuarios/{id}").buildAndExpand(usuario.id()).toUri();
         return ResponseEntity.created(uri).body(usuario);
     }
 
@@ -76,8 +76,10 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDetalhesDto> atualizar(@PathVariable Long id,
             @RequestBody @Valid UsuarioAtualizacaoDto dto) {
         log.info("Atualizando usuário...");
-        return ResponseEntity.ok().location(UriComponentsBuilder.fromPath("/usuarios/{id}").buildAndExpand(id).toUri())
-                .body(usuarioManutencaoService.atualizar(id, dto));
+        UsuarioDetalhesDto usuario = usuarioManutencaoService.atualizar(id, dto);
+        log.info("Usuário com id {} atualizado com sucesso", id);
+        URI uri = UriComponentsBuilder.fromPath("/usuarios/{id}").buildAndExpand(id).toUri();
+        return ResponseEntity.ok().location(uri).body(usuario);
     }
 
     /**
