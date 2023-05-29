@@ -7,6 +7,7 @@ import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioAl
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioNotFoundException;
 import com.github.andregpereira.resilientshop.userapi.cross.mappers.UsuarioMapper;
 import com.github.andregpereira.resilientshop.userapi.cross.validations.PaisValidation;
+import com.github.andregpereira.resilientshop.userapi.infra.entities.Endereco;
 import com.github.andregpereira.resilientshop.userapi.infra.entities.Usuario;
 import com.github.andregpereira.resilientshop.userapi.infra.repositories.EnderecoRepository;
 import com.github.andregpereira.resilientshop.userapi.infra.repositories.UsuarioRepository;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Classe de serviço de manutenção de {@link Usuario}.
@@ -70,10 +73,7 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
             log.info("Usuário já cadastrado com o CPF informado");
             throw new UsuarioAlreadyExistsException();
         }
-        usuario.getEnderecos().stream().forEach(e -> {
-            e.setPais(paisValidation.validarPais(e.getPais()));
-            e.setUsuario(usuario);
-        });
+        usuario.setEnderecos(configurarEnderecos(usuario, usuario.getEnderecos()));
         usuario.setAtivo(true);
         usuarioRepository.save(usuario);
         return usuarioMapper.toUsuarioDetalhesDto(usuario);
@@ -92,20 +92,16 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
      */
     @Override
     public UsuarioDetalhesDto atualizar(Long id, UsuarioAtualizacaoDto dto) {
-        return usuarioRepository.findByIdAndAtivoTrue(id).map(usuarioAntigo -> {
-            Usuario usuarioAtualizado = usuarioMapper.toUsuario(dto);
-            enderecoRepository.deleteByUsuarioId(usuarioAntigo.getId());
-            usuarioAtualizado.getEnderecos().stream().forEach(e -> {
-                e.setPais(paisValidation.validarPais(e.getPais()));
-                e.setUsuario(usuarioAtualizado);
-            });
-            usuarioAtualizado.setId(id);
-            usuarioAtualizado.setCpf(usuarioAntigo.getCpf());
-            usuarioAtualizado.setAtivo(true);
-            usuarioAtualizado.setEnderecos(usuarioRepository.save(usuarioAtualizado).getEnderecos());
-            log.info("Usuário com id {} atualizado com sucesso", id);
-            return usuarioMapper.toUsuarioDetalhesDto(usuarioAtualizado);
-        }).orElseThrow(() -> {
+        return usuarioRepository.findByIdAndAtivoTrue(id).map(u -> {
+            enderecoRepository.deleteByUsuarioId(u.getId());
+            return u;
+        }).map(u -> {
+            u.setNome(dto.nome());
+            u.setSobrenome(dto.sobrenome());
+            u.setTelefone(dto.telefone());
+            u.setEnderecos(configurarEnderecos(u, usuarioMapper.toUsuario(dto).getEnderecos()));
+            return u;
+        }).map(usuarioRepository::saveAndFlush).map(usuarioMapper::toUsuarioDetalhesDto).orElseThrow(() -> {
             log.info("Usuário ativo com id {} não encontrado", id);
             return new UsuarioNotFoundException(id, true);
         });
@@ -124,14 +120,14 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
     @Override
     public String desativar(Long id) {
         return usuarioRepository.findByIdAndAtivoTrue(id).map(u -> {
-            u.setAtivo(false);
-            usuarioRepository.save(u);
-            log.info("Usuário com id {} desativado com sucesso", id);
-            return MessageFormat.format("Usuário com id {0} desativado com sucesso", id);
-        }).orElseThrow(() -> {
-            log.info("Usuário ativo com id {} não encontrado", id);
-            return new UsuarioNotFoundException(id, true);
-        });
+                    u.setAtivo(false);
+                    log.info("Usuário com id {} desativado com sucesso", id);
+                    return u;
+                }).map(usuarioRepository::save).map(u -> MessageFormat.format("Usuário com id {0} desativado com sucesso", id))
+                .orElseThrow(() -> {
+                    log.info("Usuário ativo com id {} não encontrado", id);
+                    return new UsuarioNotFoundException(id, true);
+                });
     }
 
     /**
@@ -147,14 +143,22 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
     @Override
     public String reativar(Long id) {
         return usuarioRepository.findByIdAndAtivoFalse(id).map(u -> {
-            u.setAtivo(true);
-            usuarioRepository.save(u);
-            log.info("Usuário com id {} reativado com sucesso", id);
-            return MessageFormat.format("Usuário com id {0} reativado com sucesso", id);
-        }).orElseThrow(() -> {
-            log.info("Usuário inativo com id {} não encontrado", id);
-            return new UsuarioNotFoundException(id, false);
-        });
+                    u.setAtivo(true);
+                    log.info("Usuário com id {} reativado com sucesso", id);
+                    return u;
+                }).map(usuarioRepository::save).map(u -> MessageFormat.format("Usuário com id {0} reativado com sucesso", id))
+                .orElseThrow(() -> {
+                    log.info("Usuário inativo com id {} não encontrado", id);
+                    return new UsuarioNotFoundException(id, false);
+                });
+    }
+
+    private List<Endereco> configurarEnderecos(Usuario usuario, List<Endereco> enderecos) {
+        return enderecos.stream().map(e -> {
+            e.setPais(paisValidation.validarPais(e.getPais()));
+            e.setUsuario(usuario);
+            return e;
+        }).collect(Collectors.toList());
     }
 
 }
