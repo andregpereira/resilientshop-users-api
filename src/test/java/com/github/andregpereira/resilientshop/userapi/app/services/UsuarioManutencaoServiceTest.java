@@ -107,27 +107,27 @@ class UsuarioManutencaoServiceTest {
     @Test
     void atualizarUsuarioComDadosValidosEPaisNovoRetornaUsuarioDetalhesDto() {
         given(usuarioRepository.findByIdAndAtivoTrue(anyLong())).willReturn(Optional.of(USUARIO));
+        willDoNothing().given(enderecoRepository).deleteByUsuarioId(anyLong());
         given(mapper.toUsuario(USUARIO_ATUALIZACAO_DTO_PAIS_NOVO)).willReturn(USUARIO_ATUALIZADO_PAIS_NOVO);
-        willDoNothing().given(enderecoRepository).deleteByUsuarioId(any());
         given(paisValidation.validarPais(PAIS_NOVO)).willReturn(PAIS_NOVO);
-        given(usuarioRepository.save(USUARIO_ATUALIZADO_PAIS_NOVO)).willReturn(USUARIO_ATUALIZADO_PAIS_NOVO);
+        given(usuarioRepository.saveAndFlush(USUARIO_ATUALIZADO_PAIS_NOVO)).willReturn(USUARIO_ATUALIZADO_PAIS_NOVO);
         given(mapper.toUsuarioDetalhesDto(USUARIO_ATUALIZADO_PAIS_NOVO)).willReturn(
                 USUARIO_DETALHES_DTO_ATUALIZADO_PAIS_NOVO);
-        assertThat(manutencaoService.atualizar(5L, USUARIO_ATUALIZACAO_DTO_PAIS_NOVO)).isNotNull().isEqualTo(
+        assertThat(manutencaoService.atualizar(5L, USUARIO_ATUALIZACAO_DTO_PAIS_NOVO)).isEqualTo(
                 USUARIO_DETALHES_DTO_ATUALIZADO_PAIS_NOVO);
-        then(usuarioRepository).should().save(USUARIO_ATUALIZADO_PAIS_NOVO);
+        then(usuarioRepository).should().saveAndFlush(USUARIO_ATUALIZADO_PAIS_NOVO);
     }
 
     @Test
     void atualizarUsuarioComDadosValidosEPaisExistenteRetornaUsuarioDetalhesDto() {
         given(usuarioRepository.findByIdAndAtivoTrue(anyLong())).willReturn(Optional.of(USUARIO));
+        willDoNothing().given(enderecoRepository).deleteByUsuarioId(anyLong());
         given(mapper.toUsuario(USUARIO_ATUALIZACAO_DTO)).willReturn(USUARIO_ATUALIZADO);
-        willDoNothing().given(enderecoRepository).deleteByUsuarioId(any());
         given(paisValidation.validarPais(PAIS)).willReturn(PAIS);
-        given(usuarioRepository.save(USUARIO_ATUALIZADO)).willReturn(USUARIO_ATUALIZADO);
+        given(usuarioRepository.saveAndFlush(USUARIO_ATUALIZADO)).willReturn(USUARIO_ATUALIZADO);
         given(mapper.toUsuarioDetalhesDto(USUARIO_ATUALIZADO)).willReturn(USUARIO_DETALHES_DTO_ATUALIZADO);
         assertThat(manutencaoService.atualizar(5L, USUARIO_ATUALIZACAO_DTO)).isEqualTo(USUARIO_DETALHES_DTO_ATUALIZADO);
-        then(usuarioRepository).should().save(USUARIO_ATUALIZADO);
+        then(usuarioRepository).should().saveAndFlush(USUARIO_ATUALIZADO);
     }
 
     @Test
@@ -149,6 +149,7 @@ class UsuarioManutencaoServiceTest {
     @Test
     void desativarUsuarioAtivoComIdExistenteRetornaString() {
         given(usuarioRepository.findByIdAndAtivoTrue(anyLong())).willReturn(Optional.of(USUARIO));
+        given(usuarioRepository.save(USUARIO)).willReturn(USUARIO_INATIVO);
         assertThat(manutencaoService.desativar(10L)).isEqualTo("Usuário com id 10 desativado com sucesso");
         then(usuarioRepository).should().save(USUARIO);
     }
@@ -164,6 +165,7 @@ class UsuarioManutencaoServiceTest {
     @Test
     void reativarUsuarioInativoComIdExistenteRetornaString() {
         given(usuarioRepository.findByIdAndAtivoFalse(anyLong())).willReturn(Optional.of(USUARIO_INATIVO));
+        given(usuarioRepository.save(USUARIO_INATIVO)).willReturn(USUARIO);
         assertThat(manutencaoService.reativar(15L)).isEqualTo("Usuário com id 15 reativado com sucesso");
         then(usuarioRepository).should().save(USUARIO_INATIVO);
     }
