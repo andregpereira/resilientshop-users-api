@@ -172,8 +172,8 @@ public class UsuarioController {
             @RequestParam(required = false) String sobrenome,
             @PageableDefault(sort = "nome", direction = Direction.ASC, page = 0, size = 10) Pageable pageable) {
         log.info("Consultando usuário por nome...");
-        return ResponseEntity.ok(usuarioConsultaService.consultarPorNome(nome.trim(), Optional.ofNullable(sobrenome)
-                .map(String::trim).orElse(""), pageable));
+        return ResponseEntity.ok(usuarioConsultaService.consultarPorNome(nome.trim(), Optional.ofNullable(
+                sobrenome).map(String::trim).orElse(""), pageable));
     }
 
 }

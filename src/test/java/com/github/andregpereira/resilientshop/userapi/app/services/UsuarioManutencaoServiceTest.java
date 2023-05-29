@@ -157,8 +157,9 @@ class UsuarioManutencaoServiceTest {
     @Test
     void desativarUsuarioInativoOuComIdInexistenteThrowsException() {
         given(usuarioRepository.findByIdAndAtivoTrue(anyLong())).willReturn(Optional.empty());
-        assertThatThrownBy(() -> manutencaoService.desativar(10L)).isInstanceOf(UsuarioNotFoundException.class)
-                .hasMessage("Não foi possível encontrar um usuário ativo com o id 10. Verifique e tente novamente");
+        assertThatThrownBy(() -> manutencaoService.desativar(10L)).isInstanceOf(
+                UsuarioNotFoundException.class).hasMessage(
+                "Não foi possível encontrar um usuário ativo com o id 10. Verifique e tente novamente");
         then(usuarioRepository).should(never()).save(USUARIO_INATIVO);
     }
 
@@ -173,8 +174,9 @@ class UsuarioManutencaoServiceTest {
     @Test
     void reativarUsuarioAtivoOuComIdInexistenteThrowsExecption() {
         given(usuarioRepository.findByIdAndAtivoFalse(anyLong())).willReturn(Optional.empty());
-        assertThatThrownBy(() -> manutencaoService.reativar(20L)).isInstanceOf(UsuarioNotFoundException.class)
-                .hasMessage("Não foi possível encontrar um usuário inativo com o id 20. Verifique e tente novamente");
+        assertThatThrownBy(() -> manutencaoService.reativar(20L)).isInstanceOf(
+                UsuarioNotFoundException.class).hasMessage(
+                "Não foi possível encontrar um usuário inativo com o id 20. Verifique e tente novamente");
         then(usuarioRepository).should(never()).save(USUARIO);
     }
 
