@@ -1,6 +1,6 @@
-package com.github.andregpereira.resilientshop.userapi.app.dtos.endereco;
+package com.github.andregpereira.resilientshop.userapi.app.dto.endereco;
 
-import com.github.andregpereira.resilientshop.userapi.app.dtos.pais.PaisDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.pais.PaisDto;
 
 public record EnderecoDto(Long id,
         String apelido,

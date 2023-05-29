@@ -1,9 +1,9 @@
 package com.github.andregpereira.resilientshop.userapi.constants;
 
-import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioAtualizacaoDto;
-import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioDetalhesDto;
-import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioDto;
-import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioRegistroDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioAtualizacaoDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioDetalhesDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioRegistroDto;
 
 import static com.github.andregpereira.resilientshop.userapi.constants.EnderecoDtoConstants.*;
 import static com.github.andregpereira.resilientshop.userapi.constants.UsuarioConstants.LOCAL_DATE;

@@ -1,6 +1,6 @@
 package com.github.andregpereira.resilientshop.userapi.app.controllers;
 
-import com.github.andregpereira.resilientshop.userapi.app.dtos.endereco.EnderecoDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoDto;
 import com.github.andregpereira.resilientshop.userapi.app.services.EnderecoConsultaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

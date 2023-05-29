@@ -1,6 +1,6 @@
 package com.github.andregpereira.resilientshop.userapi.app.services;
 
-import com.github.andregpereira.resilientshop.userapi.app.dtos.endereco.EnderecoDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoDto;
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.EnderecoNotFoundException;
 import com.github.andregpereira.resilientshop.userapi.cross.mappers.EnderecoMapper;
 import com.github.andregpereira.resilientshop.userapi.infra.repositories.EnderecoRepository;

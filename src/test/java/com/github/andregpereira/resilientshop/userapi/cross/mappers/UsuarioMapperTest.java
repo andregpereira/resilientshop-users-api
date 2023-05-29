@@ -1,7 +1,7 @@
 package com.github.andregpereira.resilientshop.userapi.cross.mappers;
 
-import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioAtualizacaoDto;
-import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioRegistroDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioAtualizacaoDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioRegistroDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

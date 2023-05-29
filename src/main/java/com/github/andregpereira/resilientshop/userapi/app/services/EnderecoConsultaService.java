@@ -1,6 +1,6 @@
 package com.github.andregpereira.resilientshop.userapi.app.services;
 
-import com.github.andregpereira.resilientshop.userapi.app.dtos.endereco.EnderecoDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoDto;
 
 public interface EnderecoConsultaService {
 

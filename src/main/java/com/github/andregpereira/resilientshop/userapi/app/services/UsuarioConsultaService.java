@@ -1,7 +1,7 @@
 package com.github.andregpereira.resilientshop.userapi.app.services;
 
-import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioDetalhesDto;
-import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioDetalhesDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

@@ -1,9 +1,9 @@
 package com.github.andregpereira.resilientshop.userapi.app.controllers;
 
-import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioAtualizacaoDto;
-import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioDetalhesDto;
-import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioDto;
-import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioRegistroDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioAtualizacaoDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioDetalhesDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioRegistroDto;
 import com.github.andregpereira.resilientshop.userapi.app.services.UsuarioConsultaService;
 import com.github.andregpereira.resilientshop.userapi.app.services.UsuarioManutencaoService;
 import io.swagger.v3.oas.annotations.Parameter;

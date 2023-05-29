@@ -1,8 +1,8 @@
 package com.github.andregpereira.resilientshop.userapi.app.services;
 
-import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioAtualizacaoDto;
-import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioDetalhesDto;
-import com.github.andregpereira.resilientshop.userapi.app.dtos.usuario.UsuarioRegistroDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioAtualizacaoDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioDetalhesDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioRegistroDto;
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioAlreadyExistsException;
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioNotFoundException;
 import com.github.andregpereira.resilientshop.userapi.cross.mappers.UsuarioMapper;

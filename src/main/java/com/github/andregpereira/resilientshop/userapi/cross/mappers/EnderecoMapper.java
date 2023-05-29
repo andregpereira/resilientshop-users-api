@@ -1,7 +1,7 @@
 package com.github.andregpereira.resilientshop.userapi.cross.mappers;
 
-import com.github.andregpereira.resilientshop.userapi.app.dtos.endereco.EnderecoDto;
-import com.github.andregpereira.resilientshop.userapi.app.dtos.endereco.EnderecoRegistroDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoRegistroDto;
 import com.github.andregpereira.resilientshop.userapi.infra.entities.Endereco;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
