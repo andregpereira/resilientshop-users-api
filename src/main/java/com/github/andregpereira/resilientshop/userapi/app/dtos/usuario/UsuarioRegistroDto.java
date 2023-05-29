@@ -1,6 +1,6 @@
-package com.github.andregpereira.resilientshop.userapi.app.representantion.usuario;
+package com.github.andregpereira.resilientshop.userapi.app.dtos.usuario;
 
-import com.github.andregpereira.resilientshop.userapi.app.representantion.endereco.EnderecoRegistroDto;
+import com.github.andregpereira.resilientshop.userapi.app.dtos.endereco.EnderecoRegistroDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
