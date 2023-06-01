@@ -39,7 +39,7 @@ public class UsuarioController {
     /**
      * Injeção da dependência {@link UsuarioManutencaoService} para serviços de manutenção.
      */
-    private final UsuarioManutencaoService usuarioManutencaoService;
+    private final UsuarioManutencaoService manutencaoService;
 
     /**
      * Injeção da dependência {@link UsuarioConsultaService} para serviços de consulta.
@@ -57,7 +57,7 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<UsuarioDetalhesDto> registrar(@RequestBody @Valid UsuarioRegistroDto dto) {
         log.info("Criando usuário...");
-        UsuarioDetalhesDto usuario = usuarioManutencaoService.registrar(dto);
+        UsuarioDetalhesDto usuario = manutencaoService.registrar(dto);
         log.info("Usuário criado com sucesso");
         URI uri = UriComponentsBuilder.fromPath("/usuarios/{id}").buildAndExpand(usuario.id()).toUri();
         return ResponseEntity.created(uri).body(usuario);
@@ -76,7 +76,7 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDetalhesDto> atualizar(@PathVariable Long id,
             @RequestBody @Valid UsuarioAtualizacaoDto dto) {
         log.info("Atualizando usuário...");
-        UsuarioDetalhesDto usuario = usuarioManutencaoService.atualizar(id, dto);
+        UsuarioDetalhesDto usuario = manutencaoService.atualizar(id, dto);
         log.info("Usuário com id {} atualizado com sucesso", id);
         URI uri = UriComponentsBuilder.fromPath("/usuarios/{id}").buildAndExpand(id).toUri();
         return ResponseEntity.ok().location(uri).body(usuario);
@@ -93,7 +93,7 @@ public class UsuarioController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> desativar(@PathVariable Long id) {
         log.info("Desativando usuário...");
-        return ResponseEntity.ok(usuarioManutencaoService.desativar(id));
+        return ResponseEntity.ok(manutencaoService.desativar(id));
     }
 
     /**
@@ -107,7 +107,7 @@ public class UsuarioController {
     @PatchMapping("/reativar/{id}")
     public ResponseEntity<String> reativar(@PathVariable Long id) {
         log.info("Reativando usuário...");
-        return ResponseEntity.ok(usuarioManutencaoService.reativar(id));
+        return ResponseEntity.ok(manutencaoService.reativar(id));
     }
 
     /**
