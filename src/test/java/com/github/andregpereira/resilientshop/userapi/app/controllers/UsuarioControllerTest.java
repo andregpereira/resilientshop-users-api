@@ -2,8 +2,8 @@ package com.github.andregpereira.resilientshop.userapi.app.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioDto;
-import com.github.andregpereira.resilientshop.userapi.app.services.UsuarioConsultaService;
-import com.github.andregpereira.resilientshop.userapi.app.services.UsuarioManutencaoService;
+import com.github.andregpereira.resilientshop.userapi.app.services.usuario.UsuarioConsultaService;
+import com.github.andregpereira.resilientshop.userapi.app.services.usuario.UsuarioManutencaoService;
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioAlreadyExistsException;
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioNotFoundException;
 import jakarta.validation.ConstraintViolationException;

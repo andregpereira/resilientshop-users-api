@@ -1,5 +1,6 @@
 package com.github.andregpereira.resilientshop.userapi.app.services;
 
+import com.github.andregpereira.resilientshop.userapi.app.services.usuario.UsuarioManutencaoServiceImpl;
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioAlreadyExistsException;
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioNotFoundException;
 import com.github.andregpereira.resilientshop.userapi.cross.mappers.UsuarioMapper;

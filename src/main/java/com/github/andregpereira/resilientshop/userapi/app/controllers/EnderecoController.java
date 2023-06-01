@@ -2,8 +2,8 @@ package com.github.andregpereira.resilientshop.userapi.app.controllers;
 
 import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoDto;
 import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoRegistroDto;
-import com.github.andregpereira.resilientshop.userapi.app.services.EnderecoConsultaService;
-import com.github.andregpereira.resilientshop.userapi.app.services.EnderecoManutencaoService;
+import com.github.andregpereira.resilientshop.userapi.app.services.endereco.EnderecoConsultaService;
+import com.github.andregpereira.resilientshop.userapi.app.services.endereco.EnderecoManutencaoService;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.github.andregpereira.resilientshop.userapi.app.services;
+package com.github.andregpereira.resilientshop.userapi.app.services.usuario;
 
 import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioAtualizacaoDto;
 import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioDetalhesDto;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * Classe de serviço de manutenção de {@link Usuario}.
  *
  * @author André Garcia
- * @see UsuarioManutencaoService
+ * @see com.github.andregpereira.resilientshop.userapi.app.services.usuario.UsuarioManutencaoService
  */
 @RequiredArgsConstructor
 @Slf4j

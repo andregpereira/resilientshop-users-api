@@ -1,4 +1,4 @@
-package com.github.andregpereira.resilientshop.userapi.app.services;
+package com.github.andregpereira.resilientshop.userapi.app.services.usuario;
 
 import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioAtualizacaoDto;
 import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioDetalhesDto;

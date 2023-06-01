@@ -4,8 +4,8 @@ import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioAtu
 import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioDetalhesDto;
 import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioDto;
 import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioRegistroDto;
-import com.github.andregpereira.resilientshop.userapi.app.services.UsuarioConsultaService;
-import com.github.andregpereira.resilientshop.userapi.app.services.UsuarioManutencaoService;
+import com.github.andregpereira.resilientshop.userapi.app.services.usuario.UsuarioConsultaService;
+import com.github.andregpereira.resilientshop.userapi.app.services.usuario.UsuarioManutencaoService;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;

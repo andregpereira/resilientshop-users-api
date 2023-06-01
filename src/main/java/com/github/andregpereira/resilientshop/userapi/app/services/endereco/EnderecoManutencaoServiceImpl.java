@@ -1,7 +1,7 @@
-package com.github.andregpereira.resilientshop.userapi.app.services;
+package com.github.andregpereira.resilientshop.userapi.app.services.endereco;
 
 import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoDto;
-import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoRegistroDtoNovo;
+import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoRegistroDto;
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.EnderecoNotFoundException;
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioNotFoundException;
 import com.github.andregpereira.resilientshop.userapi.cross.mappers.EnderecoMapper;
@@ -20,7 +20,7 @@ import java.text.MessageFormat;
  * Classe de serviço de manutenção de {@link Endereco}.
  *
  * @author André Garcia
- * @see EnderecoManutencaoService
+ * @see com.github.andregpereira.resilientshop.userapi.app.services.endereco.EnderecoManutencaoService
  */
 @RequiredArgsConstructor
 @Slf4j
@@ -52,7 +52,7 @@ public class EnderecoManutencaoServiceImpl implements EnderecoManutencaoService 
     private final PaisValidation paisValidation;
 
     @Override
-    public EnderecoDto criar(EnderecoRegistroDtoNovo dto) {
+    public EnderecoDto criar(EnderecoRegistroDto dto) {
         return usuarioRepository.findById(dto.idUsuario()).map(u -> {
             Endereco endereco = mapper.toEndereco(dto);
             paisValidation.validarPais(endereco.getPais());
@@ -62,13 +62,13 @@ public class EnderecoManutencaoServiceImpl implements EnderecoManutencaoService 
     }
 
     @Override
-    public EnderecoDto atualizar(Long id, EnderecoRegistroDtoNovo dto) {
+    public EnderecoDto atualizar(Long id, EnderecoRegistroDto dto) {
         return enderecoRepository.findById(id).map(e -> usuarioRepository.findById(dto.idUsuario()).map(u -> {
             Endereco endereco = mapper.toEndereco(dto);
             paisValidation.validarPais(endereco.getPais());
             return endereco;
         }).map(mapper::toEnderecoDto).orElseThrow(() -> new UsuarioNotFoundException(dto.idUsuario()))).orElseThrow(
-                () -> new EnderecoNotFoundException(id));
+                () -> new EnderecoNotFoundException("endereço", id));
     }
 
     @Override
@@ -79,7 +79,7 @@ public class EnderecoManutencaoServiceImpl implements EnderecoManutencaoService 
             return MessageFormat.format("Endereço com id {0} removido com sucesso", id);
         }).orElseThrow(() -> {
             log.info("Endereço não encontrado com id {}", id);
-            return new EnderecoNotFoundException(id);
+            return new EnderecoNotFoundException("endereço", id);
         });
     }
 

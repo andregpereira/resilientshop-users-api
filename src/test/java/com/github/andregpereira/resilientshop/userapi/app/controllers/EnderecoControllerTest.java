@@ -1,7 +1,7 @@
 package com.github.andregpereira.resilientshop.userapi.app.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.andregpereira.resilientshop.userapi.app.services.EnderecoConsultaService;
+import com.github.andregpereira.resilientshop.userapi.app.services.endereco.EnderecoConsultaService;
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.EnderecoNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
