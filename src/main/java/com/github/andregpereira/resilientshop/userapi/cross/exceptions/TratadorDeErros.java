@@ -39,6 +39,11 @@ public class TratadorDeErros {
                 "O campo " + e.getParameterName().replace("cpf", "CPF") + " é obrigatório"));
     }
 
+    @ExceptionHandler(EnderecoAlreadyExistsException.class)
+    public ResponseEntity<String> erro404(EnderecoAlreadyExistsException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
     @ExceptionHandler(EnderecoNotFoundException.class)
     public ResponseEntity<String> erro404(EnderecoNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
