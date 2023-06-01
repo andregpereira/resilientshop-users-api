@@ -1,9 +1,8 @@
 package com.github.andregpereira.resilientshop.userapi.app.dto.usuario;
 
-import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoRegistroDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoRegistroUsuarioDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -16,6 +15,6 @@ public record UsuarioAtualizacaoDto(@NotBlank(message = "Insira o nome") @Size(
         @Size(message = "O telefone deve ter no máximo 20 caracteres", max = 20) @Pattern(
                 message = "Formato do " + "telefone inválido. " + "Por favor, informe um telefone no seguinte formato +xxx (xx) xxxxx-xxxx",
                 regexp = "^[+]\\d{2,3} [(]\\d{2}[)] \\d{4," + "5}-\\d{4}$") String telefone,
-        @NotNull(message = "Insira o endereço") @Valid List<EnderecoRegistroDto> enderecos) {
+        @Valid List<EnderecoRegistroUsuarioDto> enderecos) {
 
 }
