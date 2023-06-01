@@ -39,7 +39,7 @@ public class UsuarioDtoConstants {
             LISTA_ENDERECOS_REGISTRO_DTO_INVALIDO);
 
     public static final UsuarioAtualizacaoDto USUARIO_ATUALIZACAO_DTO = new UsuarioAtualizacaoDto("nome2", "sobrenome2",
-            null, LISTA_ENDERECOS_REGISTRO_DTO_ATUALIZADO);
+            null, LISTA_ENDERECOS_REGISTRO_NOVO_USUARIO_DTO_ATUALIZADO);
 
     public static final UsuarioAtualizacaoDto USUARIO_ATUALIZACAO_DTO_PAIS_NOVO = new UsuarioAtualizacaoDto("nome2",
             "sobrenome2", null, LISTA_ENDERECOS_REGISTRO_DTO_ATUALIZADO_PAIS_NOVO);

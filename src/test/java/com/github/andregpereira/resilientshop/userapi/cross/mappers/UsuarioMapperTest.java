@@ -11,7 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import static com.github.andregpereira.resilientshop.userapi.constants.EnderecoConstants.*;
 import static com.github.andregpereira.resilientshop.userapi.constants.EnderecoDtoConstants.LISTA_ENDERECOS_DTO;
-import static com.github.andregpereira.resilientshop.userapi.constants.EnderecoDtoConstants.LISTA_ENDERECOS_REGISTRO_DTO_ATUALIZADO;
+import static com.github.andregpereira.resilientshop.userapi.constants.EnderecoDtoConstants.LISTA_ENDERECOS_REGISTRO_NOVO_USUARIO_DTO_ATUALIZADO;
 import static com.github.andregpereira.resilientshop.userapi.constants.UsuarioConstants.*;
 import static com.github.andregpereira.resilientshop.userapi.constants.UsuarioDtoConstants.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,7 +42,7 @@ class UsuarioMapperTest {
     @Test
     void usuarioAtualizacaoDtoRetornaUsuario() {
         given(enderecoMapper.listaEnderecoRegistroDtoToListaEnderecos(
-                LISTA_ENDERECOS_REGISTRO_DTO_ATUALIZADO)).willReturn(LISTA_ENDERECOS_ATUALIZADO_MAPEADO);
+                LISTA_ENDERECOS_REGISTRO_NOVO_USUARIO_DTO_ATUALIZADO)).willReturn(LISTA_ENDERECOS_ATUALIZADO_MAPEADO);
         assertThat(usuarioMapper.toUsuario(USUARIO_ATUALIZACAO_DTO)).isEqualTo(USUARIO_ATUALIZADO_MAPEADO);
     }
 

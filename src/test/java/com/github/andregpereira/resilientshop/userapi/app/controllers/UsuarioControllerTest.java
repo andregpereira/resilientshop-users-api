@@ -2,6 +2,7 @@ package com.github.andregpereira.resilientshop.userapi.app.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioRegistroDto;
 import com.github.andregpereira.resilientshop.userapi.app.services.usuario.UsuarioConsultaService;
 import com.github.andregpereira.resilientshop.userapi.app.services.usuario.UsuarioManutencaoService;
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioAlreadyExistsException;
@@ -68,7 +69,8 @@ class UsuarioControllerTest {
 
     @Test
     void criarUsuarioComCpfExistenteRetornaConflict() throws Exception {
-        given(manutencaoService.registrar(any())).willThrow(UsuarioAlreadyExistsException.class);
+        given(manutencaoService.registrar(any(UsuarioRegistroDto.class))).willThrow(
+                UsuarioAlreadyExistsException.class);
         mockMvc.perform(post("/usuarios").content(objectMapper.writeValueAsString(USUARIO_REGISTRO_DTO)).contentType(
                 MediaType.APPLICATION_JSON)).andExpect(status().isConflict());
     }

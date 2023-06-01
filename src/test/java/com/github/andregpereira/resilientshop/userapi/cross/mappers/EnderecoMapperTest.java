@@ -1,5 +1,7 @@
 package com.github.andregpereira.resilientshop.userapi.cross.mappers;
 
+import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoRegistroNovoUsuarioDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -54,22 +56,22 @@ class EnderecoMapperTest {
 
     @Test
     void enderecoRegistroDtoRetornaEndereco() {
-        assertThat(mapper.enderecoRegistroDtoToEndereco(ENDERECO_REGISTRO_DTO)).isEqualTo(ENDERECO);
+        assertThat(mapper.toEndereco(ENDERECO_REGISTRO_NOVO_USUARIO_DTO)).isEqualTo(ENDERECO);
     }
 
     @Test
     void enderecoRegistroDtoNuloRetornaEnderecoNull() {
-        assertThat(mapper.enderecoRegistroDtoToEndereco(null)).isNull();
+        assertThat(mapper.toEndereco((EnderecoRegistroNovoUsuarioDto) null)).isNull();
     }
 
     @Test
     void enderecoDtoRetornaEndereco() {
-        assertThat(mapper.enderecoDtoToEndereco(ENDERECO_DTO)).isEqualTo(ENDERECO);
+        assertThat(mapper.toEndereco(ENDERECO_DTO)).isEqualTo(ENDERECO);
     }
 
     @Test
     void enderecoDtoNuloRetornaEnderecoNull() {
-        assertThat(mapper.enderecoDtoToEndereco(null)).isNull();
+        assertThat(mapper.toEndereco((EnderecoDto) null)).isNull();
     }
 
     @Test

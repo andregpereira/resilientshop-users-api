@@ -2,6 +2,7 @@ package com.github.andregpereira.resilientshop.userapi.constants;
 
 import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoDto;
 import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoRegistroDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoRegistroNovoUsuarioDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,64 +23,87 @@ public class EnderecoDtoConstants {
     public static final EnderecoDto ENDERECO_DTO_ATUALIZADO_PAIS_NOVO = new EnderecoDto(null, "apelido2", "12345-670",
             "estado2", "cidade2", "bairro2", "rua2", "202", null, PAIS_DTO_NOVO);
 
-    public static final EnderecoRegistroDto ENDERECO_REGISTRO_DTO = new EnderecoRegistroDto("apelido", "12345-678",
-            "estado", "cidade", "bairro", "rua", "20", null, PAIS_REGISTRO_DTO);
+    public static final EnderecoRegistroNovoUsuarioDto ENDERECO_REGISTRO_NOVO_USUARIO_DTO = new EnderecoRegistroNovoUsuarioDto(
+            "apelido", "12345-678", "estado", "cidade", "bairro", "rua", "20", null, PAIS_REGISTRO_DTO);
 
-    public static final EnderecoRegistroDto ENDERECO_REGISTRO_DTO_PAIS_NOVO = new EnderecoRegistroDto("apelido",
-            "12345-678", "estado", "cidade", "bairro", "rua", "20", null, PAIS_REGISTRO_DTO_NOVO);
+    public static final EnderecoRegistroDto ENDERECO_REGISTRO_DTO = new EnderecoRegistroDto("apelido", "12345-678",
+            "estado", "cidade", "bairro", "rua", "20", null, 1L, PAIS_REGISTRO_DTO);
+
+    public static final EnderecoRegistroNovoUsuarioDto ENDERECO_REGISTROUSUARIO_NOVO_DTO_PAIS_NOVO = new EnderecoRegistroNovoUsuarioDto(
+            "apelido", "12345-678", "estado", "cidade", "bairro", "rua", "20", null, PAIS_REGISTRO_DTO_NOVO);
 
     public static final EnderecoRegistroDto ENDERECO_REGISTRO_DTO_ATUALIZADO = new EnderecoRegistroDto("apelido2",
-            "12345-670", "estado2", "cidade2", "bairro2", "rua2", "202", null, PAIS_REGISTRO_DTO);
+            "12345-670", "estado2", "cidade2", "bairro2", "rua2", "202", null, 1L, PAIS_REGISTRO_DTO);
 
-    public static final EnderecoRegistroDto ENDERECO_REGISTRO_DTO_ATUALIZADO_PAIS_NOVO = new EnderecoRegistroDto(
+    public static final EnderecoRegistroNovoUsuarioDto ENDERECO_REGISTRO_NOVO_USUARIO_DTO_ATUALIZADO = new EnderecoRegistroNovoUsuarioDto(
+            "apelido2", "12345-670", "estado2", "cidade2", "bairro2", "rua2", "202", null, PAIS_REGISTRO_DTO);
+
+    public static final EnderecoRegistroNovoUsuarioDto ENDERECO_REGISTRO_DTO_ATUALIZADO_PAIS_NOVO = new EnderecoRegistroNovoUsuarioDto(
             "apelido2", "12345-670", "estado2", "cidade2", "bairro2", "rua2", "202", null, PAIS_REGISTRO_DTO_NOVO);
 
     public static final EnderecoRegistroDto ENDERECO_REGISTRO_DTO_INVALIDO = new EnderecoRegistroDto("", "", "", "", "",
-            "", "", null, PAIS_REGISTRO_DTO_INVALIDO);
+            "", "", null, null, PAIS_REGISTRO_DTO_INVALIDO);
+
+    public static final EnderecoRegistroNovoUsuarioDto ENDERECO_REGISTRO_NOVO_USUARIO_DTO_INVALIDO = new EnderecoRegistroNovoUsuarioDto(
+            "", "", "", "", "", "", "", null, PAIS_REGISTRO_DTO_INVALIDO);
 
     public static final List<EnderecoDto> LISTA_ENDERECOS_DTO = new ArrayList<>() {
         {
             add(ENDERECO_DTO);
         }
     };
+
     public static final List<EnderecoDto> LISTA_ENDERECOS_DTO_PAIS_NOVO = new ArrayList<>() {
         {
             add(ENDERECO_DTO_PAIS_NOVO);
         }
     };
+
     public static final List<EnderecoDto> LISTA_ENDERECOS_DTO_ATUALIZADO = new ArrayList<>() {
         {
             add(ENDERECO_DTO_ATUALIZADO);
         }
     };
+
     public static final List<EnderecoDto> LISTA_ENDERECOS_DTO_ATUALIZADO_PAIS_NOVO = new ArrayList<>() {
         {
             add(ENDERECO_DTO_ATUALIZADO_PAIS_NOVO);
         }
     };
-    public static final List<EnderecoRegistroDto> LISTA_ENDERECOS_REGISTRO_DTO = new ArrayList<>() {
+
+    public static final List<EnderecoRegistroNovoUsuarioDto> LISTA_ENDERECOS_REGISTRO_DTO = new ArrayList<>() {
         {
-            add(ENDERECO_REGISTRO_DTO);
+            add(ENDERECO_REGISTRO_NOVO_USUARIO_DTO);
         }
     };
-    public static final List<EnderecoRegistroDto> LISTA_ENDERECOS_REGISTRO_DTO_PAIS_NOVO = new ArrayList<>() {
+
+    public static final List<EnderecoRegistroNovoUsuarioDto> LISTA_ENDERECOS_REGISTRO_DTO_PAIS_NOVO = new ArrayList<>() {
         {
-            add(ENDERECO_REGISTRO_DTO_PAIS_NOVO);
+            add(ENDERECO_REGISTROUSUARIO_NOVO_DTO_PAIS_NOVO);
         }
     };
+
     public static final List<EnderecoRegistroDto> LISTA_ENDERECOS_REGISTRO_DTO_ATUALIZADO = new ArrayList<>() {
         {
             add(ENDERECO_REGISTRO_DTO_ATUALIZADO);
         }
     };
-    public static final List<EnderecoRegistroDto> LISTA_ENDERECOS_REGISTRO_DTO_ATUALIZADO_PAIS_NOVO = new ArrayList<>() {
+
+    public static final List<EnderecoRegistroNovoUsuarioDto> LISTA_ENDERECOS_REGISTRO_NOVO_USUARIO_DTO_ATUALIZADO = new ArrayList<>() {
+        {
+            add(ENDERECO_REGISTRO_NOVO_USUARIO_DTO_ATUALIZADO);
+        }
+    };
+
+    public static final List<EnderecoRegistroNovoUsuarioDto> LISTA_ENDERECOS_REGISTRO_DTO_ATUALIZADO_PAIS_NOVO = new ArrayList<>() {
         {
             add(ENDERECO_REGISTRO_DTO_ATUALIZADO_PAIS_NOVO);
         }
     };
-    public static final List<EnderecoRegistroDto> LISTA_ENDERECOS_REGISTRO_DTO_INVALIDO = new ArrayList<>() {
+
+    public static final List<EnderecoRegistroNovoUsuarioDto> LISTA_ENDERECOS_REGISTRO_DTO_INVALIDO = new ArrayList<>() {
         {
-            add(ENDERECO_REGISTRO_DTO_INVALIDO);
+            add(ENDERECO_REGISTRO_NOVO_USUARIO_DTO_INVALIDO);
         }
     };
 
