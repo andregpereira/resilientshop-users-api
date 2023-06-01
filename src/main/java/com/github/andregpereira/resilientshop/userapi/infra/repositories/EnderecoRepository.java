@@ -1,17 +1,19 @@
 package com.github.andregpereira.resilientshop.userapi.infra.repositories;
 
 import com.github.andregpereira.resilientshop.userapi.infra.entities.Endereco;
-import com.github.andregpereira.resilientshop.userapi.infra.entities.Usuario;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface EnderecoRepository extends JpaRepository<Endereco, Long> {
+
+    Page<Endereco> findAllByUsuarioId(Long idUsuario, Pageable pageable);
 
     @Query(value = """
             SELECT e.*
@@ -25,8 +27,6 @@ public interface EnderecoRepository extends JpaRepository<Endereco, Long> {
             @Param("idUsuario") Long idUsuario);
 
     Optional<Endereco> findByApelido(String apelido);
-
-    List<Endereco> findByUsuario(Usuario usuario);
 
     void deleteByUsuarioId(Long idUsuario);
 
