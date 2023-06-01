@@ -40,7 +40,6 @@ public class EnderecoConsultaServiceImpl implements EnderecoConsultaService {
     private final UsuarioRepository usuarioRepository;
     private final EnderecoMapper mapper;
 
-
     @Override
     public EnderecoDto consultarPorId(Long id) {
         return enderecoRepository.findById(id).map(e -> {
