@@ -14,7 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.function.Predicate;
+
+import static java.util.function.Predicate.not;
 
 /**
  * Classe de serviço de consulta de {@link Endereco}.
@@ -46,29 +47,37 @@ public class EnderecoConsultaServiceImpl implements EnderecoConsultaService {
             log.info("Retornando endereço com id {}", id);
             return mapper.toEnderecoDto(e);
         }).orElseThrow(() -> {
-            log.info("Nào foi encontrado um endereço com id {}", id);
-            return new EnderecoNotFoundException("endereço", id);
+            log.info("Não foi encontrado um endereço com id {}", id);
+            return new EnderecoNotFoundException(id);
         });
     }
 
     @Override
     public Page<EnderecoDto> consultarPorIdUsuario(Long idUsuario, Pageable pageable) {
-        return usuarioRepository.findById(idUsuario).map(u -> Optional.of(
-                enderecoRepository.findAllByUsuarioId(idUsuario, pageable)).filter(Predicate.not(Page::isEmpty)).map(
-                p -> p.map(mapper::toEnderecoDto)).orElseThrow(
-                () -> new EnderecoNotFoundException("usuário", idUsuario))).orElseThrow(
-                () -> new UsuarioNotFoundException(idUsuario));
+        if (usuarioRepository.existsById(idUsuario)) {
+            return Optional.of(enderecoRepository.findAllByUsuarioId(idUsuario, pageable)).filter(
+                    not(Page::isEmpty)).map(p -> p.map(mapper::toEnderecoDto)).orElseThrow(() -> {
+                log.info("O usuário com id {} nào possui endereços cadastrados", idUsuario);
+                return new EnderecoNotFoundException();
+            });
+        } else {
+            log.info("Usuário com id {} não encontrado", idUsuario);
+            throw new UsuarioNotFoundException(idUsuario);
+        }
     }
 
     @Override
     public EnderecoDto consultarPorApelido(Long idUsuario, String apelido) {
-        return enderecoRepository.findByApelidoAndUsuarioIdAndUsuarioAtivoTrue(apelido, idUsuario).map(e -> {
-            log.info("Retornando endereço com apelido {}", apelido);
-            return mapper.toEnderecoDto(e);
-        }).orElseThrow(() -> {
-            log.info("Usuário com id {} não possui um endereço com o apelido {}", idUsuario, apelido);
-            return new EnderecoNotFoundException(apelido, idUsuario);
-        });
+        if (usuarioRepository.existsById(idUsuario)) {
+            return enderecoRepository.findByApelidoAndUsuarioId(apelido, idUsuario).map(
+                    mapper::toEnderecoDto).orElseThrow(() -> {
+                log.info("Usuário com id {} não possui um endereço com o apelido {}", idUsuario, apelido);
+                return new EnderecoNotFoundException(apelido);
+            });
+        } else {
+            log.info("Usuário com id {} não encontrado", idUsuario);
+            throw new UsuarioNotFoundException(idUsuario);
+        }
     }
 
 }
