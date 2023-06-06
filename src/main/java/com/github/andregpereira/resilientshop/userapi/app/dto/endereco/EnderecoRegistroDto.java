@@ -19,6 +19,7 @@ public record EnderecoRegistroDto(@NotBlank(message = "O apelido é obrigatório
         @NotBlank(message = "Insira o número.") @Size(message = "O número deve ter no máximo 10 carecteres.",
                 max = 10) String numero,
         @Size(message = "O complemento deve ter no máximo 45 caracteres.", max = 45) String complemento,
+        boolean padrao,
         @NotNull(message = "O id do usuário é obrigatório") Long idUsuario,
         @NotNull(message = "Insira o país.") @Valid PaisRegistroDto pais) {
 

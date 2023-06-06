@@ -11,6 +11,7 @@ public record EnderecoDto(Long id,
         String rua,
         String numero,
         String complemento,
+        boolean padrao,
         PaisDto pais) {
 
 }
