@@ -1,6 +1,6 @@
 package com.github.andregpereira.resilientshop.userapi.cross.mappers;
 
-import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoDto;
+import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoRegistroDto;
 import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoRegistroUsuarioNovoDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,8 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ContextConfiguration;
 
-import static com.github.andregpereira.resilientshop.userapi.constants.EnderecoConstants.ENDERECO;
-import static com.github.andregpereira.resilientshop.userapi.constants.EnderecoConstants.LISTA_ENDERECOS;
+import static com.github.andregpereira.resilientshop.userapi.constants.EnderecoConstants.*;
 import static com.github.andregpereira.resilientshop.userapi.constants.EnderecoDtoConstants.*;
 import static com.github.andregpereira.resilientshop.userapi.constants.PaisConstants.PAIS;
 import static com.github.andregpereira.resilientshop.userapi.constants.PaisDtoConstants.PAIS_DTO;
@@ -24,54 +23,22 @@ class EnderecoMapperTest {
     private EnderecoMapperImpl mapper;
 
     @Test
-    void listaEnderecosRegistroDtoRetornaListaEnderecos() {
-        assertThat(mapper.listaEnderecoRegistroDtoToListaEnderecos(LISTA_ENDERECOS_REGISTRO_DTO)).isEqualTo(
-                LISTA_ENDERECOS);
-    }
-
-    @Test
-    void listaEnderecosRegistroDtoNuloRetornaNullListaEnderecos() {
-        assertThat(mapper.listaEnderecoRegistroDtoToListaEnderecos(null)).isNull();
-    }
-
-    @Test
-    void listaEnderecosDtoRetornaListaEnderecos() {
-        assertThat(mapper.listaEnderecoDtoToListaEnderecos(LISTA_ENDERECOS_DTO)).isEqualTo(LISTA_ENDERECOS);
-    }
-
-    @Test
-    void listaEnderecosDtoNuloRetornaNullListaEnderecos() {
-        assertThat(mapper.listaEnderecoDtoToListaEnderecos(null)).isNull();
-    }
-
-    @Test
-    void listaEnderecosRetornaListaEnderecosDto() {
-        assertThat(mapper.toListaEnderecosDto(LISTA_ENDERECOS)).isEqualTo(LISTA_ENDERECOS_DTO);
-    }
-
-    @Test
-    void listaEnderecosNuloRetornaListaEnderecosDtoNull() {
-        assertThat(mapper.toListaEnderecosDto(null)).isNull();
-    }
-
-    @Test
     void enderecoRegistroDtoRetornaEndereco() {
-        assertThat(mapper.toEndereco(ENDERECO_REGISTRO_USUARIO_NOVO_DTO)).isEqualTo(ENDERECO);
+        assertThat(mapper.toEndereco(ENDERECO_REGISTRO_DTO_PADRAO_FALSE)).isEqualTo(ENDERECO_MAPEADO);
     }
 
     @Test
     void enderecoRegistroDtoNuloRetornaEnderecoNull() {
+        assertThat(mapper.toEndereco((EnderecoRegistroDto) null)).isNull();
+    }
+    @Test
+    void enderecoRegistroUsuarioNovoDtoRetornaEndereco() {
+        assertThat(mapper.toEndereco(ENDERECO_REGISTRO_USUARIO_NOVO_DTO)).isEqualTo(ENDERECO_MAPEADO);
+    }
+
+    @Test
+    void enderecoRegistroUsuarioNovoDtoNuloRetornaEnderecoNull() {
         assertThat(mapper.toEndereco((EnderecoRegistroUsuarioNovoDto) null)).isNull();
-    }
-
-    @Test
-    void enderecoDtoRetornaEndereco() {
-        assertThat(mapper.toEndereco(ENDERECO_DTO)).isEqualTo(ENDERECO);
-    }
-
-    @Test
-    void enderecoDtoNuloRetornaEnderecoNull() {
-        assertThat(mapper.toEndereco((EnderecoDto) null)).isNull();
     }
 
     @Test
@@ -85,6 +52,16 @@ class EnderecoMapperTest {
     }
 
     @Test
+    void listaEnderecosRetornaListaEnderecosDto() {
+        assertThat(mapper.toListaEnderecosDto(LISTA_ENDERECOS)).isEqualTo(LISTA_ENDERECOS_DTO);
+    }
+
+    @Test
+    void listaEnderecosNuloRetornaListaEnderecosDtoNull() {
+        assertThat(mapper.toListaEnderecosDto(null)).isNull();
+    }
+
+    @Test
     void paisRegistroDtoRetornaPais() {
         assertThat(mapper.paisRegistroDtoToPais(PAIS_REGISTRO_DTO)).isEqualTo(PAIS);
     }
@@ -92,16 +69,6 @@ class EnderecoMapperTest {
     @Test
     void paisRegistroDtoNuloRetornaPaisNull() {
         assertThat(mapper.paisRegistroDtoToPais(null)).isNull();
-    }
-
-    @Test
-    void paisDtoRetornaPais() {
-        assertThat(mapper.paisDtoToPais(PAIS_DTO)).isEqualTo(PAIS);
-    }
-
-    @Test
-    void paisDtoNuloRetornaPaisNull() {
-        assertThat(mapper.paisDtoToPais(null)).isNull();
     }
 
     @Test

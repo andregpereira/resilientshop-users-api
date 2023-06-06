@@ -5,6 +5,7 @@ import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoR
 import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoRegistroUsuarioNovoDto;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.github.andregpereira.resilientshop.userapi.constants.PaisDtoConstants.*;
@@ -12,53 +13,73 @@ import static com.github.andregpereira.resilientshop.userapi.constants.PaisDtoCo
 public class EnderecoDtoConstants {
 
     public static final EnderecoDto ENDERECO_DTO = new EnderecoDto(null, "apelido", "12345-678", "estado", "cidade",
-            "bairro", "rua", "20", null, PAIS_DTO);
+            "bairro", "rua", "20", null, true, PAIS_DTO);
 
     public static final EnderecoDto ENDERECO_DTO_PAIS_NOVO = new EnderecoDto(null, "apelido", "12345-678", "estado",
-            "cidade", "bairro", "rua", "20", null, PAIS_DTO_NOVO);
+            "cidade", "bairro", "rua", "20", null, true, PAIS_DTO_NOVO);
 
     public static final EnderecoDto ENDERECO_DTO_ATUALIZADO = new EnderecoDto(null, "apelido2", "12345-670", "estado2",
-            "cidade2", "bairro2", "rua2", "202", null, PAIS_DTO);
+            "cidade2", "bairro2", "rua2", "202", null, true, PAIS_DTO);
 
     public static final EnderecoDto ENDERECO_DTO_ATUALIZADO_PAIS_NOVO = new EnderecoDto(null, "apelido2", "12345-670",
-            "estado2", "cidade2", "bairro2", "rua2", "202", null, PAIS_DTO_NOVO);
+            "estado2", "cidade2", "bairro2", "rua2", "202", null, true, PAIS_DTO_NOVO);
 
     public static final EnderecoRegistroDto ENDERECO_REGISTRO_DTO = new EnderecoRegistroDto("apelido", "12345-678",
-            "estado", "cidade", "bairro", "rua", "20", null, 1L, PAIS_REGISTRO_DTO);
+            "estado", "cidade", "bairro", "rua", "20", null, true, 1L, PAIS_REGISTRO_DTO);
+
+    public static final EnderecoRegistroDto ENDERECO_REGISTRO_DTO_PADRAO_FALSE = new EnderecoRegistroDto("apelido",
+            "12345-678", "estado", "cidade", "bairro", "rua", "20", null, false, 1L, PAIS_REGISTRO_DTO);
 
     public static final EnderecoRegistroUsuarioNovoDto ENDERECO_REGISTRO_USUARIO_NOVO_DTO = new EnderecoRegistroUsuarioNovoDto(
             "apelido", "12345-678", "estado", "cidade", "bairro", "rua", "20", null, PAIS_REGISTRO_DTO);
 
     public static final EnderecoRegistroDto ENDERECO_REGISTRO_DTO_ATUALIZADO = new EnderecoRegistroDto("apelido2",
-            "12345-670", "estado2", "cidade2", "bairro2", "rua2", "202", null, 1L, PAIS_REGISTRO_DTO);
+            "12345-670", "estado2", "cidade2", "bairro2", "rua2", "202", null, true, 1L, PAIS_REGISTRO_DTO);
+
+    public static final EnderecoRegistroDto ENDERECO_REGISTRO_DTO_ATUALIZADO_PADRAO_FALSE = new EnderecoRegistroDto(
+            "apelido2", "12345-670", "estado2", "cidade2", "bairro2", "rua2", "202", null, false, 1L,
+            PAIS_REGISTRO_DTO);
 
     public static final EnderecoRegistroUsuarioNovoDto ENDERECO_REGISTRO_USUARIO_NOVO_DTO_ATUALIZADO = new EnderecoRegistroUsuarioNovoDto(
             "apelido2", "12345-670", "estado2", "cidade2", "bairro2", "rua2", "202", null, PAIS_REGISTRO_DTO);
 
     public static final EnderecoRegistroDto ENDERECO_REGISTRO_DTO_PAIS_NOVO = new EnderecoRegistroDto("apelido",
-            "12345-678", "estado", "cidade", "bairro", "rua", "20", null, 1L, PAIS_REGISTRO_DTO_NOVO);
+            "12345-678", "estado", "cidade", "bairro", "rua", "20", null, true, 1L, PAIS_REGISTRO_DTO_NOVO);
+
+    public static final EnderecoRegistroDto ENDERECO_REGISTRO_DTO_PAIS_NOVO_PADRAO_FALSE = new EnderecoRegistroDto(
+            "apelido", "12345-678", "estado", "cidade", "bairro", "rua", "20", null, false, 1L, PAIS_REGISTRO_DTO_NOVO);
 
     public static final EnderecoRegistroUsuarioNovoDto ENDERECO_REGISTRO_USUARIO_NOVO_DTO_PAIS_NOVO = new EnderecoRegistroUsuarioNovoDto(
             "apelido", "12345-678", "estado", "cidade", "bairro", "rua", "20", null, PAIS_REGISTRO_DTO_NOVO);
 
     public static final EnderecoRegistroDto ENDERECO_REGISTRO_DTO_ATUALIZADO_PAIS_NOVO = new EnderecoRegistroDto(
-            "apelido2", "12345-670", "estado2", "cidade2", "bairro2", "rua2", "202", null, 2L, PAIS_REGISTRO_DTO_NOVO);
+            "apelido2", "12345-670", "estado2", "cidade2", "bairro2", "rua2", "202", null, true, 2L,
+            PAIS_REGISTRO_DTO_NOVO);
+
+    public static final EnderecoRegistroDto ENDERECO_REGISTRO_DTO_ATUALIZADO_PAIS_NOVO_PADRAO_FALSE = new EnderecoRegistroDto(
+            "apelido2", "12345-670", "estado2", "cidade2", "bairro2", "rua2", "202", null, false, 2L,
+            PAIS_REGISTRO_DTO_NOVO);
 
     public static final EnderecoRegistroUsuarioNovoDto ENDERECO_REGISTRO_USUARIO_NOVO_DTO_ATUALIZADO_PAIS_NOVO = new EnderecoRegistroUsuarioNovoDto(
             "apelido2", "12345-670", "estado2", "cidade2", "bairro2", "rua2", "202", null, PAIS_REGISTRO_DTO_NOVO);
 
     public static final EnderecoRegistroDto ENDERECO_REGISTRO_DTO_INVALIDO = new EnderecoRegistroDto("", "", "", "", "",
-            "", "", null, null, PAIS_REGISTRO_DTO_INVALIDO);
+            "", "", null, true, null, PAIS_REGISTRO_DTO_INVALIDO);
+
+    public static final EnderecoRegistroDto ENDERECO_REGISTRO_DTO_INVALIDO_PADRAO_FALSE = new EnderecoRegistroDto("",
+            "", "", "", "", "", "", null, false, null, PAIS_REGISTRO_DTO_INVALIDO);
 
     public static final EnderecoRegistroUsuarioNovoDto ENDERECO_REGISTRO_USUARIO_NOVO_DTO_INVALIDO = new EnderecoRegistroUsuarioNovoDto(
             "", "", "", "", "", "", "", null, PAIS_REGISTRO_DTO_INVALIDO);
 
-    public static final List<EnderecoDto> LISTA_ENDERECOS_DTO = new ArrayList<>() {
-        {
-            add(ENDERECO_DTO);
-        }
-    };
+    public static final List<EnderecoDto> LISTA_ENDERECOS_DTO = Collections.singletonList(ENDERECO_DTO);
 
+    //    public static final List<EnderecoDto> LISTA_ENDERECOS_DTO = new ArrayList<>() {
+//        {
+//            add(ENDERECO_DTO);
+//        }
+//    };
+//
     public static final List<EnderecoDto> LISTA_ENDERECOS_DTO_PAIS_NOVO = new ArrayList<>() {
         {
             add(ENDERECO_DTO_PAIS_NOVO);

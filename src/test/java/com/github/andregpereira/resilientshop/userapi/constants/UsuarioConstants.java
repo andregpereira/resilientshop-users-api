@@ -18,7 +18,7 @@ public class UsuarioConstants {
             LOCAL_DATE, LOCAL_DATE, true, new ArrayList<>());
 
     public static final Usuario USUARIO_SEM_ENDERECO_MAPEADO = new Usuario(null, "nome", "sobrenome", "22426853093",
-            null, null, null, true, null);
+            null, null, null, true, new ArrayList<>());
 
     public static final Usuario USUARIO_INATIVO = new Usuario(null, "nome", "sobrenome", "22426853093", null,
             LOCAL_DATE, LOCAL_DATE, false, LISTA_ENDERECOS_USUARIO_INATIVO);

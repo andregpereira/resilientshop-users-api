@@ -5,9 +5,10 @@ import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioAl
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioNotFoundException;
 import com.github.andregpereira.resilientshop.userapi.cross.mappers.UsuarioMapper;
 import com.github.andregpereira.resilientshop.userapi.cross.validations.PaisValidation;
-import com.github.andregpereira.resilientshop.userapi.infra.entities.Pais;
 import com.github.andregpereira.resilientshop.userapi.infra.entities.Usuario;
 import com.github.andregpereira.resilientshop.userapi.infra.repositories.UsuarioRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,8 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static com.github.andregpereira.resilientshop.userapi.constants.PaisConstants.PAIS;
-import static com.github.andregpereira.resilientshop.userapi.constants.PaisConstants.PAIS_NOVO;
+import static com.github.andregpereira.resilientshop.userapi.constants.EnderecoConstants.*;
 import static com.github.andregpereira.resilientshop.userapi.constants.UsuarioConstants.*;
 import static com.github.andregpereira.resilientshop.userapi.constants.UsuarioDtoConstants.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,28 +38,25 @@ class UsuarioManutencaoServiceTest {
 
     @Mock
     private PaisValidation paisValidation;
-//    @AfterEach
-//    public void afterEach() {
-//        USUARIO.setAtivo(true);
-//        USUARIO_INATIVO.setAtivo(false);
-//        USUARIO_MAPEADO.setAtivo(false);
-//        USUARIO_MAPEADO.setDataCriacao(null);
-//        USUARIO_MAPEADO.setDataModificacao(null);
-//        USUARIO_ATUALIZADO_MAPEADO.setCpf(null);
-//        USUARIO_ATUALIZADO_MAPEADO.setAtivo(false);
-//        USUARIO_ATUALIZADO_MAPEADO.setDataCriacao(null);
-//        USUARIO_ATUALIZADO_MAPEADO.setDataModificacao(null);
-//    }
-//    @BeforeEach
-//    void beforeEach() {
-//        USUARIO.setEnderecos(LISTA_ENDERECOS);
-//        USUARIO_MAPEADO.setEnderecos(LISTA_ENDERECOS_MAPEADO);
-//        USUARIO_MAPEADO.setId(null);
-//        USUARIO_ATUALIZADO_MAPEADO.setEnderecos(LISTA_ENDERECOS_ATUALIZADO_MAPEADO);
-//        USUARIO_PAIS_NOVO.setEnderecos(LISTA_ENDERECOS_PAIS_NOVO);
-//        USUARIO_ATUALIZADO.setEnderecos(LISTA_ENDERECOS_ATUALIZADO);
-//        USUARIO_ATUALIZADO_PAIS_NOVO.setEnderecos(LISTA_ENDERECOS_ATUALIZADO_PAIS_NOVO);
-//    }
+
+    @AfterEach
+    public void afterEach() {
+        USUARIO.setNome("nome");
+        USUARIO.setSobrenome("sobrenome");
+        USUARIO.setAtivo(true);
+        USUARIO_INATIVO.setAtivo(false);
+        USUARIO_MAPEADO.setAtivo(false);
+        USUARIO_MAPEADO.setDataCriacao(null);
+        USUARIO_MAPEADO.setDataModificacao(null);
+        USUARIO_MAPEADO.setEnderecos(LISTA_ENDERECOS_MAPEADO);
+        USUARIO_PAIS_NOVO_MAPEADO.setEnderecos(LISTA_ENDERECOS_PAIS_NOVO_MAPEADO);
+    }
+
+    @BeforeEach
+    void beforeEach() {
+        USUARIO.setEnderecos(LISTA_ENDERECOS);
+        USUARIO_ATUALIZADO.setEnderecos(LISTA_ENDERECOS);
+    }
 
     @Test
     void criarUsuarioComDadosValidosESemEnderecoRetornaUsuarioDetalhesDto() {
@@ -76,7 +73,6 @@ class UsuarioManutencaoServiceTest {
     void criarUsuarioComDadosValidosEPaisNovoRetornaUsuarioDetalhesDto() {
         given(mapper.toUsuario(any(UsuarioRegistroDto.class))).willReturn(USUARIO_PAIS_NOVO_MAPEADO);
         given(usuarioRepository.existsByCpf(anyString())).willReturn(false);
-        given(paisValidation.validarPais(any(Pais.class))).willReturn(PAIS_NOVO);
         given(usuarioRepository.save(any(Usuario.class))).willReturn(USUARIO_PAIS_NOVO);
         given(mapper.toUsuarioDetalhesDto(any(Usuario.class))).willReturn(USUARIO_DETALHES_DTO_PAIS_NOVO);
         assertThat(manutencaoService.registrar(USUARIO_REGISTRO_DTO_PAIS_NOVO)).isEqualTo(
@@ -88,7 +84,6 @@ class UsuarioManutencaoServiceTest {
     void criarUsuarioComDadosValidosEPaisExistenteRetornaUsuarioDetalhesDto() {
         given(mapper.toUsuario(any(UsuarioRegistroDto.class))).willReturn(USUARIO_MAPEADO);
         given(usuarioRepository.existsByCpf(anyString())).willReturn(false);
-        given(paisValidation.validarPais(any(Pais.class))).willReturn(PAIS);
         given(usuarioRepository.save(any(Usuario.class))).willReturn(USUARIO);
         given(mapper.toUsuarioDetalhesDto(any(Usuario.class))).willReturn(USUARIO_DETALHES_DTO);
         assertThat(manutencaoService.registrar(USUARIO_REGISTRO_DTO)).isEqualTo(USUARIO_DETALHES_DTO);

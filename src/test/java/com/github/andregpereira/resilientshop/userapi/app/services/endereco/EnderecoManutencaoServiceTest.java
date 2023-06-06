@@ -10,6 +10,7 @@ import com.github.andregpereira.resilientshop.userapi.infra.entities.Endereco;
 import com.github.andregpereira.resilientshop.userapi.infra.entities.Pais;
 import com.github.andregpereira.resilientshop.userapi.infra.repositories.EnderecoRepository;
 import com.github.andregpereira.resilientshop.userapi.infra.repositories.UsuarioRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,6 +47,11 @@ class EnderecoManutencaoServiceTest {
 
     @Mock
     private PaisValidation paisValidation;
+
+    @AfterEach
+    void afterEach() {
+        ENDERECO.setPadrao(true);
+    }
 
     @BeforeEach
     void beforeEach() {

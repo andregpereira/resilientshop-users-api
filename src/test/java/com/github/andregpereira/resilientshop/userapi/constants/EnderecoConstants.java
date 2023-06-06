@@ -23,10 +23,10 @@ public class EnderecoConstants {
             "bairro", "rua", "20", null, false, PAIS, USUARIO);
 
     public static final Endereco ENDERECO_MAPEADO = new Endereco(null, "apelido", "12345-678", "estado", "cidade",
-            "bairro", "rua", "20", null, true, PAIS_MAPEADO, USUARIO_MAPEADO);
+            "bairro", "rua", "20", null, false, PAIS_MAPEADO, null);
 
     public static final Endereco ENDERECO_PADRAO_FALSE_MAPEADO = new Endereco(null, "apelido", "12345-678", "estado",
-            "cidade", "bairro", "rua", "20", null, false, PAIS_MAPEADO, USUARIO_MAPEADO);
+            "cidade", "bairro", "rua", "20", null, false, PAIS_MAPEADO, null);
 
     public static final Endereco ENDERECO_USUARIO_INATIVO = new Endereco(null, "apelido", "12345-678", "estado",
             "cidade", "bairro", "rua", "20", null, true, PAIS, USUARIO_INATIVO);
@@ -35,22 +35,22 @@ public class EnderecoConstants {
             "bairro", "rua", "20", null, true, PAIS_NOVO, USUARIO_PAIS_NOVO);
 
     public static final Endereco ENDERECO_PAIS_NOVO_MAPEADO = new Endereco(null, "apelido", "12345-678", "estado",
-            "cidade", "bairro", "rua", "20", null, true, PAIS_NOVO, USUARIO_PAIS_NOVO_MAPEADO);
+            "cidade", "bairro", "rua", "20", null, true, PAIS_NOVO, null);
 
     public static final Endereco ENDERECO_ATUALIZADO = new Endereco(null, "apelido2", "12345-670", "estado2", "cidade2",
             "bairro2", "rua2", "202", null, true, PAIS, USUARIO_ATUALIZADO);
 
     public static final Endereco ENDERECO_ATUALIZADO_MAPEADO = new Endereco(null, "apelido2", "12345-670", "estado2",
-            "cidade2", "bairro2", "rua2", "202", null, true, PAIS_MAPEADO, USUARIO_ATUALIZADO_MAPEADO);
+            "cidade2", "bairro2", "rua2", "202", null, true, PAIS_MAPEADO, null);
 
     public static final Endereco ENDERECO_ATUALIZADO_PADRAO_FALSE_MAPEADO = new Endereco(null, "apelido2", "12345-670",
-            "estado2", "cidade2", "bairro2", "rua2", "202", null, false, PAIS_MAPEADO, USUARIO_ATUALIZADO_MAPEADO);
+            "estado2", "cidade2", "bairro2", "rua2", "202", null, false, PAIS_MAPEADO, null);
 
     public static final Endereco ENDERECO_ATUALIZADO_PAIS_NOVO = new Endereco(null, "apelido2", "12345-670", "estado2",
             "cidade2", "bairro2", "rua2", "202", null, true, PAIS_NOVO, USUARIO_ATUALIZADO_PAIS_NOVO);
 
     public static final Endereco ENDERECO_ATUALIZADO_PAIS_NOVO_MAPEADO = new Endereco(null, "apelido2", "12345-670",
-            "estado2", "cidade2", "bairro2", "rua2", "202", null, true, PAIS_NOVO, USUARIO_ATUALIZADO_PAIS_NOVO);
+            "estado2", "cidade2", "bairro2", "rua2", "202", null, true, PAIS_NOVO, null);
 
     public static final Endereco ENDERECO_INVALIDO = new Endereco(null, "", "", "", "", "", "", null, null, true,
             PAIS_INVALIDO, USUARIO_INVALIDO);
