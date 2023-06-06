@@ -32,7 +32,7 @@ public class EnderecoDtoConstants {
     public static final EnderecoRegistroDto ENDERECO_REGISTRO_DTO_ATUALIZADO = new EnderecoRegistroDto("apelido2",
             "12345-670", "estado2", "cidade2", "bairro2", "rua2", "202", null, 1L, PAIS_REGISTRO_DTO);
 
-    public static final EnderecoRegistroUsuarioNovoDto ENDERECO_REGISTRO_NOVO_USUARIO_DTO_ATUALIZADO = new EnderecoRegistroUsuarioNovoDto(
+    public static final EnderecoRegistroUsuarioNovoDto ENDERECO_REGISTRO_USUARIO_NOVO_DTO_ATUALIZADO = new EnderecoRegistroUsuarioNovoDto(
             "apelido2", "12345-670", "estado2", "cidade2", "bairro2", "rua2", "202", null, PAIS_REGISTRO_DTO);
 
     public static final EnderecoRegistroDto ENDERECO_REGISTRO_DTO_PAIS_NOVO = new EnderecoRegistroDto("apelido",
@@ -44,13 +44,13 @@ public class EnderecoDtoConstants {
     public static final EnderecoRegistroDto ENDERECO_REGISTRO_DTO_ATUALIZADO_PAIS_NOVO = new EnderecoRegistroDto(
             "apelido2", "12345-670", "estado2", "cidade2", "bairro2", "rua2", "202", null, 2L, PAIS_REGISTRO_DTO_NOVO);
 
-    public static final EnderecoRegistroUsuarioNovoDto ENDERECO_REGISTRO_NOVO_USUARIO_DTO_ATUALIZADO_PAIS_NOVO = new EnderecoRegistroUsuarioNovoDto(
+    public static final EnderecoRegistroUsuarioNovoDto ENDERECO_REGISTRO_USUARIO_NOVO_DTO_ATUALIZADO_PAIS_NOVO = new EnderecoRegistroUsuarioNovoDto(
             "apelido2", "12345-670", "estado2", "cidade2", "bairro2", "rua2", "202", null, PAIS_REGISTRO_DTO_NOVO);
 
     public static final EnderecoRegistroDto ENDERECO_REGISTRO_DTO_INVALIDO = new EnderecoRegistroDto("", "", "", "", "",
             "", "", null, null, PAIS_REGISTRO_DTO_INVALIDO);
 
-    public static final EnderecoRegistroUsuarioNovoDto ENDERECO_REGISTRO_NOVO_USUARIO_DTO_INVALIDO = new EnderecoRegistroUsuarioNovoDto(
+    public static final EnderecoRegistroUsuarioNovoDto ENDERECO_REGISTRO_USUARIO_NOVO_DTO_INVALIDO = new EnderecoRegistroUsuarioNovoDto(
             "", "", "", "", "", "", "", null, PAIS_REGISTRO_DTO_INVALIDO);
 
     public static final List<EnderecoDto> LISTA_ENDERECOS_DTO = new ArrayList<>() {
@@ -97,19 +97,19 @@ public class EnderecoDtoConstants {
 
     public static final List<EnderecoRegistroUsuarioNovoDto> LISTA_ENDERECOS_REGISTRO_NOVO_USUARIO_DTO_ATUALIZADO = new ArrayList<>() {
         {
-            add(ENDERECO_REGISTRO_NOVO_USUARIO_DTO_ATUALIZADO);
+            add(ENDERECO_REGISTRO_USUARIO_NOVO_DTO_ATUALIZADO);
         }
     };
 
     public static final List<EnderecoRegistroUsuarioNovoDto> LISTA_ENDERECOS_REGISTRO_DTO_ATUALIZADO_PAIS_NOVO = new ArrayList<>() {
         {
-            add(ENDERECO_REGISTRO_NOVO_USUARIO_DTO_ATUALIZADO_PAIS_NOVO);
+            add(ENDERECO_REGISTRO_USUARIO_NOVO_DTO_ATUALIZADO_PAIS_NOVO);
         }
     };
 
     public static final List<EnderecoRegistroUsuarioNovoDto> LISTA_ENDERECOS_REGISTRO_DTO_INVALIDO = new ArrayList<>() {
         {
-            add(ENDERECO_REGISTRO_NOVO_USUARIO_DTO_INVALIDO);
+            add(ENDERECO_REGISTRO_USUARIO_NOVO_DTO_INVALIDO);
         }
     };
 

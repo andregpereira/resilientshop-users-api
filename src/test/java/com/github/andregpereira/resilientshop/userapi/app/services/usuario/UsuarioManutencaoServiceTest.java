@@ -1,13 +1,13 @@
 package com.github.andregpereira.resilientshop.userapi.app.services.usuario;
 
+import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioRegistroDto;
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioAlreadyExistsException;
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioNotFoundException;
 import com.github.andregpereira.resilientshop.userapi.cross.mappers.UsuarioMapper;
 import com.github.andregpereira.resilientshop.userapi.cross.validations.PaisValidation;
-import com.github.andregpereira.resilientshop.userapi.infra.repositories.EnderecoRepository;
+import com.github.andregpereira.resilientshop.userapi.infra.entities.Pais;
+import com.github.andregpereira.resilientshop.userapi.infra.entities.Usuario;
 import com.github.andregpereira.resilientshop.userapi.infra.repositories.UsuarioRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static com.github.andregpereira.resilientshop.userapi.constants.EnderecoConstants.*;
 import static com.github.andregpereira.resilientshop.userapi.constants.PaisConstants.PAIS;
 import static com.github.andregpereira.resilientshop.userapi.constants.PaisConstants.PAIS_NOVO;
 import static com.github.andregpereira.resilientshop.userapi.constants.UsuarioConstants.*;
@@ -38,54 +37,62 @@ class UsuarioManutencaoServiceTest {
     private UsuarioRepository usuarioRepository;
 
     @Mock
-    private EnderecoRepository enderecoRepository;
-
-    @Mock
     private PaisValidation paisValidation;
+//    @AfterEach
+//    public void afterEach() {
+//        USUARIO.setAtivo(true);
+//        USUARIO_INATIVO.setAtivo(false);
+//        USUARIO_MAPEADO.setAtivo(false);
+//        USUARIO_MAPEADO.setDataCriacao(null);
+//        USUARIO_MAPEADO.setDataModificacao(null);
+//        USUARIO_ATUALIZADO_MAPEADO.setCpf(null);
+//        USUARIO_ATUALIZADO_MAPEADO.setAtivo(false);
+//        USUARIO_ATUALIZADO_MAPEADO.setDataCriacao(null);
+//        USUARIO_ATUALIZADO_MAPEADO.setDataModificacao(null);
+//    }
+//    @BeforeEach
+//    void beforeEach() {
+//        USUARIO.setEnderecos(LISTA_ENDERECOS);
+//        USUARIO_MAPEADO.setEnderecos(LISTA_ENDERECOS_MAPEADO);
+//        USUARIO_MAPEADO.setId(null);
+//        USUARIO_ATUALIZADO_MAPEADO.setEnderecos(LISTA_ENDERECOS_ATUALIZADO_MAPEADO);
+//        USUARIO_PAIS_NOVO.setEnderecos(LISTA_ENDERECOS_PAIS_NOVO);
+//        USUARIO_ATUALIZADO.setEnderecos(LISTA_ENDERECOS_ATUALIZADO);
+//        USUARIO_ATUALIZADO_PAIS_NOVO.setEnderecos(LISTA_ENDERECOS_ATUALIZADO_PAIS_NOVO);
+//    }
 
-    @AfterEach
-    public void afterEach() {
-        USUARIO.setAtivo(true);
-        USUARIO_INATIVO.setAtivo(false);
-        USUARIO_MAPEADO.setAtivo(false);
-        USUARIO_MAPEADO.setDataCriacao(null);
-        USUARIO_MAPEADO.setDataModificacao(null);
-        USUARIO_ATUALIZADO_MAPEADO.setCpf(null);
-        USUARIO_ATUALIZADO_MAPEADO.setAtivo(false);
-        USUARIO_ATUALIZADO_MAPEADO.setDataCriacao(null);
-        USUARIO_ATUALIZADO_MAPEADO.setDataModificacao(null);
-    }
-
-    @BeforeEach
-    void beforeEach() {
-        USUARIO.setEnderecos(LISTA_ENDERECOS);
-        USUARIO_MAPEADO.setEnderecos(LISTA_ENDERECOS_MAPEADO);
-        USUARIO_MAPEADO.setId(null);
-        USUARIO_ATUALIZADO_MAPEADO.setEnderecos(LISTA_ENDERECOS_ATUALIZADO_MAPEADO);
-        USUARIO_PAIS_NOVO.setEnderecos(LISTA_ENDERECOS_PAIS_NOVO);
-        USUARIO_ATUALIZADO.setEnderecos(LISTA_ENDERECOS_ATUALIZADO);
-        USUARIO_ATUALIZADO_PAIS_NOVO.setEnderecos(LISTA_ENDERECOS_ATUALIZADO_PAIS_NOVO);
+    @Test
+    void criarUsuarioComDadosValidosESemEnderecoRetornaUsuarioDetalhesDto() {
+        given(mapper.toUsuario(any(UsuarioRegistroDto.class))).willReturn(USUARIO_SEM_ENDERECO_MAPEADO);
+        given(usuarioRepository.existsByCpf(anyString())).willReturn(false);
+        given(usuarioRepository.save(any(Usuario.class))).willReturn(USUARIO_PAIS_NOVO);
+        given(mapper.toUsuarioDetalhesDto(any(Usuario.class))).willReturn(USUARIO_DETALHES_DTO_SEM_ENDERECO);
+        assertThat(manutencaoService.registrar(USUARIO_REGISTRO_DTO_SEM_ENDERECO)).isEqualTo(
+                USUARIO_DETALHES_DTO_SEM_ENDERECO);
+        then(usuarioRepository).should().save(USUARIO_SEM_ENDERECO_MAPEADO);
     }
 
     @Test
     void criarUsuarioComDadosValidosEPaisNovoRetornaUsuarioDetalhesDto() {
-        given(mapper.toUsuario(USUARIO_REGISTRO_DTO_PAIS_NOVO)).willReturn(USUARIO_PAIS_NOVO);
-        given(paisValidation.validarPais(PAIS_NOVO)).willReturn(PAIS_NOVO);
-        given(usuarioRepository.save(USUARIO_PAIS_NOVO)).willReturn(USUARIO_PAIS_NOVO);
-        given(mapper.toUsuarioDetalhesDto(USUARIO_PAIS_NOVO)).willReturn(USUARIO_DETALHES_DTO_PAIS_NOVO);
+        given(mapper.toUsuario(any(UsuarioRegistroDto.class))).willReturn(USUARIO_PAIS_NOVO_MAPEADO);
+        given(usuarioRepository.existsByCpf(anyString())).willReturn(false);
+        given(paisValidation.validarPais(any(Pais.class))).willReturn(PAIS_NOVO);
+        given(usuarioRepository.save(any(Usuario.class))).willReturn(USUARIO_PAIS_NOVO);
+        given(mapper.toUsuarioDetalhesDto(any(Usuario.class))).willReturn(USUARIO_DETALHES_DTO_PAIS_NOVO);
         assertThat(manutencaoService.registrar(USUARIO_REGISTRO_DTO_PAIS_NOVO)).isEqualTo(
                 USUARIO_DETALHES_DTO_PAIS_NOVO);
-        then(usuarioRepository).should().save(USUARIO_PAIS_NOVO);
+        then(usuarioRepository).should().save(USUARIO_PAIS_NOVO_MAPEADO);
     }
 
     @Test
     void criarUsuarioComDadosValidosEPaisExistenteRetornaUsuarioDetalhesDto() {
-        given(mapper.toUsuario(USUARIO_REGISTRO_DTO)).willReturn(USUARIO);
-        given(paisValidation.validarPais(PAIS)).willReturn(PAIS);
-        given(usuarioRepository.save(USUARIO)).willReturn(USUARIO);
-        given(mapper.toUsuarioDetalhesDto(USUARIO)).willReturn(USUARIO_DETALHES_DTO);
+        given(mapper.toUsuario(any(UsuarioRegistroDto.class))).willReturn(USUARIO_MAPEADO);
+        given(usuarioRepository.existsByCpf(anyString())).willReturn(false);
+        given(paisValidation.validarPais(any(Pais.class))).willReturn(PAIS);
+        given(usuarioRepository.save(any(Usuario.class))).willReturn(USUARIO);
+        given(mapper.toUsuarioDetalhesDto(any(Usuario.class))).willReturn(USUARIO_DETALHES_DTO);
         assertThat(manutencaoService.registrar(USUARIO_REGISTRO_DTO)).isEqualTo(USUARIO_DETALHES_DTO);
-        then(usuarioRepository).should().save(USUARIO);
+        then(usuarioRepository).should().save(USUARIO_MAPEADO);
     }
 
     @Test
@@ -103,31 +110,25 @@ class UsuarioManutencaoServiceTest {
                 UsuarioAlreadyExistsException.class).hasMessage("Opa! Já existe um usuário cadastrado com esse CPF");
         then(usuarioRepository).should(never()).save(USUARIO);
     }
+//    @Test
+//    void atualizarUsuarioComDadosValidosEPaisNovoRetornaUsuarioDetalhesDto() {
+//        given(usuarioRepository.findByIdAndAtivoTrue(anyLong())).willReturn(Optional.of(USUARIO));
+//        given(mapper.toUsuario(any(UsuarioAtualizacaoDto.class))).willReturn(USUARIO_ATUALIZADO_PAIS_NOVO);
+//        given(paisValidation.validarPais(any(Pais.class))).willReturn(PAIS_NOVO);
+//        given(usuarioRepository.save(any(Usuario.class))).willReturn(USUARIO_ATUALIZADO_PAIS_NOVO);
+//        given(mapper.toUsuarioDetalhesDto(any(Usuario.class))).willReturn(USUARIO_DETALHES_DTO_ATUALIZADO_PAIS_NOVO);
+//        assertThat(manutencaoService.atualizar(5L, USUARIO_ATUALIZACAO_DTO_PAIS_NOVO)).isEqualTo(
+//                USUARIO_DETALHES_DTO_ATUALIZADO_PAIS_NOVO);
+//        then(usuarioRepository).should().save(USUARIO_ATUALIZADO_PAIS_NOVO);
+//    }
 
     @Test
-    void atualizarUsuarioComDadosValidosEPaisNovoRetornaUsuarioDetalhesDto() {
+    void atualizarUsuarioComDadosValidosRetornaUsuarioDetalhesDto() {
         given(usuarioRepository.findByIdAndAtivoTrue(anyLong())).willReturn(Optional.of(USUARIO));
-        willDoNothing().given(enderecoRepository).deleteByUsuarioId(anyLong());
-        given(mapper.toUsuario(USUARIO_ATUALIZACAO_DTO_PAIS_NOVO)).willReturn(USUARIO_ATUALIZADO_PAIS_NOVO);
-        given(paisValidation.validarPais(PAIS_NOVO)).willReturn(PAIS_NOVO);
-        given(usuarioRepository.saveAndFlush(USUARIO_ATUALIZADO_PAIS_NOVO)).willReturn(USUARIO_ATUALIZADO_PAIS_NOVO);
-        given(mapper.toUsuarioDetalhesDto(USUARIO_ATUALIZADO_PAIS_NOVO)).willReturn(
-                USUARIO_DETALHES_DTO_ATUALIZADO_PAIS_NOVO);
-        assertThat(manutencaoService.atualizar(5L, USUARIO_ATUALIZACAO_DTO_PAIS_NOVO)).isEqualTo(
-                USUARIO_DETALHES_DTO_ATUALIZADO_PAIS_NOVO);
-        then(usuarioRepository).should().saveAndFlush(USUARIO_ATUALIZADO_PAIS_NOVO);
-    }
-
-    @Test
-    void atualizarUsuarioComDadosValidosEPaisExistenteRetornaUsuarioDetalhesDto() {
-        given(usuarioRepository.findByIdAndAtivoTrue(anyLong())).willReturn(Optional.of(USUARIO));
-        willDoNothing().given(enderecoRepository).deleteByUsuarioId(anyLong());
-        given(mapper.toUsuario(USUARIO_ATUALIZACAO_DTO)).willReturn(USUARIO_ATUALIZADO);
-        given(paisValidation.validarPais(PAIS)).willReturn(PAIS);
-        given(usuarioRepository.saveAndFlush(USUARIO_ATUALIZADO)).willReturn(USUARIO_ATUALIZADO);
-        given(mapper.toUsuarioDetalhesDto(USUARIO_ATUALIZADO)).willReturn(USUARIO_DETALHES_DTO_ATUALIZADO);
+        given(usuarioRepository.save(any(Usuario.class))).willReturn(USUARIO_ATUALIZADO);
+        given(mapper.toUsuarioDetalhesDto(any(Usuario.class))).willReturn(USUARIO_DETALHES_DTO_ATUALIZADO);
         assertThat(manutencaoService.atualizar(5L, USUARIO_ATUALIZACAO_DTO)).isEqualTo(USUARIO_DETALHES_DTO_ATUALIZADO);
-        then(usuarioRepository).should().saveAndFlush(USUARIO_ATUALIZADO);
+        then(usuarioRepository).should().save(USUARIO_ATUALIZADO);
     }
 
     @Test

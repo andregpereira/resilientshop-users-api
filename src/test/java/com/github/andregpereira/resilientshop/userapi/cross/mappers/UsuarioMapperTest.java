@@ -29,8 +29,7 @@ class UsuarioMapperTest {
 
     @Test
     void usuarioRegistroDtoRetornaUsuario() {
-        given(enderecoMapper.listaEnderecoRegistroDtoToListaEnderecos(USUARIO_REGISTRO_DTO.enderecos())).willReturn(
-                LISTA_ENDERECOS_MAPEADO);
+        given(enderecoMapper.toEndereco(USUARIO_REGISTRO_DTO.endereco())).willReturn(ENDERECO_MAPEADO);
         assertThat(usuarioMapper.toUsuario(USUARIO_REGISTRO_DTO)).isEqualTo(USUARIO_MAPEADO);
     }
 
