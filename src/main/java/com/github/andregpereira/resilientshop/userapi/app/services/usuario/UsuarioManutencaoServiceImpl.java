@@ -9,7 +9,6 @@ import com.github.andregpereira.resilientshop.userapi.cross.mappers.UsuarioMappe
 import com.github.andregpereira.resilientshop.userapi.cross.validations.PaisValidation;
 import com.github.andregpereira.resilientshop.userapi.infra.entities.Endereco;
 import com.github.andregpereira.resilientshop.userapi.infra.entities.Usuario;
-import com.github.andregpereira.resilientshop.userapi.infra.repositories.EnderecoRepository;
 import com.github.andregpereira.resilientshop.userapi.infra.repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Classe de serviço de manutenção de {@link Usuario}.
@@ -43,12 +41,11 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
      * conversões de DTO e entidade de usuário.
      */
     private final UsuarioMapper usuarioMapper;
-
-    /**
-     * Injeção da dependência {@link EnderecoRepository} para realizar operações de
-     * manutenção na tabela de endereços no banco de dados.
-     */
-    private final EnderecoRepository enderecoRepository;
+//    /**
+//     * Injeção da dependência {@link EnderecoRepository} para realizar operações de
+//     * manutenção na tabela de endereços no banco de dados.
+//     */
+//    private final EnderecoRepository enderecoRepository;
 
     /**
      * Injeção da dependência {@link PaisValidation} para validar o país.
@@ -73,7 +70,8 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
             log.info("Usuário já cadastrado com o CPF informado");
             throw new UsuarioAlreadyExistsException();
         }
-        usuario.setEnderecos(configurarEnderecos(usuario, usuario.getEnderecos()));
+        if (!usuario.getEnderecos().isEmpty())
+            usuario.setEnderecos(configurarEnderecos(usuario, usuario.getEnderecos()));
         usuario.setAtivo(true);
         return usuarioMapper.toUsuarioDetalhesDto(usuarioRepository.save(usuario));
     }
@@ -92,15 +90,11 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
     @Override
     public UsuarioDetalhesDto atualizar(Long id, UsuarioAtualizacaoDto dto) {
         return usuarioRepository.findByIdAndAtivoTrue(id).map(u -> {
-            enderecoRepository.deleteByUsuarioId(id);
-            return u;
-        }).map(u -> {
             u.setNome(dto.nome());
             u.setSobrenome(dto.sobrenome());
             u.setTelefone(dto.telefone());
-            u.setEnderecos(configurarEnderecos(u, usuarioMapper.toUsuario(dto).getEnderecos()));
-            return u;
-        }).map(usuarioRepository::saveAndFlush).map(usuarioMapper::toUsuarioDetalhesDto).orElseThrow(() -> {
+            return usuarioMapper.toUsuarioDetalhesDto(usuarioRepository.save(u));
+        }).orElseThrow(() -> {
             log.info("Usuário ativo com id {} não encontrado", id);
             return new UsuarioNotFoundException(id, true);
         });
@@ -157,7 +151,7 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
             e.setPais(paisValidation.validarPais(e.getPais()));
             e.setUsuario(usuario);
             return e;
-        }).collect(Collectors.toList());
+        }).toList();
     }
 
 }
