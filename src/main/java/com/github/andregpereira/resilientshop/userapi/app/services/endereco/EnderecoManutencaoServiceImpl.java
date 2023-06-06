@@ -2,11 +2,13 @@ package com.github.andregpereira.resilientshop.userapi.app.services.endereco;
 
 import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoDto;
 import com.github.andregpereira.resilientshop.userapi.app.dto.endereco.EnderecoRegistroDto;
+import com.github.andregpereira.resilientshop.userapi.cross.exceptions.EnderecoAlreadyExistsException;
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.EnderecoNotFoundException;
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioNotFoundException;
 import com.github.andregpereira.resilientshop.userapi.cross.mappers.EnderecoMapper;
 import com.github.andregpereira.resilientshop.userapi.cross.validations.PaisValidation;
 import com.github.andregpereira.resilientshop.userapi.infra.entities.Endereco;
+import com.github.andregpereira.resilientshop.userapi.infra.entities.Usuario;
 import com.github.andregpereira.resilientshop.userapi.infra.repositories.EnderecoRepository;
 import com.github.andregpereira.resilientshop.userapi.infra.repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -51,24 +53,49 @@ public class EnderecoManutencaoServiceImpl implements EnderecoManutencaoService 
      */
     private final PaisValidation paisValidation;
 
+    private static void configurarPadrao(Endereco endereco, Usuario usuario) {
+        if (endereco.isPadrao()) {
+            usuario.getEnderecos().forEach(e -> e.setPadrao(false));
+        } else if (usuario.getEnderecos().isEmpty()) {
+            endereco.setPadrao(true);
+        }
+    }
+
     @Override
     public EnderecoDto criar(EnderecoRegistroDto dto) {
         return usuarioRepository.findById(dto.idUsuario()).map(u -> {
-            Endereco endereco = mapper.toEndereco(dto);
-            paisValidation.validarPais(endereco.getPais());
-            return endereco;
-        }).map(enderecoRepository::save).map(mapper::toEnderecoDto).orElseThrow(
-                () -> new UsuarioNotFoundException(dto.idUsuario()));
+            u.getEnderecos().stream().filter(e -> dto.apelido().equalsIgnoreCase(e.getApelido())).findAny().ifPresent(
+                    enderecoRepetido -> {
+                        log.info(
+                                "Falha ao tentar cadastrar um novo endereço. O usuário com id {} já possui um endereço com o apelido {}",
+                                dto.idUsuario(), enderecoRepetido.getApelido());
+                        throw new EnderecoAlreadyExistsException(enderecoRepetido.getApelido());
+                    });
+            return salvarEndereco(dto, u);
+        }).orElseThrow(() -> {
+            log.info("Falha ao tentar cadastrar um novo endereço. Usuário com id {} não encontrado", dto.idUsuario());
+            return new UsuarioNotFoundException(dto.idUsuario());
+        });
     }
 
     @Override
     public EnderecoDto atualizar(Long id, EnderecoRegistroDto dto) {
         return enderecoRepository.findById(id).map(e -> usuarioRepository.findById(dto.idUsuario()).map(u -> {
-            Endereco endereco = mapper.toEndereco(dto);
-            paisValidation.validarPais(endereco.getPais());
-            return endereco;
-        }).map(mapper::toEnderecoDto).orElseThrow(() -> new UsuarioNotFoundException(dto.idUsuario()))).orElseThrow(
-                () -> new EnderecoNotFoundException("endereço", id));
+            u.getEnderecos().stream().filter(
+                    filterEndereco -> dto.apelido().equalsIgnoreCase(filterEndereco.getApelido()) && !id.equals(
+                            filterEndereco.getId())).findAny().ifPresent(enderecoRepetido -> {
+                log.info("O usuário com id {} já possui um endereço com o apelido {}", dto.idUsuario(),
+                        enderecoRepetido.getApelido());
+                throw new EnderecoAlreadyExistsException(enderecoRepetido.getApelido());
+            });
+            return salvarEndereco(dto, u);
+        }).orElseThrow(() -> {
+            log.info("Usuário com id {} não encontrado", dto.idUsuario());
+            return new UsuarioNotFoundException(dto.idUsuario());
+        })).orElseThrow(() -> {
+            log.info("Não foi encontrado um endereço com id {}", id);
+            return new EnderecoNotFoundException(id);
+        });
     }
 
     @Override
@@ -79,8 +106,16 @@ public class EnderecoManutencaoServiceImpl implements EnderecoManutencaoService 
             return MessageFormat.format("Endereço com id {0} removido com sucesso", id);
         }).orElseThrow(() -> {
             log.info("Endereço não encontrado com id {}", id);
-            return new EnderecoNotFoundException("endereço", id);
+            return new EnderecoNotFoundException(id);
         });
+    }
+
+    private EnderecoDto salvarEndereco(EnderecoRegistroDto dto, Usuario u) {
+        Endereco endereco = mapper.toEndereco(dto);
+        paisValidation.validarPais(endereco.getPais());
+        configurarPadrao(endereco, u);
+        endereco.setUsuario(u);
+        return mapper.toEnderecoDto(enderecoRepository.save(endereco));
     }
 
 }
