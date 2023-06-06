@@ -83,7 +83,7 @@ public class Endereco {
                 "apelido='" + apelido + "'").add("cep='" + cep + "'").add("estado='" + estado + "'").add(
                 "cidade='" + cidade + "'").add("bairro='" + bairro + "'").add("rua='" + rua + "'").add(
                 "numero='" + numero + "'").add("complemento='" + complemento + "'").add("padrao=" + padrao).add(
-                "pais=" + pais).add("usuario=" + usuario).toString();
+                "pais=" + pais).toString();
     }
 
 }
