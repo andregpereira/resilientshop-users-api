@@ -64,16 +64,17 @@ public class Endereco {
             return true;
         if (!(o instanceof Endereco endereco))
             return false;
-        return Objects.equals(id, endereco.id) && Objects.equals(apelido, endereco.apelido) && Objects.equals(cep,
-                endereco.cep) && Objects.equals(estado, endereco.estado) && Objects.equals(cidade,
-                endereco.cidade) && Objects.equals(bairro, endereco.bairro) && Objects.equals(rua,
-                endereco.rua) && Objects.equals(numero, endereco.numero) && Objects.equals(complemento,
-                endereco.complemento) && Objects.equals(pais, endereco.pais);
+        return padrao == endereco.padrao && Objects.equals(id, endereco.id) && Objects.equals(apelido,
+                endereco.apelido) && Objects.equals(cep, endereco.cep) && Objects.equals(estado,
+                endereco.estado) && Objects.equals(cidade, endereco.cidade) && Objects.equals(bairro,
+                endereco.bairro) && Objects.equals(rua, endereco.rua) && Objects.equals(numero,
+                endereco.numero) && Objects.equals(complemento, endereco.complemento) && Objects.equals(pais,
+                endereco.pais) && Objects.equals(usuario, endereco.usuario);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, apelido, cep, estado, cidade, bairro, rua, numero, complemento, pais);
+        return Objects.hash(id, apelido, cep, estado, cidade, bairro, rua, numero, complemento, padrao, pais, usuario);
     }
 
     @Override
@@ -81,7 +82,8 @@ public class Endereco {
         return new StringJoiner(", ", Endereco.class.getSimpleName() + "[", "]").add("id=" + id).add(
                 "apelido='" + apelido + "'").add("cep='" + cep + "'").add("estado='" + estado + "'").add(
                 "cidade='" + cidade + "'").add("bairro='" + bairro + "'").add("rua='" + rua + "'").add(
-                "numero='" + numero + "'").add("complemento='" + complemento + "'").add("pais=" + pais).toString();
+                "numero='" + numero + "'").add("complemento='" + complemento + "'").add("padrao=" + padrao).add(
+                "pais=" + pais).add("usuario=" + usuario).toString();
     }
 
 }
