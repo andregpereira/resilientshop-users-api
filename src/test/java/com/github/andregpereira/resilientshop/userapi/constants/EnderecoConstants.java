@@ -49,6 +49,10 @@ public class EnderecoConstants {
     public static final Endereco ENDERECO_ATUALIZADO_PAIS_NOVO = new Endereco(null, "apelido2", "12345-670", "estado2",
             "cidade2", "bairro2", "rua2", "202", null, true, PAIS_NOVO, USUARIO_ATUALIZADO_PAIS_NOVO);
 
+    public static final Endereco ENDERECO_ATUALIZADO_PAIS_NOVO_PADRAO_FALSE = new Endereco(null, "apelido2",
+            "12345-670", "estado2", "cidade2", "bairro2", "rua2", "202", null, false, PAIS_NOVO,
+            USUARIO_ATUALIZADO_PAIS_NOVO);
+
     public static final Endereco ENDERECO_ATUALIZADO_PAIS_NOVO_MAPEADO = new Endereco(null, "apelido2", "12345-670",
             "estado2", "cidade2", "bairro2", "rua2", "202", null, true, PAIS_NOVO, null);
 
@@ -104,6 +108,12 @@ public class EnderecoConstants {
     public static final List<Endereco> LISTA_ENDERECOS_ATUALIZADO_PAIS_NOVO = new ArrayList<>() {
         {
             add(ENDERECO_ATUALIZADO_PAIS_NOVO);
+        }
+    };
+
+    public static final List<Endereco> LISTA_ENDERECOS_ATUALIZADO_PAIS_NOVO_PADRAO_FALSE = new ArrayList<>() {
+        {
+            add(ENDERECO_ATUALIZADO_PAIS_NOVO_PADRAO_FALSE);
         }
     };
 

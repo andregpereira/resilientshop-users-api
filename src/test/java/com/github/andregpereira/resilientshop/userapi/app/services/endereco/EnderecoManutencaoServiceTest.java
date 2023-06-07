@@ -59,7 +59,7 @@ class EnderecoManutencaoServiceTest {
     }
 
     @Test
-    void criarEnderecoComDadosValidosEPaisNovoRetornaEnderecoDto() {
+    void criarEnderecoComDadosValidosEPaisNovoComUsuarioSemEnderecoRetornaEnderecoDto() {
         given(usuarioRepository.findById(anyLong())).willReturn(Optional.of(USUARIO_SEM_ENDERECO));
         given(mapper.toEndereco(any(EnderecoRegistroDto.class))).willReturn(ENDERECO_PAIS_NOVO_MAPEADO);
         given(paisValidation.validarPais(any(Pais.class))).willReturn(PAIS_NOVO);
@@ -67,6 +67,21 @@ class EnderecoManutencaoServiceTest {
         given(mapper.toEnderecoDto(any(Endereco.class))).willReturn(ENDERECO_DTO_PAIS_NOVO);
         assertThat(manutencaoService.criar(ENDERECO_REGISTRO_DTO_PAIS_NOVO)).isEqualTo(ENDERECO_DTO_PAIS_NOVO);
         then(enderecoRepository).should().save(ENDERECO_PAIS_NOVO_MAPEADO);
+    }
+
+    @Test
+    void criarEnderecoComDadosValidosPaisNovoEPadraoTrueEUsuarioComEnderecoRetornaEnderecoDto() {
+        given(usuarioRepository.findById(anyLong())).willReturn(Optional.of(USUARIO));
+        given(mapper.toEndereco(any(EnderecoRegistroDto.class))).willReturn(ENDERECO_ATUALIZADO_PAIS_NOVO_MAPEADO);
+        given(paisValidation.validarPais(any(Pais.class))).willReturn(PAIS_NOVO);
+        given(enderecoRepository.saveAll(USUARIO.getEnderecos())).willReturn(
+                LISTA_ENDERECOS_ATUALIZADO_PAIS_NOVO_PADRAO_FALSE);
+        given(enderecoRepository.save(any(Endereco.class))).willReturn(ENDERECO_ATUALIZADO_PAIS_NOVO);
+        given(mapper.toEnderecoDto(any(Endereco.class))).willReturn(ENDERECO_DTO_ATUALIZADO_PAIS_NOVO);
+        assertThat(manutencaoService.criar(ENDERECO_REGISTRO_DTO_ATUALIZADO_PAIS_NOVO)).isEqualTo(
+                ENDERECO_DTO_ATUALIZADO_PAIS_NOVO);
+        assertThat(USUARIO.getEnderecos().get(0).isPadrao()).isFalse();
+        then(enderecoRepository).should().save(ENDERECO_ATUALIZADO_PAIS_NOVO_MAPEADO);
     }
 
     @Test

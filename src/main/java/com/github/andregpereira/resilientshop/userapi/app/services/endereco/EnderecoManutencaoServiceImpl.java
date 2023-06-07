@@ -53,14 +53,6 @@ public class EnderecoManutencaoServiceImpl implements EnderecoManutencaoService 
      */
     private final PaisValidation paisValidation;
 
-    private static void configurarPadrao(Endereco endereco, Usuario usuario) {
-        if (endereco.isPadrao()) {
-            usuario.getEnderecos().forEach(e -> e.setPadrao(false));
-        } else if (usuario.getEnderecos().isEmpty()) {
-            endereco.setPadrao(true);
-        }
-    }
-
     @Override
     public EnderecoDto criar(EnderecoRegistroDto dto) {
         return usuarioRepository.findById(dto.idUsuario()).map(u -> {
@@ -116,6 +108,15 @@ public class EnderecoManutencaoServiceImpl implements EnderecoManutencaoService 
         configurarPadrao(endereco, u);
         endereco.setUsuario(u);
         return mapper.toEnderecoDto(enderecoRepository.save(endereco));
+    }
+
+    private void configurarPadrao(Endereco endereco, Usuario usuario) {
+        if (endereco.isPadrao()) {
+            usuario.getEnderecos().forEach(e -> e.setPadrao(false));
+            enderecoRepository.saveAll(usuario.getEnderecos());
+        } else if (usuario.getEnderecos().isEmpty()) {
+            endereco.setPadrao(true);
+        }
     }
 
 }
