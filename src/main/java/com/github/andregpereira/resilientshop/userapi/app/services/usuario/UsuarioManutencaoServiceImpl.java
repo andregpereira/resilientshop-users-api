@@ -144,6 +144,7 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
     private List<Endereco> configurarEnderecos(Usuario usuario, List<Endereco> enderecos) {
         return enderecos.stream().map(e -> {
             e.setPais(paisValidation.validarPais(e.getPais()));
+            e.setPadrao(true);
             e.setUsuario(usuario);
             return e;
         }).toList();
