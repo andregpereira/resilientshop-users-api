@@ -70,22 +70,25 @@ public class Usuario {
             return false;
         return ativo == usuario.ativo && Objects.equals(id, usuario.id) && Objects.equals(nome,
                 usuario.nome) && Objects.equals(sobrenome, usuario.sobrenome) && Objects.equals(cpf,
-                usuario.cpf) && Objects.equals(telefone, usuario.telefone) && Objects.equals(dataCriacao,
+                usuario.cpf) && Objects.equals(email, usuario.email) && Objects.equals(telefone,
+                usuario.telefone) && Objects.equals(senha, usuario.senha) && Objects.equals(dataCriacao,
                 usuario.dataCriacao) && Objects.equals(dataModificacao, usuario.dataModificacao) && Objects.equals(
                 enderecos, usuario.enderecos);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, sobrenome, cpf, telefone, dataCriacao, dataModificacao, ativo, enderecos);
+        return Objects.hash(id, nome, sobrenome, cpf, email, telefone, senha, dataCriacao, dataModificacao, ativo,
+                enderecos);
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", Usuario.class.getSimpleName() + "[", "]").add("id=" + id).add(
                 "nome='" + nome + "'").add("sobrenome='" + sobrenome + "'").add("cpf='" + cpf + "'").add(
-                "telefone='" + telefone + "'").add("dataCriacao=" + dataCriacao).add(
-                "dataModificacao=" + dataModificacao).add("ativo=" + ativo).add("enderecos=" + enderecos).toString();
+                "email='" + email + "'").add("telefone='" + telefone + "'").add("senha='" + senha + "'").add(
+                "dataCriacao=" + dataCriacao).add("dataModificacao=" + dataModificacao).add("ativo=" + ativo).add(
+                "enderecos=" + enderecos).toString();
     }
 
 }
