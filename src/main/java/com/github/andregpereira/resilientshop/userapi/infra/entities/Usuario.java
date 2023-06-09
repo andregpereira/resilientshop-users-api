@@ -20,7 +20,8 @@ import java.util.StringJoiner;
 @NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "tb_usuarios", uniqueConstraints = {@UniqueConstraint(name = "uc_cpf", columnNames = "cpf")})
+@Table(name = "tb_usuarios", uniqueConstraints = {@UniqueConstraint(name = "uc_cpf", columnNames = "cpf"),
+        @UniqueConstraint(name = "uc_email", columnNames = "email")})
 @SequenceGenerator(name = "usuario", sequenceName = "sq_usuarios", allocationSize = 1)
 public class Usuario {
 
