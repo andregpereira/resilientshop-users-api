@@ -38,8 +38,14 @@ public class Usuario {
     @Column(length = 14, nullable = false)
     private String cpf;
 
+    @Column(nullable = false)
+    private String email;
+
     @Column(length = 20)
     private String telefone;
+
+    @Column(nullable = false)
+    private String senha;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
