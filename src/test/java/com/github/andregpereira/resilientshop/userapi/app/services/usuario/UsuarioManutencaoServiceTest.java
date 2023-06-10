@@ -43,6 +43,7 @@ class UsuarioManutencaoServiceTest {
     public void afterEach() {
         USUARIO.setNome("nome");
         USUARIO.setSobrenome("sobrenome");
+        USUARIO.setEmail("teste@teste.com");
         USUARIO.setAtivo(true);
         USUARIO_INATIVO.setAtivo(false);
         USUARIO_MAPEADO.setAtivo(false);

@@ -31,14 +31,13 @@ class UsuarioMapperTest {
 
     @BeforeEach
     void beforeEach() {
-        USUARIO.setNome("nome");
-        USUARIO.setSobrenome("sobrenome");
+//        USUARIO.setNome("nome");
+//        USUARIO.setSobrenome("sobrenome");
         USUARIO_MAPEADO.setEnderecos(LISTA_ENDERECOS_MAPEADO);
     }
 
     @Test
     void usuarioRegistroDtoRetornaUsuario() {
-        List<Object> objects = Collections.singletonList(null);
         given(enderecoMapper.toEndereco(USUARIO_REGISTRO_DTO.endereco())).willReturn(ENDERECO_MAPEADO);
         assertThat(usuarioMapper.toUsuario(USUARIO_REGISTRO_DTO)).isEqualTo(USUARIO_MAPEADO);
     }
