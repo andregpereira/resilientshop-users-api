@@ -63,7 +63,11 @@ public class EnderecoManutencaoServiceImpl implements EnderecoManutencaoService 
                                 dto.idUsuario(), enderecoRepetido.getApelido());
                         throw new EnderecoAlreadyExistsException(enderecoRepetido.getApelido());
                     });
-            return salvarEndereco(dto, u);
+            Endereco endereco = mapper.toEndereco(dto);
+            endereco.setPais(paisValidation.validarPais(endereco.getPais()));
+            configurarPadrao(endereco, u);
+            endereco.setUsuario(u);
+            return mapper.toEnderecoDto(enderecoRepository.save(endereco));
         }).orElseThrow(() -> {
             log.info("Falha ao tentar cadastrar um novo endereço. Usuário com id {} não encontrado", dto.idUsuario());
             return new UsuarioNotFoundException(dto.idUsuario());
@@ -80,7 +84,12 @@ public class EnderecoManutencaoServiceImpl implements EnderecoManutencaoService 
                         enderecoRepetido.getApelido());
                 throw new EnderecoAlreadyExistsException(enderecoRepetido.getApelido());
             });
-            return salvarEndereco(dto, u);
+            Endereco endereco = mapper.toEndereco(dto);
+            endereco.setId(id);
+            endereco.setPais(paisValidation.validarPais(endereco.getPais()));
+            configurarPadrao(endereco, u);
+            endereco.setUsuario(u);
+            return mapper.toEnderecoDto(enderecoRepository.save(endereco));
         }).orElseThrow(() -> {
             log.info("Usuário com id {} não encontrado", dto.idUsuario());
             return new UsuarioNotFoundException(dto.idUsuario());
@@ -100,14 +109,6 @@ public class EnderecoManutencaoServiceImpl implements EnderecoManutencaoService 
             log.info("Endereço não encontrado com id {}", id);
             return new EnderecoNotFoundException(id);
         });
-    }
-
-    private EnderecoDto salvarEndereco(EnderecoRegistroDto dto, Usuario u) {
-        Endereco endereco = mapper.toEndereco(dto);
-        endereco.setPais(paisValidation.validarPais(endereco.getPais()));
-        configurarPadrao(endereco, u);
-        endereco.setUsuario(u);
-        return mapper.toEnderecoDto(enderecoRepository.save(endereco));
     }
 
     private void configurarPadrao(Endereco endereco, Usuario usuario) {
