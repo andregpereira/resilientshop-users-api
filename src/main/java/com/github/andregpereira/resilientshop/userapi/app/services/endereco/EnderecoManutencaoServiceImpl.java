@@ -104,7 +104,7 @@ public class EnderecoManutencaoServiceImpl implements EnderecoManutencaoService 
 
     private EnderecoDto salvarEndereco(EnderecoRegistroDto dto, Usuario u) {
         Endereco endereco = mapper.toEndereco(dto);
-        paisValidation.validarPais(endereco.getPais());
+        endereco.setPais(paisValidation.validarPais(endereco.getPais()));
         configurarPadrao(endereco, u);
         endereco.setUsuario(u);
         return mapper.toEnderecoDto(enderecoRepository.save(endereco));
