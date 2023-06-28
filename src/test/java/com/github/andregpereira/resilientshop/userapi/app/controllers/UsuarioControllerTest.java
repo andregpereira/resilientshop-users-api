@@ -28,7 +28,6 @@ import static com.github.andregpereira.resilientshop.userapi.constants.UsuarioDt
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -55,9 +54,9 @@ class UsuarioControllerTest {
                 jsonPath("$.nome").value(USUARIO_DETALHES_DTO.nome()),
                 jsonPath("$.sobrenome").value(USUARIO_DETALHES_DTO.sobrenome()),
                 jsonPath("$.telefone").value(USUARIO_DETALHES_DTO.telefone()), jsonPath("$.dataCriacao").value(
-                        USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))),
+                        USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/uuuu"))),
                 jsonPath("$.dataModificacao").value(
-                        USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+                        USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/uuuu"))));
     }
 
     @Test
@@ -85,9 +84,9 @@ class UsuarioControllerTest {
                 jsonPath("$.sobrenome").value(USUARIO_DETALHES_DTO_ATUALIZADO.sobrenome()),
                 jsonPath("$.telefone").value(USUARIO_DETALHES_DTO_ATUALIZADO.telefone()),
                 jsonPath("$.dataCriacao").value(
-                        USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))),
+                        USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/uuuu"))),
                 jsonPath("$.dataModificacao").value(
-                        USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+                        USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/uuuu"))));
     }
 
     @Test
@@ -155,9 +154,9 @@ class UsuarioControllerTest {
                 jsonPath("$.nome").value(USUARIO_DETALHES_DTO.nome()),
                 jsonPath("$.sobrenome").value(USUARIO_DETALHES_DTO.sobrenome()),
                 jsonPath("$.telefone").value(USUARIO_DETALHES_DTO.telefone()), jsonPath("$.dataCriacao").value(
-                        USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))),
+                        USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/uuuu"))),
                 jsonPath("$.dataModificacao").value(
-                        USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+                        USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/uuuu"))));
     }
 
     @Test
@@ -175,13 +174,13 @@ class UsuarioControllerTest {
     @Test
     void consultarUsuarioPorCpfExistenteRetornaUsuarioDetalhesDto() throws Exception {
         given(consultaService.consultarPorCpf(USUARIO_DETALHES_DTO.cpf())).willReturn(USUARIO_DETALHES_DTO);
-        mockMvc.perform(get("/usuarios/cpf").param("cpf", USUARIO_DETALHES_DTO.cpf())).andDo(print()).andExpect(
+        mockMvc.perform(get("/usuarios/cpf").param("cpf", USUARIO_DETALHES_DTO.cpf())).andExpect(
                 status().isOk()).andExpectAll(jsonPath("$.nome").value(USUARIO_DETALHES_DTO.nome()),
                 jsonPath("$.sobrenome").value(USUARIO_DETALHES_DTO.sobrenome()),
                 jsonPath("$.telefone").value(USUARIO_DETALHES_DTO.telefone()), jsonPath("$.dataCriacao").value(
-                        USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))),
+                        USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/uuuu"))),
                 jsonPath("$.dataModificacao").value(
-                        USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+                        USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/uuuu"))));
     }
 
     @Test
