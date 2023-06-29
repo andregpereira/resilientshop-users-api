@@ -15,7 +15,7 @@ import org.mapstruct.ReportingPolicy;
 public interface UsuarioMapper {
 
     @Mapping(target = "enderecos", expression = """
-            java(usuarioRegistroDto.endereco() == null ? new java.util.ArrayList<>()
+            java(usuarioRegistroDto.endereco() == null ? java.util.Collections.emptyList()
             : java.util.Collections.singletonList(enderecoMapper.toEndereco(usuarioRegistroDto.endereco())))
             """)
     Usuario toUsuario(UsuarioRegistroDto usuarioRegistroDto);
