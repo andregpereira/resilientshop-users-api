@@ -36,24 +36,24 @@ public class UsuarioDtoConstants {
             LISTA_ENDERECOS_DTO_ATUALIZADO_PAIS_NOVO);
 
     public static final UsuarioRegistroDto USUARIO_REGISTRO_DTO = new UsuarioRegistroDto("nome", "sobrenome",
-            "22426853093", "teste@teste.com", null, "senha123", ENDERECO_REGISTRO_USUARIO_NOVO_DTO);
+            "22426853093", "teste@teste.com", null, ENDERECO_REGISTRO_USUARIO_NOVO_DTO);
 
     public static final UsuarioRegistroDto USUARIO_REGISTRO_DTO_SEM_ENDERECO = new UsuarioRegistroDto("nome",
-            "sobrenome", "22426853093", "teste@teste.com", null, "senha123", null);
+            "sobrenome", "22426853093", "teste@teste.com", null, null);
 
     public static final UsuarioRegistroDto USUARIO_REGISTRO_DTO_PAIS_NOVO = new UsuarioRegistroDto("nome", "sobrenome",
-            "22426853093", "teste@teste.com", null, "senha123", ENDERECO_REGISTRO_USUARIO_NOVO_DTO_PAIS_NOVO);
+            "22426853093", "teste@teste.com", null, ENDERECO_REGISTRO_USUARIO_NOVO_DTO_PAIS_NOVO);
 
     public static final UsuarioRegistroDto USUARIO_REGISTRO_DTO_INVALIDO = new UsuarioRegistroDto("", "", "",
-            "teste@teste.com", null, "senha123", ENDERECO_REGISTRO_USUARIO_NOVO_DTO_INVALIDO);
+            "teste@teste.com", null, ENDERECO_REGISTRO_USUARIO_NOVO_DTO_INVALIDO);
 
     public static final UsuarioAtualizacaoDto USUARIO_ATUALIZACAO_DTO = new UsuarioAtualizacaoDto("nome2", "sobrenome2",
-            "teste2@teste2.com", null, "senhaAtualizada");
+            "teste2@teste2.com", null);
 
     public static final UsuarioAtualizacaoDto USUARIO_ATUALIZACAO_DTO_PAIS_NOVO = new UsuarioAtualizacaoDto("nome2",
-            "sobrenome2", "teste2@teste2.com", null, "senhaAtualizada");
+            "sobrenome2", "teste2@teste2.com", null);
 
     public static final UsuarioAtualizacaoDto USUARIO_ATUALIZACAO_DTO_INVALIDO = new UsuarioAtualizacaoDto("", "", "",
-            "", "");
+            "");
 
 }

@@ -63,7 +63,7 @@ class UsuarioManutencaoServiceTest {
     void criarUsuarioComDadosValidosESemEnderecoRetornaUsuarioDetalhesDto() {
         given(mapper.toUsuario(any(UsuarioRegistroDto.class))).willReturn(USUARIO_SEM_ENDERECO_MAPEADO);
         given(usuarioRepository.existsByCpf(anyString())).willReturn(false);
-        given(usuarioRepository.save(any(Usuario.class))).willReturn(USUARIO_PAIS_NOVO);
+        given(usuarioRepository.save(any(Usuario.class))).willReturn(USUARIO_SEM_ENDERECO);
         given(mapper.toUsuarioDetalhesDto(any(Usuario.class))).willReturn(USUARIO_DETALHES_DTO_SEM_ENDERECO);
         assertThat(manutencaoService.registrar(USUARIO_REGISTRO_DTO_SEM_ENDERECO)).isEqualTo(
                 USUARIO_DETALHES_DTO_SEM_ENDERECO);
@@ -106,17 +106,6 @@ class UsuarioManutencaoServiceTest {
                 UsuarioAlreadyExistsException.class).hasMessage("Opa! Já existe um usuário cadastrado com esse CPF");
         then(usuarioRepository).should(never()).save(USUARIO);
     }
-//    @Test
-//    void atualizarUsuarioComDadosValidosEPaisNovoRetornaUsuarioDetalhesDto() {
-//        given(usuarioRepository.findByIdAndAtivoTrue(anyLong())).willReturn(Optional.of(USUARIO));
-//        given(mapper.toUsuario(any(UsuarioAtualizacaoDto.class))).willReturn(USUARIO_ATUALIZADO_PAIS_NOVO);
-//        given(paisValidation.validarPais(any(Pais.class))).willReturn(PAIS_NOVO);
-//        given(usuarioRepository.save(any(Usuario.class))).willReturn(USUARIO_ATUALIZADO_PAIS_NOVO);
-//        given(mapper.toUsuarioDetalhesDto(any(Usuario.class))).willReturn(USUARIO_DETALHES_DTO_ATUALIZADO_PAIS_NOVO);
-//        assertThat(manutencaoService.atualizar(5L, USUARIO_ATUALIZACAO_DTO_PAIS_NOVO)).isEqualTo(
-//                USUARIO_DETALHES_DTO_ATUALIZADO_PAIS_NOVO);
-//        then(usuarioRepository).should().save(USUARIO_ATUALIZADO_PAIS_NOVO);
-//    }
 
     @Test
     void atualizarUsuarioComDadosValidosRetornaUsuarioDetalhesDto() {

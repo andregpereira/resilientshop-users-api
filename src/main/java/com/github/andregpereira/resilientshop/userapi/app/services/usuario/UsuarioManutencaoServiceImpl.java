@@ -89,7 +89,6 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
             u.setSobrenome(dto.sobrenome());
             u.setEmail(dto.email());
             u.setTelefone(dto.telefone());
-            u.setSenha(dto.senha());
             return usuarioMapper.toUsuarioDetalhesDto(usuarioRepository.save(u));
         }).orElseThrow(() -> {
             log.info("Usuário ativo com id {} não encontrado", id);
