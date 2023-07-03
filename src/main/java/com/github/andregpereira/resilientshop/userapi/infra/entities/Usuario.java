@@ -33,17 +33,19 @@ public class Usuario {
     @Column(nullable = false)
     private String nome;
 
-    @Column(nullable = false)
-    private String sobrenome;
+    private String apelido;
 
     @Column(length = 14, nullable = false)
     private String cpf;
 
     @Column(nullable = false)
+    private LocalDate dataNascimento;
+
+    @Column(nullable = false)
     private String email;
 
     @Column(length = 20)
-    private String telefone;
+    private String celular;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -66,23 +68,26 @@ public class Usuario {
         if (!(o instanceof Usuario usuario))
             return false;
         return ativo == usuario.ativo && Objects.equals(id, usuario.id) && Objects.equals(nome,
-                usuario.nome) && Objects.equals(sobrenome, usuario.sobrenome) && Objects.equals(cpf,
-                usuario.cpf) && Objects.equals(email, usuario.email) && Objects.equals(telefone,
-                usuario.telefone) && Objects.equals(dataCriacao, usuario.dataCriacao) && Objects.equals(dataModificacao,
-                usuario.dataModificacao) && Objects.equals(enderecos, usuario.enderecos);
+                usuario.nome) && Objects.equals(apelido, usuario.apelido) && Objects.equals(cpf,
+                usuario.cpf) && Objects.equals(dataNascimento, usuario.dataNascimento) && Objects.equals(email,
+                usuario.email) && Objects.equals(celular, usuario.celular) && Objects.equals(dataCriacao,
+                usuario.dataCriacao) && Objects.equals(dataModificacao, usuario.dataModificacao) && Objects.equals(
+                enderecos, usuario.enderecos);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, sobrenome, cpf, email, telefone, dataCriacao, dataModificacao, ativo, enderecos);
+        return Objects.hash(id, nome, apelido, cpf, dataNascimento, email, celular, dataCriacao, dataModificacao, ativo,
+                enderecos);
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", Usuario.class.getSimpleName() + "[", "]").add("id=" + id).add(
-                "nome='" + nome + "'").add("sobrenome='" + sobrenome + "'").add("cpf='" + cpf + "'").add(
-                "email='" + email + "'").add("telefone='" + telefone + "'").add("dataCriacao=" + dataCriacao).add(
-                "dataModificacao=" + dataModificacao).add("ativo=" + ativo).add("enderecos=" + enderecos).toString();
+                "nome='" + nome + "'").add("apelido='" + apelido + "'").add("cpf='" + cpf + "'").add(
+                "dataNascimento=" + dataNascimento).add("email='" + email + "'").add("celular='" + celular + "'").add(
+                "dataCriacao=" + dataCriacao).add("dataModificacao=" + dataModificacao).add("ativo=" + ativo).add(
+                "enderecos=" + enderecos).toString();
     }
 
 }

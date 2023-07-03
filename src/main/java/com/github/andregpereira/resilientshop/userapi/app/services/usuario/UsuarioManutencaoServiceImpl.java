@@ -1,5 +1,6 @@
 package com.github.andregpereira.resilientshop.userapi.app.services.usuario;
 
+import com.github.andregpereira.resilientshop.commons.dto.UsuarioCredentialRegistroDto;
 import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioAtualizacaoDto;
 import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioDetalhesDto;
 import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioRegistroDto;
@@ -9,6 +10,7 @@ import com.github.andregpereira.resilientshop.userapi.cross.mappers.UsuarioMappe
 import com.github.andregpereira.resilientshop.userapi.cross.validations.PaisValidation;
 import com.github.andregpereira.resilientshop.userapi.infra.entities.Endereco;
 import com.github.andregpereira.resilientshop.userapi.infra.entities.Usuario;
+import com.github.andregpereira.resilientshop.userapi.infra.feignclient.AuthFeignClient;
 import com.github.andregpereira.resilientshop.userapi.infra.repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +45,12 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
     private final UsuarioMapper usuarioMapper;
 
     /**
+     * Injeção da dependência {@link AuthFeignClient} para realizar
+     * requisições na API de autenticação.
+     */
+    private final AuthFeignClient feignClient;
+
+    /**
      * Injeção da dependência {@link PaisValidation} para validar o país.
      */
     private final PaisValidation paisValidation;
@@ -59,15 +67,19 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
      */
     @Override
     public UsuarioDetalhesDto registrar(UsuarioRegistroDto dto) {
-        Usuario usuario = usuarioMapper.toUsuario(dto);
-        usuario.setCpf(usuario.getCpf().replace(".", "").replace("-", ""));
-        if (usuarioRepository.existsByCpf(usuario.getCpf())) {
+        if (usuarioRepository.existsByCpf(dto.cpf())) {
             log.info("Usuário já cadastrado com o CPF informado");
-            throw new UsuarioAlreadyExistsException();
+            throw new UsuarioAlreadyExistsException("CPF");
+        } else if (usuarioRepository.existsByEmail(dto.email())) {
+            log.info("Usuário já cadastrado com o e-mail informado");
+            throw new UsuarioAlreadyExistsException("e-mail");
         }
+        Usuario usuario = usuarioMapper.toUsuario(dto);
+        usuario.setCpf(usuario.getCpf().replaceAll("[.-]", ""));
         if (!usuario.getEnderecos().isEmpty())
             usuario.setEnderecos(configurarEnderecos(usuario, usuario.getEnderecos()));
         usuario.setAtivo(true);
+        feignClient.cadastrarUsuario(new UsuarioCredentialRegistroDto(dto.email(), dto.senha()));
         return usuarioMapper.toUsuarioDetalhesDto(usuarioRepository.save(usuario));
     }
 
@@ -86,9 +98,9 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
     public UsuarioDetalhesDto atualizar(Long id, UsuarioAtualizacaoDto dto) {
         return usuarioRepository.findByIdAndAtivoTrue(id).map(u -> {
             u.setNome(dto.nome());
-            u.setSobrenome(dto.sobrenome());
+            u.setApelido(dto.apelido());
             u.setEmail(dto.email());
-            u.setTelefone(dto.telefone());
+            u.setCelular(dto.celular());
             return usuarioMapper.toUsuarioDetalhesDto(usuarioRepository.save(u));
         }).orElseThrow(() -> {
             log.info("Usuário ativo com id {} não encontrado", id);

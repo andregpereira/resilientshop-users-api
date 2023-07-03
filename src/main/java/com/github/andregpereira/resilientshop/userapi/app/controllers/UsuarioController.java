@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Optional;
 
 /**
  * Controller de usuários da API de Usuários.
@@ -120,7 +119,7 @@ public class UsuarioController {
      */
     @GetMapping
     public ResponseEntity<Page<UsuarioDto>> listar(
-            @Parameter(hidden = true) @PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 10)
+            @Parameter(hidden = true) @PageableDefault(sort = "id", direction = Direction.ASC)
             Pageable pageable) {
         log.info("Listando usuários...");
         return ResponseEntity.ok(usuarioConsultaService.listar(pageable));
@@ -153,27 +152,24 @@ public class UsuarioController {
     @Pattern(message = "CPF inválido. Formatos aceitos: xxx.xxx.xxx-xx, xxxxxxxxx-xx ou xxxxxxxxxxx",
             regexp = "^(\\d{3}[.]\\d{3}[.]\\d{3}-\\d{2})|(\\d{9}-\\d{2})|(\\d{11})$") String cpf) {
         log.info("Consultando usuário por CPF...");
-        return ResponseEntity.ok(usuarioConsultaService.consultarPorCpf(cpf.replace(".", "").replace("-", "")));
+        return ResponseEntity.ok(usuarioConsultaService.consultarPorCpf(cpf.replaceAll("[.-]", "")));
     }
 
     /**
-     * Pesquisa usuários por {@code nome} e {@code sobrenome}.
+     * Pesquisa usuários por {@code nome}.
      * Retorna uma {@linkplain Page sublista} de {@linkplain UsuarioDto usuários}.
      *
-     * @param nome      o nome dos usuários a serem consultados.
-     * @param sobrenome (opcional) o sobrenome dos usuários a serem consultados.
-     * @param pageable  o pageable padrão.
+     * @param nome     o nome dos usuários a serem consultados.
+     * @param pageable o pageable padrão.
      *
-     * @return uma sublista de uma lista com todos os usuários encontrados pelo {@code nome} e {@code sobrenome}.
+     * @return uma sublista de uma lista com todos os usuários encontrados pelo {@code nome}.
      */
     @GetMapping("/nome")
     public ResponseEntity<Page<UsuarioDto>> consultarPorNome(
             @RequestParam @Size(message = "O nome deve ter pelo menos 2 caracteres", min = 2) String nome,
-            @RequestParam(required = false) String sobrenome,
-            @PageableDefault(sort = "nome", direction = Direction.ASC, page = 0, size = 10) Pageable pageable) {
+            @PageableDefault(sort = "nome", direction = Direction.ASC) Pageable pageable) {
         log.info("Consultando usuário por nome...");
-        return ResponseEntity.ok(usuarioConsultaService.consultarPorNome(nome.trim(), Optional.ofNullable(
-                sobrenome).map(String::trim).orElse(""), pageable));
+        return ResponseEntity.ok(usuarioConsultaService.consultarPorNome(nome.trim(), pageable));
     }
 
 }

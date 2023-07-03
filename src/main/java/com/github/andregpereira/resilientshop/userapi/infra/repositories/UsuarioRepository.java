@@ -13,7 +13,13 @@ import java.util.Optional;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
-    boolean existsByCpf(String cpf);
+    @Query(value = """
+            SELECT COUNT(cpf) > 0 FROM tb_usuarios u
+            WHERE u.cpf like REPLACE(REPLACE(:cpf, '.', ''), '-', '')
+            """, nativeQuery = true)
+    boolean existsByCpf(@Param("cpf") String cpf);
+
+    boolean existsByEmail(String email);
 
     Optional<Usuario> findByIdAndAtivoTrue(Long id);
 
@@ -25,9 +31,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     @Query(value = """
             SELECT * FROM tb_usuarios u
-            WHERE u.nome ilike %:nome% AND u.sobrenome ilike %:sobrenome% AND u.ativo=true
+            WHERE u.nome ilike %:nome% AND u.ativo=true
             """, nativeQuery = true)
-    Page<Usuario> findAllByNomeAndSobrenomeAndAtivoTrue(@Param("nome") String nome,
-            @Param("sobrenome") String sobrenome, Pageable pageable);
+    Page<Usuario> findAllByNomeAndAtivoTrue(@Param("nome") String nome, Pageable pageable);
 
 }

@@ -103,26 +103,26 @@ public class UsuarioConsultaServiceImpl implements UsuarioConsultaService {
     }
 
     /**
-     * Pesquisa {@linkplain Usuario usuários} por {@code nome} e {@code sobrenome}.
+     * Pesquisa {@linkplain Usuario usuários} por {@code nome} e {@code apelido}.
      * Retorna uma {@linkplain Page sublista} de {@linkplain UsuarioDto usuários}.
      *
      * @param nome      o nome do usuário.
-     * @param sobrenome (opcional) o sobrenome do usuário.
+     * @param sobrenome (opcional) o apelido do usuário.
      * @param pageable  o pageable padrão.
      *
-     * @return uma sublista de uma lista de usuários encontrados pelo {@code nome} e {@code sobrenome}.
+     * @return uma sublista de uma lista de usuários encontrados pelo {@code nome} e {@code apelido}.
      *
      * @throws UsuarioNotFoundException caso nenhum usuário seja encontrado.
      */
     @Override
-    public Page<UsuarioDto> consultarPorNome(String nome, String sobrenome, Pageable pageable) {
-        return Optional.of(usuarioRepository.findAllByNomeAndSobrenomeAndAtivoTrue(nome, sobrenome, pageable)).filter(
-                not(Page::isEmpty)).map(p -> {
-            log.info("Retornando usuários encontrados com o nome {}", String.join(" ", nome, sobrenome).trim());
-            return p.map(usuarioMapper::toUsuarioDto);
-        }).orElseThrow(() -> {
-            log.info("Nenhum usuário foi encontrado com o nome {}", String.join(" ", nome, sobrenome));
-            return new UsuarioNotFoundException("nome", String.join(" ", nome, sobrenome).trim());
+    public Page<UsuarioDto> consultarPorNome(String nome, Pageable pageable) {
+        return Optional.of(usuarioRepository.findAllByNomeAndAtivoTrue(nome, pageable)).filter(not(Page::isEmpty)).map(
+                p -> {
+                    log.info("Retornando usuários encontrados com o nome {}", nome);
+                    return p.map(usuarioMapper::toUsuarioDto);
+                }).orElseThrow(() -> {
+            log.info("Nenhum usuário foi encontrado com o nome {}", nome);
+            return new UsuarioNotFoundException("nome", nome);
         });
     }
 

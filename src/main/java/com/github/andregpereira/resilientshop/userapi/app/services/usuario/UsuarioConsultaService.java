@@ -13,6 +13,6 @@ public interface UsuarioConsultaService {
 
     UsuarioDetalhesDto consultarPorCpf(String cpf);
 
-    Page<UsuarioDto> consultarPorNome(String nome, String sobrenome, Pageable pageable);
+    Page<UsuarioDto> consultarPorNome(String nome, Pageable pageable);
 
 }
