@@ -26,8 +26,6 @@ eureka:
     hostname: localhost
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
   client:
-    registerWithEureka: true
-    fetchRegistry: false
-    instance-info-replication-interval-seconds: 5
+    registry-fetch-interval-seconds: 5
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:8761/eureka
