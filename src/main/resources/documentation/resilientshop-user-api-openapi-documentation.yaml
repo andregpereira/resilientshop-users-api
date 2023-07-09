@@ -273,7 +273,7 @@ components:
       required:
         - enderecos
         - nome
-        - sobrenome
+        - apelido
       type: object
       properties:
         nome:
@@ -362,7 +362,7 @@ components:
         - cpf
         - enderecos
         - nome
-        - sobrenome
+        - apelido
       type: object
       properties:
         nome:
@@ -624,7 +624,7 @@ components:
         type: string
 
     Sobrenome:
-      name: sobrenome
+      name: apelido
       in: query
       required: false
       schema:
