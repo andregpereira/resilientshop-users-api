@@ -57,9 +57,9 @@ class UsuarioRepositoryTest {
         Usuario sut = em.find(Usuario.class, usuario.getId());
         assertThat(sut).isNotNull();
         assertThat(sut.getNome()).isEqualTo(USUARIO.getNome());
-        assertThat(sut.getSobrenome()).isEqualTo(USUARIO.getSobrenome());
+        assertThat(sut.getApelido()).isEqualTo(USUARIO.getApelido());
         assertThat(sut.getCpf()).isEqualTo(USUARIO.getCpf());
-        assertThat(sut.getTelefone()).isEqualTo(USUARIO.getTelefone());
+        assertThat(sut.getCelular()).isEqualTo(USUARIO.getCelular());
         assertThat(sut.getDataCriacao()).isEqualTo(USUARIO.getDataCriacao());
         assertThat(sut.getDataModificacao()).isEqualTo(USUARIO.getDataModificacao());
         assertThat(sut.isAtivo()).isEqualTo(USUARIO.isAtivo());
@@ -141,8 +141,7 @@ class UsuarioRepositoryTest {
         em.persist(PAIS);
         Usuario usuario = em.persistFlushFind(USUARIO);
         PageRequest pageable = PageRequest.of(0, 10, Direction.ASC, "nome");
-        Page<Usuario> pageUsuarios = repository.findAllByNomeAndSobrenomeAndAtivoTrue(usuario.getNome(),
-                usuario.getSobrenome(), pageable);
+        Page<Usuario> pageUsuarios = repository.findAllByNomeAndAtivoTrue(usuario.getNome(), pageable);
         assertThat(pageUsuarios).isNotEmpty().hasSize(1);
         assertThat(pageUsuarios.getContent().get(0)).isEqualTo(usuario);
     }
@@ -152,7 +151,7 @@ class UsuarioRepositoryTest {
         em.persist(PAIS);
         Usuario sut = em.persistFlushFind(USUARIO);
         PageRequest pageable = PageRequest.of(0, 10, Direction.ASC, "nome");
-        Page<Usuario> pageUsuarios = repository.findAllByNomeAndSobrenomeAndAtivoTrue("", "", pageable);
+        Page<Usuario> pageUsuarios = repository.findAllByNomeAndAtivoTrue("", pageable);
         assertThat(pageUsuarios).isNotEmpty().hasSize(1);
         assertThat(pageUsuarios.getContent().get(0)).isEqualTo(sut);
     }
@@ -162,15 +161,14 @@ class UsuarioRepositoryTest {
         em.persist(PAIS);
         Usuario sut = em.persistFlushFind(USUARIO_INATIVO);
         PageRequest pageable = PageRequest.of(0, 10, Direction.ASC, "nome");
-        Page<Usuario> pageUsuarios = repository.findAllByNomeAndSobrenomeAndAtivoTrue(sut.getNome(), sut.getSobrenome(),
-                pageable);
+        Page<Usuario> pageUsuarios = repository.findAllByNomeAndAtivoTrue(sut.getNome(), pageable);
         assertThat(pageUsuarios).isEmpty();
     }
 
     @Test
     void consultarUsuarioPorNomeInexistenteRetornaEmpty() {
         PageRequest pageable = PageRequest.of(0, 10, Direction.ASC, "nome");
-        Page<Usuario> pageUsuarios = repository.findAllByNomeAndSobrenomeAndAtivoTrue("", "", pageable);
+        Page<Usuario> pageUsuarios = repository.findAllByNomeAndAtivoTrue("", pageable);
         assertThat(pageUsuarios).isEmpty();
     }
 

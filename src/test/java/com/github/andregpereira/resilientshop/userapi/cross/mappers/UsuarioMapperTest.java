@@ -32,7 +32,7 @@ class UsuarioMapperTest {
     @BeforeEach
     void beforeEach() {
 //        USUARIO.setNome("nome");
-//        USUARIO.setSobrenome("sobrenome");
+//        USUARIO.setSobrenome("apelido");
         USUARIO_MAPEADO.setEnderecos(LISTA_ENDERECOS_MAPEADO);
     }
 

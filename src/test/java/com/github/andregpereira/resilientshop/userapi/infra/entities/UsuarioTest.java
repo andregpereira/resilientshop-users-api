@@ -11,7 +11,7 @@ class UsuarioTest {
     @Test
     void equalsIgualRetornaTrue() {
         assertThat((Object) USUARIO).isEqualTo(USUARIO);
-        assertThat(new Usuario(null, "nome", "sobrenome", "22426853093", null, LOCAL_DATE, LOCAL_DATE, true,
+        assertThat(new Usuario(null, "nome", "apelido", "22426853093", null, LOCAL_DATE, LOCAL_DATE, true,
                 ENDERECO)).isEqualTo(USUARIO);
     }
 

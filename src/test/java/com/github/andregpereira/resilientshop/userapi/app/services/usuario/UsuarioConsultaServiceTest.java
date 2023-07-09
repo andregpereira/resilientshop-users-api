@@ -2,7 +2,6 @@ package com.github.andregpereira.resilientshop.userapi.app.services.usuario;
 
 import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioDetalhesDto;
 import com.github.andregpereira.resilientshop.userapi.app.dto.usuario.UsuarioDto;
-import com.github.andregpereira.resilientshop.userapi.app.services.usuario.UsuarioConsultaServiceImpl;
 import com.github.andregpereira.resilientshop.userapi.cross.exceptions.UsuarioNotFoundException;
 import com.github.andregpereira.resilientshop.userapi.cross.mappers.UsuarioMapper;
 import com.github.andregpereira.resilientshop.userapi.infra.entities.Usuario;
@@ -102,9 +101,9 @@ class UsuarioConsultaServiceTest {
         List<Usuario> listaUsuarios = new ArrayList<>();
         listaUsuarios.add(USUARIO);
         Page<Usuario> pageUsuarios = new PageImpl<>(listaUsuarios, pageable, 10);
-        given(usuarioRepository.findAllByNomeAndSobrenomeAndAtivoTrue("nome", "", pageable)).willReturn(pageUsuarios);
+        given(usuarioRepository.findAllByNomeAndAtivoTrue("nome", pageable)).willReturn(pageUsuarios);
         given(mapper.toUsuarioDto(USUARIO)).willReturn(USUARIO_DTO);
-        Page<UsuarioDto> sut = consultaService.consultarPorNome("nome", "", pageable);
+        Page<UsuarioDto> sut = consultaService.consultarPorNome("nome", pageable);
         assertThat(sut).isNotEmpty().hasSize(1);
         assertThat(sut.getContent().get(0)).isEqualTo(USUARIO_DTO);
     }
@@ -112,9 +111,8 @@ class UsuarioConsultaServiceTest {
     @Test
     void consultarUsuarioPorNomeInexistenteThrowsException() {
         PageRequest pageable = PageRequest.of(0, 10, Sort.Direction.ASC, "nome");
-        given(usuarioRepository.findAllByNomeAndSobrenomeAndAtivoTrue(anyString(), anyString(),
-                any(Pageable.class))).willReturn(Page.empty());
-        assertThatThrownBy(() -> consultaService.consultarPorNome("Fulano", "de Tal", pageable)).isInstanceOf(
+        given(usuarioRepository.findAllByNomeAndAtivoTrue(anyString(), any(Pageable.class))).willReturn(Page.empty());
+        assertThatThrownBy(() -> consultaService.consultarPorNome("Fulano", pageable)).isInstanceOf(
                 UsuarioNotFoundException.class).hasMessage(
                 "Não foi possível encontrar um usuário ativo com o nome Fulano de Tal. Verifique e tente novamente");
     }

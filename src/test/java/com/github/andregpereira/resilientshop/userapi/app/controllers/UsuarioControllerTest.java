@@ -26,7 +26,7 @@ import java.util.List;
 
 import static com.github.andregpereira.resilientshop.userapi.constants.UsuarioDtoConstants.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -52,8 +52,8 @@ class UsuarioControllerTest {
         mockMvc.perform(post("/usuarios").content(objectMapper.writeValueAsString(USUARIO_REGISTRO_DTO)).contentType(
                 MediaType.APPLICATION_JSON)).andExpect(status().isCreated()).andExpectAll(
                 jsonPath("$.nome").value(USUARIO_DETALHES_DTO.nome()),
-                jsonPath("$.sobrenome").value(USUARIO_DETALHES_DTO.sobrenome()),
-                jsonPath("$.telefone").value(USUARIO_DETALHES_DTO.telefone()), jsonPath("$.dataCriacao").value(
+                jsonPath("$.apelido").value(USUARIO_DETALHES_DTO.apelido()),
+                jsonPath("$.celular").value(USUARIO_DETALHES_DTO.celular()), jsonPath("$.dataCriacao").value(
                         USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/uuuu"))),
                 jsonPath("$.dataModificacao").value(
                         USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/uuuu"))));
@@ -81,9 +81,8 @@ class UsuarioControllerTest {
                 objectMapper.writeValueAsString(USUARIO_ATUALIZACAO_DTO)).contentType(
                 MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andExpectAll(
                 jsonPath("$.nome").value(USUARIO_DETALHES_DTO_ATUALIZADO.nome()),
-                jsonPath("$.sobrenome").value(USUARIO_DETALHES_DTO_ATUALIZADO.sobrenome()),
-                jsonPath("$.telefone").value(USUARIO_DETALHES_DTO_ATUALIZADO.telefone()),
-                jsonPath("$.dataCriacao").value(
+                jsonPath("$.apelido").value(USUARIO_DETALHES_DTO_ATUALIZADO.apelido()),
+                jsonPath("$.celular").value(USUARIO_DETALHES_DTO_ATUALIZADO.celular()), jsonPath("$.dataCriacao").value(
                         USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/uuuu"))),
                 jsonPath("$.dataModificacao").value(
                         USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/uuuu"))));
@@ -152,8 +151,8 @@ class UsuarioControllerTest {
         given(consultaService.consultarPorId(1L)).willReturn(USUARIO_DETALHES_DTO);
         mockMvc.perform(get("/usuarios/1")).andExpect(status().isOk()).andExpectAll(
                 jsonPath("$.nome").value(USUARIO_DETALHES_DTO.nome()),
-                jsonPath("$.sobrenome").value(USUARIO_DETALHES_DTO.sobrenome()),
-                jsonPath("$.telefone").value(USUARIO_DETALHES_DTO.telefone()), jsonPath("$.dataCriacao").value(
+                jsonPath("$.apelido").value(USUARIO_DETALHES_DTO.apelido()),
+                jsonPath("$.celular").value(USUARIO_DETALHES_DTO.celular()), jsonPath("$.dataCriacao").value(
                         USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/uuuu"))),
                 jsonPath("$.dataModificacao").value(
                         USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/uuuu"))));
@@ -176,8 +175,8 @@ class UsuarioControllerTest {
         given(consultaService.consultarPorCpf(USUARIO_DETALHES_DTO.cpf())).willReturn(USUARIO_DETALHES_DTO);
         mockMvc.perform(get("/usuarios/cpf").param("cpf", USUARIO_DETALHES_DTO.cpf())).andExpect(
                 status().isOk()).andExpectAll(jsonPath("$.nome").value(USUARIO_DETALHES_DTO.nome()),
-                jsonPath("$.sobrenome").value(USUARIO_DETALHES_DTO.sobrenome()),
-                jsonPath("$.telefone").value(USUARIO_DETALHES_DTO.telefone()), jsonPath("$.dataCriacao").value(
+                jsonPath("$.apelido").value(USUARIO_DETALHES_DTO.apelido()),
+                jsonPath("$.celular").value(USUARIO_DETALHES_DTO.celular()), jsonPath("$.dataCriacao").value(
                         USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/uuuu"))),
                 jsonPath("$.dataModificacao").value(
                         USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/uuuu"))));
@@ -201,7 +200,7 @@ class UsuarioControllerTest {
         List<UsuarioDto> listaUsuarios = new ArrayList<>();
         listaUsuarios.add(USUARIO_DTO_ATUALIZADO);
         Page<UsuarioDto> pageUsuarios = new PageImpl<>(listaUsuarios, pageable, 10);
-        given(consultaService.consultarPorNome(USUARIO_DTO_ATUALIZADO.nome(), "", pageable)).willReturn(pageUsuarios);
+        given(consultaService.consultarPorNome(USUARIO_DTO_ATUALIZADO.nome(), pageable)).willReturn(pageUsuarios);
         mockMvc.perform(get("/usuarios/nome").param("nome", USUARIO_DTO_ATUALIZADO.nome())).andExpect(
                 status().isOk()).andExpectAll(jsonPath("$.empty").value(false), jsonPath("$.numberOfElements").value(1),
                 jsonPath("$.content[0].nome").value(USUARIO_DTO_ATUALIZADO.nome()));
@@ -210,7 +209,7 @@ class UsuarioControllerTest {
     @Test
     void consultarUsuarioPorNomeInexistenteRetornaNotFound() throws Exception {
         PageRequest pageable = PageRequest.of(0, 10, Direction.ASC, "nome");
-        given(consultaService.consultarPorNome("nome", "", pageable)).willThrow(UsuarioNotFoundException.class);
+        given(consultaService.consultarPorNome("nome", pageable)).willThrow(UsuarioNotFoundException.class);
         mockMvc.perform(get("/usuarios/nome").param("nome", "nome")).andExpect(status().isNotFound());
     }
 
