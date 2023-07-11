@@ -1,0 +1,661 @@
+openapi: 3.0.3
+info:
+  title: API de Usuários
+  description: |-
+    API do microsserviço de Usuários do e-Commerce Resilient Shop.
+  contact:
+    name: @author André Garcia
+    url: https://github.com/andregpereira
+    email: 61523970+andregpereira@users.noreply.github.com
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8763
+    description: Caminho base da API
+
+tags:
+  - name: Usuários
+    description: |-
+      Operações de criação, atualização, dasativação, reativação e consulta de usuários.
+
+paths:
+  /usuarios:
+    get:
+      tags:
+        - Usuários
+      operationId: listar
+      summary: |-
+        Retorna todos os usuários
+
+      responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+        "200":
+          description: |-
+            Listados todos os usuários
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageUsuarioDto'
+
+    post:
+      tags:
+        - Usuários
+      operationId: registrar
+      summary: |-
+        Cria um novo usuário
+
+      requestBody:
+        $ref: '#/components/requestBodies/UsuarioRegistroDto'
+
+      responses:
+        "422":
+          $ref: '#/components/responses/UnprocessableEntity'
+
+        "409":
+          $ref: '#/components/responses/Conflict'
+
+        "400":
+          $ref: '#/components/responses/BadRequest'
+
+        "201":
+          $ref: '#/components/responses/Created'
+
+  /usuarios/{id}:
+    get:
+      tags:
+        - Usuários
+      operationId: consultarPorId
+      summary: |-
+        Consulta um usuário por id
+
+      parameters:
+        - $ref: '#/components/parameters/Id'
+
+      responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+        "200":
+          description: |-
+            Usuário encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioDetalhesDto'
+
+    put:
+      tags:
+        - Usuários
+      operationId: atualizar
+      summary: |-
+        Atualiza um usuário por id
+
+      parameters:
+        - $ref: '#/components/parameters/Id'
+
+      requestBody:
+        $ref: '#/components/requestBodies/UsuarioAtualizacaoDto'
+
+      responses:
+        "422":
+          $ref: '#/components/responses/UnprocessableEntity'
+
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+        "200":
+          description: |-
+            Usuário atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioDetalhesDto'
+
+    delete:
+      tags:
+        - Usuários
+      operationId: desativar
+      summary: |-
+        Desativa um usuário por id
+      parameters:
+        - $ref: '#/components/parameters/Id'
+
+      responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+        "200":
+          description: |-
+            Usuário desativado
+          content:
+            '*/*':
+              schema:
+                type: string
+                example: |-
+                  Usuário com id 21 desativado
+
+  /usuarios/cpf:
+    get:
+      tags:
+        - Usuários
+      operationId: consultarPorCpf
+      summary: |-
+        Consulta um usuário por CPF
+
+      parameters:
+        - $ref: '#/components/parameters/Cpf'
+
+      responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+        "400":
+          $ref: '#/components/responses/BadRequest'
+
+        "200":
+          description: |-
+            Usuário encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioDetalhesDto'
+
+  /usuarios/nome:
+    get:
+      tags:
+        - Usuários
+      operationId: consultarPorNome
+      summary: |-
+        Consulta um usuário por nome
+      parameters:
+        - $ref: '#/components/parameters/Nome'
+        - $ref: '#/components/parameters/Sobrenome'
+
+      responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+        "200":
+          description: |-
+            Usuários encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PageUsuarioDto'
+
+
+  /usuarios/reativar/{id}:
+    patch:
+      tags:
+        - Usuários
+      operationId: reativar
+      summary: |-
+        Reativa um usuário por id
+
+      parameters:
+        - $ref: '#/components/parameters/Id'
+
+      responses:
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+        "200":
+          description: |-
+            Usuário reativado
+          content:
+            '*/*':
+              schema:
+                type: string
+
+components:
+  schemas:
+    EnderecoRegistroDto:
+      required:
+        - apelido
+        - bairro
+        - cep
+        - cidade
+        - estado
+        - numero
+        - pais
+        - rua
+      type: object
+      properties:
+        apelido:
+          type: string
+        cep:
+          pattern: "\\d{5}-\\d{3}"
+          type: string
+        estado:
+          type: string
+        cidade:
+          type: string
+        bairro:
+          maxLength: 45
+          minLength: 0
+          type: string
+        rua:
+          maxLength: 45
+          minLength: 0
+          type: string
+        numero:
+          maxLength: 10
+          minLength: 0
+          type: string
+        complemento:
+          maxLength: 45
+          minLength: 0
+          type: string
+        pais:
+          $ref: '#/components/schemas/PaisRegistroDto'
+
+    PaisRegistroDto:
+      required:
+        - codigo
+        - nome
+      type: object
+      properties:
+        nome:
+          maxLength: 45
+          minLength: 0
+          type: string
+        codigo:
+          maxLength: 4
+          minLength: 3
+          pattern: "[+]\\d{3}"
+          type: string
+
+    UsuarioAtualizacaoDto:
+      required:
+        - enderecos
+        - nome
+        - apelido
+      type: object
+      properties:
+        nome:
+          maxLength: 255
+          minLength: 2
+          type: string
+        sobrenome:
+          maxLength: 255
+          minLength: 2
+          type: string
+        telefone:
+          maxLength: 20
+          minLength: 0
+          pattern: "^[+]\\d{2,3} [(]\\d{2}[)] \\d{4,5}-\\d{4}$"
+          type: string
+        enderecos:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnderecoRegistroDto'
+
+    EnderecoDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        apelido:
+          type: string
+        cep:
+          type: string
+        estado:
+          type: string
+        cidade:
+          type: string
+        bairro:
+          type: string
+        rua:
+          type: string
+        numero:
+          type: string
+        complemento:
+          type: string
+        pais:
+          $ref: '#/components/schemas/PaisDto'
+
+    PaisDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        nome:
+          type: string
+        codigo:
+          type: string
+
+    UsuarioDetalhesDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        nome:
+          type: string
+        sobrenome:
+          type: string
+        cpf:
+          type: string
+        telefone:
+          type: string
+        dataCriacao:
+          type: string
+          format: date
+        dataModificacao:
+          type: string
+          format: date
+        ativo:
+          type: boolean
+        enderecos:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnderecoDto'
+
+    UsuarioRegistroDto:
+      required:
+        - cpf
+        - enderecos
+        - nome
+        - apelido
+      type: object
+      properties:
+        nome:
+          maxLength: 255
+          minLength: 2
+          type: string
+        sobrenome:
+          maxLength: 255
+          minLength: 2
+          type: string
+        cpf:
+          pattern: "^(\\d{3}[.]\\d{3}[.]\\d{3}-\\d{2})|(\\d{9}-\\d{2})|(\\d{11})$"
+          type: string
+        telefone:
+          maxLength: 20
+          minLength: 0
+          pattern: "^[+]\\d{2,3} [(]\\d{2}[)] \\d{4,5}-\\d{4}$"
+          type: string
+        enderecos:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnderecoRegistroDto'
+
+    PageUsuarioDto:
+      type: object
+      properties:
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/UsuarioDto'
+        number:
+          type: integer
+          format: int32
+        sort:
+          $ref: '#/components/schemas/SortObject'
+        first:
+          type: boolean
+        last:
+          type: boolean
+        numberOfElements:
+          type: integer
+          format: int32
+        pageable:
+          $ref: '#/components/schemas/PageableObject'
+        empty:
+          type: boolean
+
+    PageableObject:
+      type: object
+      properties:
+        offset:
+          type: integer
+          format: int64
+        sort:
+          $ref: '#/components/schemas/SortObject'
+        unpaged:
+          type: boolean
+        paged:
+          type: boolean
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+
+    SortObject:
+      type: object
+      properties:
+        empty:
+          type: boolean
+        unsorted:
+          type: boolean
+        sorted:
+          type: boolean
+
+    UsuarioDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        nome:
+          type: string
+        sobrenome:
+          type: string
+        cpf:
+          type: string
+        telefone:
+          type: string
+        dataCriacao:
+          type: string
+          format: date
+        dataModificacao:
+          type: string
+          format: date
+        ativo:
+          type: boolean
+
+    # Pageable:
+    #   type: object
+    #   properties:
+    #     page:
+    #       minimum: 0
+    #       type: integer
+    #       format: int32
+    #     size:
+    #       minimum: 10
+    #       type: integer
+    #       format: int32
+    #     sort:
+    #       type: array
+    #       items:
+    #         default: id
+    #         type: string
+
+    # PageableCpf:
+    #   type: object
+    #   properties:
+    #     page:
+    #       minimum: 0
+    #       type: integer
+    #       format: int32
+    #     size:
+    #       minimum: 10
+    #       type: integer
+    #       format: int32
+    #     sort:
+    #       type: array
+    #       items:
+    #         default: cpf
+    #         type: string
+
+    # PageableNome:
+    #   type: object
+    #   properties:
+    #     page:
+    #       minimum: 0
+    #       type: integer
+    #       format: int32
+    #     size:
+    #       minimum: 10
+    #       type: integer
+    #       format: int32
+    #     sort:
+    #       type: array
+    #       items:
+    #         default: nome
+    #         type: string
+
+    DadoInvalido:
+      type: object
+      properties:
+        campo:
+          type: string
+        mensagem:
+          type: string
+
+    ResponseConflict:
+      type: string
+      example: |-
+        Usuário já cadastrado no banco de dados
+
+    ResponseBadRequest:
+      type: string
+      example: |-
+        Parâmetro inválido
+
+    ResponseNotFound:
+      type: string
+      example: |-
+        Nenhum usuário foi encontrado no banco de dados
+
+  responses:
+    Conflict:
+      description: |-
+        Usuário já cadastrado
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/ResponseConflict'
+
+    BadRequest:
+      description: |
+        Problema ao processar requisição
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/ResponseBadRequest'
+
+    NotFound:
+      description: |-
+        Usuário não encontrado
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/ResponseNotFound'
+
+    UnprocessableEntity:
+      description: |-
+        Campo inválido
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DadoInvalido'
+
+    Created:
+      description: |-
+        Usuário criado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UsuarioDetalhesDto'
+
+  requestBodies:
+    UsuarioRegistroDto:
+      description: |-
+        Usuário a ser cadastrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UsuarioRegistroDto'
+      required: true
+
+    UsuarioAtualizacaoDto:
+      description: |-
+        Usuário a ser atualizado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UsuarioAtualizacaoDto'
+      required: true
+
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+
+    Nome:
+      name: nome
+      in: query
+      required: true
+      schema:
+        maxLength: 2147483647
+        minLength: 2
+        type: string
+
+    Sobrenome:
+      name: apelido
+      in: query
+      required: false
+      schema:
+        type: string
+
+    Cpf:
+      name: cpf
+      in: query
+      required: true
+      schema:
+        pattern: "^(\\d{3}[.]\\d{3}[.]\\d{3}-\\d{2})|(\\d{9}-\\d{2})|(\\d{11})$"
+        type: string
+
+    # Pageable:
+    #   name: pageable
+    #   in: query
+    #   required: false
+    #   schema:
+    #     $ref: '#/components/schemas/Pageable'
+
+    # PageableCpf:
+    #   name: pageable
+    #   in: query
+    #   required: false
+    #   schema:
+    #     $ref: '#/components/schemas/PageableCpf'
+
+    # PageableNome:
+    #   name: pageable
+    #   in: query
+    #   required: false
+    #   schema:
+    #     $ref: '#/components/schemas/PageableNome'
+
