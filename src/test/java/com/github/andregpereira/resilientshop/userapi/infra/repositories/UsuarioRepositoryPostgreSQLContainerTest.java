@@ -60,7 +60,7 @@ class UsuarioRepositoryPostgreSQLContainerTest extends PostgreSQLContainerConfig
         Usuario sut = em.find(Usuario.class, usuario.getId());
         assertThat(sut).isNotNull();
         assertThat(sut.getNome()).isEqualTo(USUARIO.getNome());
-        assertThat(sut.getApelido()).isEqualTo(USUARIO.getApelido());
+        assertThat(sut.getNomeSocial()).isEqualTo(USUARIO.getNomeSocial());
         assertThat(sut.getCpf()).isEqualTo(USUARIO.getCpf());
         assertThat(sut.getCelular()).isEqualTo(USUARIO.getCelular());
         assertThat(sut.getDataCriacao()).isEqualTo(USUARIO.getDataCriacao());

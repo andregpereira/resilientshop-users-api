@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @SenhasIguais
 public record UsuarioRegistroDto(@NotBlank(message = "Insira o nome") @Size(
         message = "O nome deve ter entre 2 e 255 caracteres", min = 2, max = 255) String nome,
-        @Size(message = "O apelido deve ter no máximo 30 caracteres", max = 30) String apelido,
+        @Size(message = "O apelido deve ter no máximo 30 caracteres", max = 30) String nomeSocial,
         @NotBlank(message = "Insira o CPF") @CPF(
                 message = "CPF inválido ou inexistente. Formatos aceitos: xxx.xxx.xxx-xx, xxxxxxxxx-xx ou xxxxxxxxxxx") String cpf,
         @NotNull(message = "Insira a data de nascimento") LocalDate dataNascimento,
