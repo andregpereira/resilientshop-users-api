@@ -3,4 +3,3 @@ LABEL authors="André Garcia"
 WORKDIR /app
 COPY target/*.jar /app/resilientshop-user.jar
 ENTRYPOINT ["java","-jar","resilientshop-user.jar"]
-EXPOSE 8090
