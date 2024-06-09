@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 public record UsuarioDto(Long id,
         String nome,
-        String apelido,
+        String nomeSocial,
         String cpf,
         @JsonFormat(shape = Shape.STRING, pattern = "dd/MM/uuuu") LocalDate dataNascimento,
         String email,

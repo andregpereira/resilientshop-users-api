@@ -9,7 +9,7 @@ import java.util.List;
 
 public record UsuarioDetalhesDto(Long id,
         String nome,
-        String apelido,
+        String nomeSocial,
         String cpf,
         @JsonFormat(shape = Shape.STRING, pattern = "dd/MM/uuuu") LocalDate dataNascimento,
         String email,
