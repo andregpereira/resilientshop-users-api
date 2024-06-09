@@ -33,7 +33,7 @@ public class Usuario {
     @Column(nullable = false)
     private String nome;
 
-    private String apelido;
+    private String nomeSocial;
 
     @Column(length = 14, nullable = false)
     private String cpf;
@@ -68,7 +68,7 @@ public class Usuario {
         if (!(o instanceof Usuario usuario))
             return false;
         return ativo == usuario.ativo && Objects.equals(id, usuario.id) && Objects.equals(nome,
-                usuario.nome) && Objects.equals(apelido, usuario.apelido) && Objects.equals(cpf,
+                usuario.nome) && Objects.equals(nomeSocial, usuario.nomeSocial) && Objects.equals(cpf,
                 usuario.cpf) && Objects.equals(dataNascimento, usuario.dataNascimento) && Objects.equals(email,
                 usuario.email) && Objects.equals(celular, usuario.celular) && Objects.equals(dataCriacao,
                 usuario.dataCriacao) && Objects.equals(dataModificacao, usuario.dataModificacao) && Objects.equals(
@@ -77,14 +77,14 @@ public class Usuario {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nome, apelido, cpf, dataNascimento, email, celular, dataCriacao, dataModificacao, ativo,
+        return Objects.hash(id, nome, nomeSocial, cpf, dataNascimento, email, celular, dataCriacao, dataModificacao, ativo,
                 enderecos);
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", Usuario.class.getSimpleName() + "[", "]").add("id=" + id).add(
-                "nome='" + nome + "'").add("apelido='" + apelido + "'").add("cpf='" + cpf + "'").add(
+                "nome='" + nome + "'").add("apelido='" + nomeSocial + "'").add("cpf='" + cpf + "'").add(
                 "dataNascimento=" + dataNascimento).add("email='" + email + "'").add("celular='" + celular + "'").add(
                 "dataCriacao=" + dataCriacao).add("dataModificacao=" + dataModificacao).add("ativo=" + ativo).add(
                 "enderecos=" + enderecos).toString();

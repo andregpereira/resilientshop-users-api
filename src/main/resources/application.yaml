@@ -1,19 +1,21 @@
+server:
+  port: ${SERVER_PORT:0}
+  error:
+    include-stacktrace: never
+
 spring:
   application:
     name: resilientshop-user-api
   #PostgreSQL
   datasource:
+    hikari:
+      initialization-fail-timeout: 30000
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
-
-server:
-  port: ${SERVER_PORT:0}
-  error:
-    include-stacktrace: never
 
 #Swagger
 spring-doc:
@@ -25,9 +27,18 @@ eureka:
   instance:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    metadata-map:
+      "prometheus.scrape": "true"
+      "prometheus.path": "/actuator/prometheus"
   client:
     register-with-eureka: true
     fetch-registry: true
     registry-fetch-interval-seconds: 5
     serviceUrl:
       defaultZone: http://${EUREKA_SERVICE_NAME:localhost}:8761/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
