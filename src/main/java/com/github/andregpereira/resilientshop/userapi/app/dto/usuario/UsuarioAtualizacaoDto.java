@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size;
 @SenhasIguais
 public record UsuarioAtualizacaoDto(@NotBlank(message = "Insira o nome") @Size(
         message = "O nome deve ter entre 2 e 255 caracteres", min = 2, max = 255) String nome,
-        @Size(message = "O apelido deve ter no máximo 30 caracteres", max = 30) String apelido,
+        @Size(message = "O apelido deve ter no máximo 30 caracteres", max = 30) String nomeSocial,
         @NotBlank(message = "O e-mail é obrigatório") @Email(message = "Insira um e-mail válido") String email,
         @Size(message = "O celular deve ter no máximo 20 caracteres", max = 20) @Pattern(
                 message = "Formato do " + "celular inválido. " + "Por favor, informe um celular no seguinte formato +xxx (xx) xxxxx-xxxx",

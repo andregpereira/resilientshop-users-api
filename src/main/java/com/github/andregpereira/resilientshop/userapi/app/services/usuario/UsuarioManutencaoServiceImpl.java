@@ -98,7 +98,7 @@ public class UsuarioManutencaoServiceImpl implements UsuarioManutencaoService {
     public UsuarioDetalhesDto atualizar(Long id, UsuarioAtualizacaoDto dto) {
         return usuarioRepository.findByIdAndAtivoTrue(id).map(u -> {
             u.setNome(dto.nome());
-            u.setApelido(dto.apelido());
+            u.setNomeSocial(dto.nomeSocial());
             u.setEmail(dto.email());
             u.setCelular(dto.celular());
             return usuarioMapper.toUsuarioDetalhesDto(usuarioRepository.save(u));

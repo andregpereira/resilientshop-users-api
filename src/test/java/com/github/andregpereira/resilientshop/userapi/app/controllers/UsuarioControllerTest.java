@@ -52,7 +52,7 @@ class UsuarioControllerTest {
         mockMvc.perform(post("/usuarios").content(objectMapper.writeValueAsString(USUARIO_REGISTRO_DTO)).contentType(
                 MediaType.APPLICATION_JSON)).andExpect(status().isCreated()).andExpectAll(
                 jsonPath("$.nome").value(USUARIO_DETALHES_DTO.nome()),
-                jsonPath("$.apelido").value(USUARIO_DETALHES_DTO.apelido()),
+                jsonPath("$.apelido").value(USUARIO_DETALHES_DTO.nomeSocial()),
                 jsonPath("$.celular").value(USUARIO_DETALHES_DTO.celular()), jsonPath("$.dataCriacao").value(
                         USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/uuuu"))),
                 jsonPath("$.dataModificacao").value(
@@ -81,7 +81,7 @@ class UsuarioControllerTest {
                 objectMapper.writeValueAsString(USUARIO_ATUALIZACAO_DTO)).contentType(
                 MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andExpectAll(
                 jsonPath("$.nome").value(USUARIO_DETALHES_DTO_ATUALIZADO.nome()),
-                jsonPath("$.apelido").value(USUARIO_DETALHES_DTO_ATUALIZADO.apelido()),
+                jsonPath("$.apelido").value(USUARIO_DETALHES_DTO_ATUALIZADO.nomeSocial()),
                 jsonPath("$.celular").value(USUARIO_DETALHES_DTO_ATUALIZADO.celular()), jsonPath("$.dataCriacao").value(
                         USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/uuuu"))),
                 jsonPath("$.dataModificacao").value(
@@ -151,7 +151,7 @@ class UsuarioControllerTest {
         given(consultaService.consultarPorId(1L)).willReturn(USUARIO_DETALHES_DTO);
         mockMvc.perform(get("/usuarios/1")).andExpect(status().isOk()).andExpectAll(
                 jsonPath("$.nome").value(USUARIO_DETALHES_DTO.nome()),
-                jsonPath("$.apelido").value(USUARIO_DETALHES_DTO.apelido()),
+                jsonPath("$.apelido").value(USUARIO_DETALHES_DTO.nomeSocial()),
                 jsonPath("$.celular").value(USUARIO_DETALHES_DTO.celular()), jsonPath("$.dataCriacao").value(
                         USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/uuuu"))),
                 jsonPath("$.dataModificacao").value(
@@ -175,7 +175,7 @@ class UsuarioControllerTest {
         given(consultaService.consultarPorCpf(USUARIO_DETALHES_DTO.cpf())).willReturn(USUARIO_DETALHES_DTO);
         mockMvc.perform(get("/usuarios/cpf").param("cpf", USUARIO_DETALHES_DTO.cpf())).andExpect(
                 status().isOk()).andExpectAll(jsonPath("$.nome").value(USUARIO_DETALHES_DTO.nome()),
-                jsonPath("$.apelido").value(USUARIO_DETALHES_DTO.apelido()),
+                jsonPath("$.apelido").value(USUARIO_DETALHES_DTO.nomeSocial()),
                 jsonPath("$.celular").value(USUARIO_DETALHES_DTO.celular()), jsonPath("$.dataCriacao").value(
                         USUARIO_DETALHES_DTO.dataModificacao().format(DateTimeFormatter.ofPattern("dd/MM/uuuu"))),
                 jsonPath("$.dataModificacao").value(
